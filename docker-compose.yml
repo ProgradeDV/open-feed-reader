@@ -1,0 +1,47 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./Django Website
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    links:
+      - db:db
+    volumes:
+      - ./Django Website/no_rythem_news:/app:Z
+      - db-media:/media
+    networks:
+      - no_rythem_network
+    environment:
+      - DB_DB
+      - DB_PASSWORD
+      - DB_USER
+      - DB_HOST=db
+      - SECRET_KEY
+      - SSH_PRIVATE_KEY
+  
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    networks:
+      - no_rythem_network
+    ports:
+      - "5432:5432"
+
+
+networks:
+  no_rythem_network:
+    driver: bridge
+
+volumes:
+  db-data:
+  db-media:
