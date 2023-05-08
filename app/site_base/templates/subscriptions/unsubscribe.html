@@ -1,0 +1,16 @@
+{% extends 'site_base/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div>
+    Unsubscribe from <b>{{ sub.source.name }}</b> ?
+</div>
+<form action="{% url 'unsubscribe' sub_id=sub.id %}" method="post">
+  {% csrf_token %}
+  {% buttons %}
+    <button type="submit" class="btn btn-primary">
+      Unsubscribe
+    </button>
+  {% endbuttons %}
+</form>
+{% endblock %}

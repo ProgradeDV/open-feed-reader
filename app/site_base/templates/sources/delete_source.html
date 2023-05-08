@@ -1,0 +1,16 @@
+{% extends 'site_base/base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div>
+    Delete source <b>{{ source.name }}</b>?
+</div>
+<form action="{% url 'delete_source' source_id=source.id %}" method="post">
+    {% csrf_token %}
+    {% buttons %}
+    <button type="submit" class="btn btn-primary">
+      Delete
+    </button>
+    {% endbuttons %}
+</form>
+{% endblock %}

@@ -4,14 +4,14 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from feeds.models import Post, Source
 from feeds_extensions.models import SourceSubcription
-from .forms import NewSubscriptionForm
+from .forms import NewSubscriptionForm, EditSourceForm
 
 
 @login_required
 def all_posts(request: HttpResponse):
     """all feeds"""
     posts = Post.objects.filter(source__subscriptions__user = request.user)
-    return render(request, 'site_base/posts_list.html', context={'posts':posts})
+    return render(request, 'posts/posts_list.html', context={'posts':posts})
 
 
 @login_required
@@ -31,19 +31,75 @@ def all_sources(request: HttpResponse):
 @permission_required('feeds.add_source')
 def new_source(request: HttpResponse):
     """create a new source"""
-    return HttpResponseRedirect(reverse('all_posts'))
+    if request.method == "POST":
+        form = EditSourceForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # make sure the feed isn't duplicated
+            if Source.objects.get(feed_url = form.cleaned_data["feed_url"]).exists():
+                form.add_error('feed_url', 'URL already exists in sources list')
+                return render(request, "sources/new_source.html", {"form": form})
+
+            source = Source(**form.cleaned_data)
+            source.save()
+            return HttpResponseRedirect(reverse('sources'))
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = EditSourceForm()
+
+    return render(request, "sources/new_source.html", {"form": form})
 
 
 @permission_required('feeds.change_source')
 def edit_source(request: HttpResponse, source_id: int):
     """edit a source"""
-    return HttpResponseRedirect(reverse('all_posts'))
+    try:
+        source = Source.objects.get(id = source_id)
+    except Source.DoesNotExist:
+        HttpResponseRedirect(reverse('all_sources'))
+
+    if request.method == "POST":
+        form = EditSourceForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            source.name        = form.cleaned_data['name']
+            source.site_url    = form.cleaned_data['site_url']
+            source.feed_url    = form.cleaned_data['feed_url ']
+            source.image_url   = form.cleaned_data['image_url']
+            source.description = form.cleaned_data['description']
+            source.interval    = form.cleaned_data['interval']
+
+            source.save()
+            return HttpResponseRedirect(reverse('all_sources'))
+
+    else:
+        form = EditSourceForm(initial={
+            'name':source.name,
+            'site_url':source.site_url,
+            'feed_url':source.feed_url,
+            'image_url':source.image_url,
+            'description':source.description,
+            'interval':source.interval,
+            }
+        )
+
+    return render(request, "sources/edit_source.html", {"form": form})
 
 
 @permission_required('feeds.delete_source')
 def delete_source(request: HttpResponse, source_id: int):
     """delete a source"""
-    return HttpResponseRedirect(reverse('all_posts'))
+    try:
+        source = Source.objects.get(id = source_id)
+    except SourceSubcription.DoesNotExist:
+        return HttpResponseRedirect(reverse('all_sources'))
+
+    if request.method == "POST":
+        source.delete()
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    return render(request, "subscriptions/unsubscribe.html", {"source": source})
 
 
 @login_required
@@ -56,8 +112,8 @@ def source(request: HttpResponse, source_id: int):
 @login_required
 def subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
-    sources = Source.objects.filter(subscriptions__user = request.user)
-    return render(request, 'sources/sources_list.html', context={'sources':sources})
+    subs = SourceSubcription.objects.filter(user = request.user)
+    return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs})
 
 
 @login_required
@@ -77,7 +133,7 @@ def new_subscription(request: HttpResponse):
             # if a source with the given feed does not exist, return an error
             if source is None:
                 form.add_error('feed_url', 'Unknown URL')
-                return render(request, "sources/new_sub_form.html", {"form": form})
+                return render(request, "subscriptions/subscribe.html", {"form": form})
 
             # check if you are already subscribed to that url
             try:
@@ -92,16 +148,25 @@ def new_subscription(request: HttpResponse):
                 return HttpResponseRedirect(reverse('my_sources'))
 
             form.add_error('feed_url', f'You are already subscribed to {form.cleaned_data["feed_url"]}')
-            return render(request, "sources/new_sub_form.html", {"form": form})
+            return render(request, "subscriptions/subscribe.html", {"form": form})
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NewSubscriptionForm()
 
-    return render(request, "sources/new_sub_form.html", {"form": form})
+    return render(request, "subscriptions/subscribe.html", {"form": form})
 
 
 @permission_required('feeds_extensions.delete_sourcesubscriptions')
 def delete_subscription(request: HttpResponse, sub_id: int):
     """remove a subscription from a user"""
-    return HttpResponseRedirect(reverse('all_posts'))
+    try:
+        sub = SourceSubcription.objects.get(id = sub_id)
+    except SourceSubcription.DoesNotExist:
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    if request.method == "POST":
+        sub.delete()
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    return render(request, "subscriptions/unsubscribe.html", {"sub": sub})

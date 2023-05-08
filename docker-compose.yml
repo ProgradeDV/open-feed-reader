@@ -13,10 +13,10 @@ services:
     depends_on:
       - ofr_db
     volumes:
-      - ./app:/app:Z
+      # - ./app:/app:Z
       - db-media:/media
-      - ../django-user-management/src/user_management:/app/user_management:Z
-      - ../django-feed-reader-extensions/src/feeds_extensions/:/app/feeds_extensions:Z
+      # - ../django-user-management/src/user_management:/app/user_management:Z
+      # - ../django-feed-reader-extensions/src/feeds_extensions/:/app/feeds_extensions:Z
     networks:
       - ofr_network
     environment:
