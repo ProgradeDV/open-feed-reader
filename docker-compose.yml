@@ -1,30 +1,32 @@
 version: '3'
+
 services:
-  web:
+
+  ofr_web:
     build:
-      context: ./Django Website
-      dockerfile: Dockerfile
+      context: .
+      ssh:
+        - default
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
     depends_on:
-      - db
-    links:
-      - db:db
+      - ofr_db
     volumes:
-      - ./Django Website/no_rythem_news:/app:Z
+      - ./app:/app:Z
       - db-media:/media
+      - ../django-user-management/src/user_management:/app/user_management:Z
+      - ../django-feed-reader-extensions/src/feeds_extensions/:/app/feeds_extensions:Z
     networks:
-      - no_rythem_network
+      - ofr_network
     environment:
+      - SECRET_KEY
       - DB_DB
       - DB_PASSWORD
       - DB_USER
-      - DB_HOST=db
-      - SECRET_KEY
-      - SSH_PRIVATE_KEY
-  
-  db:
+      - DB_HOST=ofr_db
+
+  ofr_db:
     image: postgres
     environment:
       - POSTGRES_USER=${DB_USER}
@@ -33,13 +35,11 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data/
     networks:
-      - no_rythem_network
-    ports:
-      - "5432:5432"
+      - ofr_network
 
 
 networks:
-  no_rythem_network:
+  ofr_network:
     driver: bridge
 
 volumes:

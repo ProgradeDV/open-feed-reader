@@ -1,0 +1,15 @@
+{% extends 'site_base/base.html' %}
+
+{% block content %}
+<div class="card">
+    {% if post.image_url %}
+    <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title"><a href="{{post.link}}"><i class="bi bi-link-45deg"></i></a>
+          {{ post.title }}
+        </h5> 
+        <p class="card-text">{{ post.body }}</p>
+    </div>
+</div>
+{% endblock %}
