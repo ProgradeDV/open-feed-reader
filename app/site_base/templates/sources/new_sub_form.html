@@ -1,0 +1,9 @@
+{% extends 'site_base/base.html' %}
+
+{% block content %}
+{% include 'site_base/form_part.html' %}
+<div>
+    If the source does not exist:
+    <a href="{% url 'new_source' %}">New Source</a>
+</div>
+{% endblock %}

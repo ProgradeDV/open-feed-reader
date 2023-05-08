@@ -1,0 +1,11 @@
+{% extends 'site_base/base.html' %}
+
+{% block content %}
+{% for source in sources %}
+<div class="card">
+    <div class="card-body">
+        <a href="{% url 'source' source_id=source.id %}"> {{ source.name }}</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
