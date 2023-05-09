@@ -10,6 +10,7 @@ urlpatterns = [
     path('sources/new/',                       views.new_source,          name='new_source'),
     path('sources/<int:source_id>/edit/',      views.edit_source,         name='edit_source'),
     path('sources/<int:source_id>/delete/',    views.delete_source,       name='delete_source'),
+    path('sources/<int:source_id>/subscribe/', views.subscribe_source,    name='subscribe_source'),
     path('subscriptions/',                     views.subscriptions,       name='subscriptions'),
     path('subscriptions/new/',                 views.new_subscription,    name='new_subscription'),
     path('subscriptions/<int:sub_id>/delete/', views.delete_subscription, name='delete_subscription'),

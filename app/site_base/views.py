@@ -110,6 +110,28 @@ def source(request: HttpResponse, source_id: int):
 
 
 @login_required
+def subscribe_source(request: HttpResponse, source_id: int):
+    """subscribe to the source with the given id"""
+    try:
+        source = Source.objects.get(id = source_id)
+    except Source.DoesNotExist:
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    # check if you are already subscribed to that source
+    try:
+        sub = SourceSubcription.objects.get(source = source)
+    except SourceSubcription.DoesNotExist:
+        sub = None
+
+    if sub is None:
+        # add a subscription
+        sub = SourceSubcription(user = request.user, source = source)
+        sub.save()
+
+    return HttpResponseRedirect(reverse('subscriptions'))
+
+
+@login_required
 def subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
     subs = SourceSubcription.objects.filter(user = request.user)
