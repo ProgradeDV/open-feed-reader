@@ -10,8 +10,8 @@ from .forms import NewSubscriptionForm, EditSourceForm
 @login_required
 def all_posts(request: HttpResponse):
     """all feeds"""
-    posts = Post.objects.filter(source__subscriptions__user = request.user)
-    return render(request, 'posts/posts_list.html', context={'posts':posts})
+    posts = Post.objects.filter(source__subscriptions__user = request.user).order_by('-created')
+    return render(request, 'posts/posts_list.html', context={'posts':posts[0:10]})
 
 
 @login_required
@@ -25,7 +25,8 @@ def post(request: HttpResponse, post_id: int):
 def all_sources(request: HttpResponse):
     """view for a list of posts"""
     sources = Source.objects.all()
-    return render(request, 'sources/sources_list.html', context={'sources':sources})
+    subed_sources = Source.objects.filter(subscriptions__user = request.user)
+    return render(request, 'sources/sources_list.html', context={'sources':sources, 'subed_sources':subed_sources})
 
 
 @permission_required('feeds.add_source')
@@ -97,16 +98,18 @@ def delete_source(request: HttpResponse, source_id: int):
 
     if request.method == "POST":
         source.delete()
-        return HttpResponseRedirect(reverse('subscriptions'))
+        return HttpResponseRedirect(reverse('all_sources'))
 
-    return render(request, "subscriptions/unsubscribe.html", {"source": source})
+    return render(request, "sources/delete_source.html", {"source": source})
 
 
 @login_required
 def source(request: HttpResponse, source_id: int):
     """view for a list of posts"""
     source = Source.objects.get(id=source_id)
-    return render(request, 'sources/source.html', context={'source':source, 'posts':source.posts})
+    posts = Post.objects.filter(source = source).order_by('-created')
+    is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
+    return render(request, 'sources/source.html', context={'source':source, 'posts':posts, 'is_subed':is_subed})
 
 
 @login_required
@@ -132,9 +135,24 @@ def subscribe_source(request: HttpResponse, source_id: int):
 
 
 @login_required
+def unsubscribe_source(request: HttpResponse, source_id: int):
+    """remove a subscription from a user"""
+    try:
+        sub = SourceSubcription.objects.filter(user = request.user).get(source = source_id)
+    except SourceSubcription.DoesNotExist:
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    if request.method == "POST":
+        sub.delete()
+        return HttpResponseRedirect(reverse('subscriptions'))
+
+    return render(request, "subscriptions/unsubscribe.html", {"sub": sub})
+
+
+@login_required
 def subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
-    subs = SourceSubcription.objects.filter(user = request.user)
+    subs = SourceSubcription.objects.filter(user = request.user).order_by('source__name')
     return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs})
 
 
@@ -177,18 +195,3 @@ def new_subscription(request: HttpResponse):
         form = NewSubscriptionForm()
 
     return render(request, "subscriptions/subscribe.html", {"form": form})
-
-
-@permission_required('feeds_extensions.delete_sourcesubscriptions')
-def delete_subscription(request: HttpResponse, sub_id: int):
-    """remove a subscription from a user"""
-    try:
-        sub = SourceSubcription.objects.get(id = sub_id)
-    except SourceSubcription.DoesNotExist:
-        return HttpResponseRedirect(reverse('subscriptions'))
-
-    if request.method == "POST":
-        sub.delete()
-        return HttpResponseRedirect(reverse('subscriptions'))
-
-    return render(request, "subscriptions/unsubscribe.html", {"sub": sub})

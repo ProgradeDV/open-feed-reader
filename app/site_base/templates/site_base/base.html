@@ -21,7 +21,7 @@
     <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container-fluid">
         <nav class="nav nav-pills">
-          <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house"></i></a>
+          <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house-fill"></i></a>
           <a class="flex-sm-fill text-sm-center nav-link {% if 'subscriptions' in request.path %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
           <a class="flex-sm-fill text-sm-center nav-link {% if 'sources' in request.path %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
         </nav>

@@ -4,7 +4,10 @@
 {% for post in posts %}
 <div class="card">
     <div class="card-body">
-        <a href="{% url 'post' post_id=post.id %}">{{ post.title }}</a>
+        <div class="container-fluid">
+            <h3><a href="{% url 'post' post_id=post.id %}">{{ post.title }}</a></h3>
+            <p><a href="{% url 'source' source_id=post.source.id %}">{{ post.source.name }}</a></p>
+        </div>
     </div>
 </div>
 {% endfor %}
