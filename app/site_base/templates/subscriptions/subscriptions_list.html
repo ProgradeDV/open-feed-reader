@@ -2,16 +2,27 @@
 
 
 {% block content %}
-<div class="row m-2">
-    <div class="col-md-3">
+<div class="d-flex m-2">
+    <div style="display: flex; align-items: center;justify-content: flex-start;">
         <h1>My Subscriptions</h1>
     </div>
-    <div class="col-md-3">
-        <div class="d-flex h-100 justify-content-start align-items-center">
-            <a href="{% url 'new_subscription' %}" class="btn btn-secondary"><i class="bi bi-plus-lg"></i></a>
-        </div>
-    </div>
 </div>
+
+<form action="{% url 'subscriptions' %}" method="post">
+    {% csrf_token %}
+    <div class="d-flex m-2">
+
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i>
+        </button>
+        <input type="text" name="search_text" maxlength="512" class="form-control" placeholder="Search" title="" required=False id="id_search_text" 
+        {% if form.search_text.value %}
+        value="{{form.search_text.value}}"
+        {% endif %}
+        >
+
+    </div>
+</form>
 
 {% for sub in subscriptions %}
 <div class="card">

@@ -167,4 +167,14 @@ def unsubscribe_source(request: HttpResponse, source_id: int):
 def subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
     subs = SourceSubcription.objects.filter(user = request.user).order_by('source__name')
-    return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs})
+
+    if request.method == "POST":
+        form = SourceSearchForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # get the source object with the given feel url
+            subs = subs.filter(Q(source__feed_url__icontains = form.cleaned_data['search_text']) | Q(source__name__icontains = form.cleaned_data['search_text']))
+    else:
+        form = SourceSearchForm()
+
+    return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs, 'form':form})
