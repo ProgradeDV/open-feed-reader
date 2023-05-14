@@ -2,9 +2,10 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Q
 from feeds.models import Post, Source
 from feeds_extensions.models import SourceSubcription
-from .forms import NewSubscriptionForm, EditSourceForm
+from .forms import EditSourceForm, SourceSearchForm
 
 
 @login_required
@@ -24,9 +25,22 @@ def post(request: HttpResponse, post_id: int):
 @login_required
 def all_sources(request: HttpResponse):
     """view for a list of posts"""
-    sources = Source.objects.all()
+
+    if request.method == "POST":
+        form = SourceSearchForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # get the source object with the given feel url
+            sources = Source.objects.filter(Q(feed_url__icontains = form.cleaned_data['search_text']) | Q(name__icontains = form.cleaned_data['search_text']))
+        else:
+            sources = []
+    else:
+        form = SourceSearchForm()
+        sources = Source.objects.all()
+
     subed_sources = Source.objects.filter(subscriptions__user = request.user)
-    return render(request, 'sources/sources_list.html', context={'sources':sources, 'subed_sources':subed_sources})
+    return render(request, 'sources/sources_list.html', 
+                  context={'form':form, 'sources':sources, 'subed_sources':subed_sources})
 
 
 @permission_required('feeds.add_source')
@@ -154,44 +168,3 @@ def subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
     subs = SourceSubcription.objects.filter(user = request.user).order_by('source__name')
     return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs})
-
-
-@login_required
-def new_subscription(request: HttpResponse):
-    """view for subscribing to a source"""
-
-    if request.method == "POST":
-        form = NewSubscriptionForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # get the source object with the given feel url
-            try:
-                source = Source.objects.get(feed_url = form.cleaned_data["feed_url"])
-            except Source.DoesNotExist:
-                source = None
-
-            # if a source with the given feed does not exist, return an error
-            if source is None:
-                form.add_error('feed_url', 'Unknown URL')
-                return render(request, "subscriptions/subscribe.html", {"form": form})
-
-            # check if you are already subscribed to that url
-            try:
-                sub = SourceSubcription.objects.get(source = source)
-            except SourceSubcription.DoesNotExist:
-                sub = None
-
-            if sub is None:
-                # add a subscription
-                sub = SourceSubcription(user = request.user, source = source)
-                sub.save()
-                return HttpResponseRedirect(reverse('my_sources'))
-
-            form.add_error('feed_url', f'You are already subscribed to {form.cleaned_data["feed_url"]}')
-            return render(request, "subscriptions/subscribe.html", {"form": form})
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = NewSubscriptionForm()
-
-    return render(request, "subscriptions/subscribe.html", {"form": form})

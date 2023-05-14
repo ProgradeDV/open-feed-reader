@@ -14,5 +14,4 @@ urlpatterns = [
     path('sources/<int:source_id>/subscribe/',   views.subscribe_source,    name='subscribe_source'),
     path('sources/<int:source_id>/unsubscribe/', views.unsubscribe_source,  name='unsubscribe_source'),
     path('subscriptions/',                       views.subscriptions,       name='subscriptions'),
-    path('subscriptions/new/',                   views.new_subscription,    name='new_subscription'),
 ]

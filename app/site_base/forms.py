@@ -2,9 +2,10 @@
 from django import forms
 
 
-class NewSubscriptionForm(forms.Form):
+class SourceSearchForm(forms.Form):
     """the form for subscribing to a new source"""
-    feed_url = forms.CharField(label="Feed URL", max_length=512)
+    search_text = forms.CharField(label="Search", max_length=512, required=False)
+
 
 
 class EditSourceForm(forms.Form):
