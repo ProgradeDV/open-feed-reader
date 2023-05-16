@@ -25,6 +25,7 @@ services:
       - DB_PASSWORD
       - DB_USER
       - DB_HOST=ofr_db
+      - DEBUG=True
 
   ofr_db:
     image: postgres
