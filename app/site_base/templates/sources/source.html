@@ -1,19 +1,21 @@
 {% extends 'site_base/base.html' %}
 
-
 {% block content %}
 <div class="row">
     <div class="col-md-8 mx-auto">
         <div class="container-fluid m-2">
             {% if is_subed %}
-            <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-plus-lg"></i></a>
-            {% else %}
             <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-primary"><i class="bi bi-dash-lg"></i></a>
+            {% else %}
+            <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
             {% endif %}
+
             <a href="{{ source.best_link }}" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></a>
+
             {% if perms.feeds.edit_source %}
             <a href="{% url 'edit_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
             {% endif %}
+
             {% if perms.feeds.delete_source %}
             <a href="{% url 'delete_source' source_id=source.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
             {% endif %}
