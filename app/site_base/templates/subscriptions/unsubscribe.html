@@ -2,18 +2,23 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div>
-    Unsubscribe from <b>{{ sub.source.name }}</b> ?
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+
+    <h2>
+      Unsubscribe from <b>{{ sub.source.name }}</b> ?
+    </h2>
+    <form action="{% url 'unsubscribe_source' source_id=sub.source.id %}" method="post">
+      {% csrf_token %}
+      {% buttons %}
+      <button type="submit" class="btn btn-danger">
+        Unsubscribe
+      </button>
+      <button type="button" class="btn btn-primary" onclick="history.back()">
+        Cancel
+      </button>
+      {% endbuttons %}
+    </form>
+  </div>
 </div>
-<form action="{% url 'unsubscribe_source' source_id=sub.source.id %}" method="post">
-  {% csrf_token %}
-  {% buttons %}
-    <button type="submit" class="btn btn-danger">
-      Unsubscribe
-    </button>
-    <button type="button" class="btn btn-primary" onclick="history.back()">
-      Cancel
-    </button>
-  {% endbuttons %}
-</form>
 {% endblock %}
