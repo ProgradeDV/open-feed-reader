@@ -26,6 +26,7 @@
 </div>
 {% endfor %}
 
+{% if num_pages > 1 %}
 <div class="row">
     <div class="col-lg-8 mx-auto my-4">
 
@@ -38,7 +39,6 @@
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
-              
                 {% endif %}
 
                 {% for i in page_range %}
@@ -63,5 +63,6 @@
         
     </div>
 </div>
+{% endif %}
 
 {% endblock %}

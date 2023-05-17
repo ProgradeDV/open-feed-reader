@@ -28,7 +28,8 @@ def all_posts(request: HttpResponse):
             'page_obj':page_obj,
             'page_range':page_range,
             'page_number':page_number,
-            'title':'Open Feed Reader - Posts'
+            'num_pages':paginator.num_pages,
+            'title':'Open Feed Reader - Posts',
             },
         )
 
@@ -169,7 +170,7 @@ def source(request: HttpResponse, source_id: int):
     source = Source.objects.get(id=source_id)
     posts = Post.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
-    
+
     return render(request,
                   'sources/source.html',
                   context={'source':source,
