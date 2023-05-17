@@ -4,10 +4,10 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-10">
-        <form action="{% url 'edit_source' source_id=source.id%}" method="post">
+        <form action="{% url 'new_source' %}" method="post">
             {% csrf_token %}
             {% bootstrap_form_errors form layout='inline' %}
-            {% bootstrap_form form %}
+            {% bootstrap_form form%}
             
             {% buttons %}
             <button type="submit" class="btn btn-primary">

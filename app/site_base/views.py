@@ -1,8 +1,9 @@
 """site_base.views"""
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from feeds.models import Post, Source
 from feeds_extensions.models import SourceSubcription
 from .forms import EditSourceForm, SourceSearchForm
@@ -12,14 +13,37 @@ from .forms import EditSourceForm, SourceSearchForm
 def all_posts(request: HttpResponse):
     """all feeds"""
     posts = Post.objects.filter(source__subscriptions__user = request.user).order_by('-created')
-    return render(request, 'posts/posts_list.html', context={'posts':posts[0:10]})
+
+    paginator = Paginator(posts, 20)
+
+    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
+    page_obj = paginator.get_page(page_number)
+
+    page_range = range(max(1, page_number - 3), min(paginator.num_pages, page_number + 4))
+
+    return render(
+        request,
+        'posts/posts_list.html',
+        context={
+            'page_obj':page_obj,
+            'page_range':page_range,
+            'page_number':page_number,
+            'title':'Open Feed Reader - Posts'
+            },
+        )
 
 
 @login_required
 def post(request: HttpResponse, post_id: int):
     """view for a single post"""
     post = Post.objects.get(id=post_id)
-    return render(request, 'posts/post.html', context={'post':post})
+    return render(request,
+        'posts/post.html',
+        context={
+            'post':post,
+            'title':f'{post.title}'
+            },
+        )
 
 
 @login_required
@@ -39,8 +63,14 @@ def all_sources(request: HttpResponse):
         sources = Source.objects.all()
 
     subed_sources = Source.objects.filter(subscriptions__user = request.user)
-    return render(request, 'sources/sources_list.html', 
-                  context={'form':form, 'sources':sources, 'subed_sources':subed_sources})
+    return render(request,
+                  'sources/sources_list.html',
+                  context={'form':form,
+                           'sources':sources,
+                           'subed_sources':subed_sources,
+                           'title':'Open Feed Reader - Sources',
+                           },
+                  )
 
 
 @permission_required('feeds.add_source')
@@ -51,19 +81,24 @@ def new_source(request: HttpResponse):
         # check whether it's valid:
         if form.is_valid():
             # make sure the feed isn't duplicated
-            if Source.objects.get(feed_url = form.cleaned_data["feed_url"]).exists():
+            if Source.objects.filter(feed_url = form.cleaned_data["feed_url"]).exists():
                 form.add_error('feed_url', 'URL already exists in sources list')
                 return render(request, "sources/new_source.html", {"form": form})
 
             source = Source(**form.cleaned_data)
             source.save()
-            return HttpResponseRedirect(reverse('sources'))
+            return HttpResponseRedirect(reverse('all_sources'))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = EditSourceForm()
 
-    return render(request, "sources/new_source.html", {"form": form})
+    return render(request,
+                  "sources/new_source.html",
+                  context={"form": form,
+                           "title":"New Source",
+                          },
+                  )
 
 
 @permission_required('feeds.change_source')
@@ -99,7 +134,13 @@ def edit_source(request: HttpResponse, source_id: int):
             }
         )
 
-    return render(request, "sources/edit_source.html", {"form": form})
+    return render(request,
+                  "sources/edit_source.html",
+                  context={"form": form,
+                           "source":source,
+                           "title":f"Edit Source: {source.name}",
+                           },
+                  )
 
 
 @permission_required('feeds.delete_source')
@@ -114,7 +155,12 @@ def delete_source(request: HttpResponse, source_id: int):
         source.delete()
         return HttpResponseRedirect(reverse('all_sources'))
 
-    return render(request, "sources/delete_source.html", {"source": source})
+    return render(request,
+                  "sources/delete_source.html",
+                  context={"source": source,
+                           "title":f"Delete Source: {source.name}"
+                           },
+                  )
 
 
 @login_required
@@ -123,7 +169,15 @@ def source(request: HttpResponse, source_id: int):
     source = Source.objects.get(id=source_id)
     posts = Post.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
-    return render(request, 'sources/source.html', context={'source':source, 'posts':posts, 'is_subed':is_subed})
+    
+    return render(request,
+                  'sources/source.html',
+                  context={'source':source,
+                           'posts':posts,
+                           'is_subed':is_subed,
+                           'title':source.name,
+                           },
+                  )
 
 
 @login_required
@@ -177,4 +231,10 @@ def subscriptions(request: HttpResponse):
     else:
         form = SourceSearchForm()
 
-    return render(request, 'subscriptions/subscriptions_list.html', context={'subscriptions':subs, 'form':form})
+    return render(request,
+                  'subscriptions/subscriptions_list.html',
+                  context={'subscriptions':subs,
+                           'form':form,
+                           'title':'Open Feed Reader - Subscriptions',
+                           },
+                  )

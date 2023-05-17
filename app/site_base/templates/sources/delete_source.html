@@ -8,8 +8,11 @@
 <form action="{% url 'delete_source' source_id=source.id %}" method="post">
     {% csrf_token %}
     {% buttons %}
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" class="btn btn-danger">
       Delete
+    </button>
+    <button type="button" class="btn btn-primary" onclick="history.back()">
+      Cancel
     </button>
     {% endbuttons %}
 </form>
