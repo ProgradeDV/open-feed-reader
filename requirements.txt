@@ -1,7 +1,6 @@
 Django >= 4.2
 psycopg2 >= 2.9
 django-feed-reader >= 1.0
-django-bootstrap-v5 >= 1.0
 django-axes >= 5.41
 pillow >= 9.5
 

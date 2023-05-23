@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'site_base',
-    'bootstrap5',
     'axes',
     'user_management',
     'feeds',
