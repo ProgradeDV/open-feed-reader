@@ -171,11 +171,21 @@ def source(request: HttpResponse, source_id: int):
     posts = Post.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
 
+    paginator = Paginator(posts, 20)
+
+    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
+    page_obj = paginator.get_page(page_number)
+
+    page_range = range(max(1, page_number - 3), min(paginator.num_pages, page_number + 4))
+
     return render(request,
                   'sources/source.html',
                   context={'source':source,
-                           'posts':posts,
                            'is_subed':is_subed,
+                           'page_obj':page_obj,
+                           'page_range':page_range,
+                           'page_number':page_number,
+                           'num_pages':paginator.num_pages,
                            'title':source.name,
                            },
                   )
