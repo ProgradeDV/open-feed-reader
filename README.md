@@ -4,6 +4,7 @@ An open source rss feed website for those who want to host their own
 # update feeds command
 Run this command to update all feeds.
 `python manage.py refreshfeeds`
+I recomend using cron to run it every 5-20 minutes
 
 # required environment variables
 | Key | Description |

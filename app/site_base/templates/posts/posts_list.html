@@ -1,31 +1,40 @@
 {% extends 'site_base/base.html' %}
 
 {% block content %}
-
+<!-- page header -->
 <div class="row">
     <div class="col-lg-8 mx-auto">
-        <h1 class="px-5">All Posts</h1>
+        <div class="m-3">
+            <h1>All Posts</h1>
+        </div>
     </div>
 </div>
 
-
+<!-- list of posts -->
 {% for post in page_obj.object_list %}
 <div class="row">
     <div class="col-lg-8 mx-auto">
         <div class="card card-body">
+            <!-- link to post page -->
             <a href="{% url 'post' post_id=post.id %}">
                 <span>
                     <h5>{{ post.title }}</h5>
                 </span>
             </a>
-            <span  class="inline-block text-xs">
-                {{ post.source.name }}
-            </span>
+            <!-- credit -->
+            <footer class="blockquote-footer mt-1">
+                {% if post.author %}
+                {{ post.author }} at 
+                {% endif %}
+                <a href="{% url 'source' source_id=post.source.id %}">{{ post.source.name }}</a>,
+                {{ post.created }}
+            </footer>
         </div>
     </div>
 </div>
 {% endfor %}
 
+<!-- pagination -->
 {% if num_pages > 1 %}
 <div class="row">
     <div class="col-lg-8 mx-auto my-4">
