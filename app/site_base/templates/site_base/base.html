@@ -20,39 +20,36 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-sm">
+    <nav class="navbar navbar-expand-sm bg-dark-subtle">
       <div class="container-fluid">
         <nav class="nav nav-pills">
           <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house-fill"></i></a>
-          <a class="flex-sm-fill text-sm-center nav-link {% if 'subscriptions' in request.path %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
-          <a class="flex-sm-fill text-sm-center nav-link {% if 'sources' in request.path %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
+          <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/subscriptions/' %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
+          <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/sources/' %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
+          {% block extra_navbar_links %}{% endblock %}
         </nav>
-      </div>
-
-      {% block navbar_content %}
-      {% endblock %}
-  
-      <!-- account -->
-      {% if user.is_authenticated %}
-      <div class="container justify-content-end">
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {{ user.username }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
-              <li><a class="dropdown-item" href="{% url 'users-profile' %}">Profile</a></li>
-              {% if user.is_superuser %}
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/admin/">Administer</a></li>
-              {% endif %}
-            </ul>
-          </li>
-        </ul>
-        {% else %}
-        <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
-        {% endif %}
+        {% block navbar_content %}{% endblock %}
+        
+        <!-- account -->
+        {% if user.is_authenticated %}
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.username }}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Log Out</a></li>
+                <li><a class="dropdown-item" href="{% url 'users-profile' %}">Profile</a></li>
+                {% if user.is_superuser %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/admin/">Administer</a></li>
+                {% endif %}
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
+          {% endif %}
       </div>
     </nav>
 
