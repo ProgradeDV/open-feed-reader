@@ -22,7 +22,7 @@
                 {% if post.author %}
                 {{ post.author }} at 
                 {% endif %}
-                <a href="{% url 'source' source_id=post.source.id %}">{{ post.source.name }}</a>,
+                <a href="{% url 'source' source_id=post.source.id %}" class="subtle">{{ post.source.name }}</a>,
                 {{ post.created }}
             </footer>
         </div>

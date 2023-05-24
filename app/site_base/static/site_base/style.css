@@ -1,0 +1,20 @@
+a:link {
+    color: var(--bs-emphasis-color);
+    text-decoration: none;
+}
+
+a:visited:not(.btn)  {
+    color: var(--bs-body-color);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: underline;
+}
+
+a.subtle {
+    color: var(--bs-body-color);
+}
