@@ -1,6 +1,9 @@
 # open-feed-reader
 An open source rss feed website for those who want to host their own.
 
+## Build
+`docker build -t progradedv/open-feed-reader:v0.1 --ssh default .`
+
 ## Setup
 
 ### Port
@@ -30,7 +33,7 @@ User uploaded media will be stored internally at "/media" extend a volume to thi
 | ALLOWED_HOSTS | "[]" | A list of strings representing the host/domain names that this Django site can serve |
 
 ### HTTPS
-This container is not ment to handle https connections. It expects them to be handled via nginx, apache, or other network manager
+This container is not meant to handle https connections. It expects them to be handled via nginx, apache, or other network manager
 
 ## Administration
 
@@ -41,7 +44,7 @@ Run this command from within the container to create a superuser.
 ### Updating Feeds
 Run this command within the container to update all feeds.
 `python manage.py refreshfeeds`
-I recomend using cron to run it every 5-20 minutes
+It is recommended using cron to run it every 5-20 minutes
 
 ### Permissions
 - Any user with the feeds.add_source, feeds.change_source, feeds.delete_source permissions can add, edit, and delete sources
