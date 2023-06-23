@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-import json
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +26,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', False)
 
-ALLOWED_HOSTS = json.loads(os.getenv('ALLOWED_HOSTS', '[]'))
-
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
+# ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -136,9 +135,7 @@ STATIC_ROOT = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # user login session
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = 'login'
+# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
 
 # email configs
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -162,5 +159,37 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # HTTPS settings
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "root": {"level": "INFO", "handlers": ["file"]},
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "/var/log/django.log",
+            "formatter": "app",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True
+        },
+    },
+    "formatters": {
+        "app": {
+            "format": (
+                u"%(asctime)s [%(levelname)-8s] "
+                "(%(module)s.%(funcName)s) %(message)s"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+}
+

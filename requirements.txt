@@ -4,5 +4,5 @@ django-feed-reader >= 1.0
 django-axes >= 5.41
 pillow >= 9.5
 
-git+ssh://git@github.com/ProgradeDV/django-user-management.git@main
-git+ssh://git@github.com/ProgradeDV/django-feed-reader-extensions.git@main
+# git+ssh://git@github.com/ProgradeDV/django-user-management.git@main
+# git+ssh://git@github.com/ProgradeDV/django-feed-reader-extensions.git@main
