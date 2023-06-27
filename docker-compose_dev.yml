@@ -27,7 +27,6 @@ services:
       - DB_HOST=ofr_db
       - ALLOWED_HOSTS
       - DEBUG
-      - DJANGO_LOG_LEVEL
 
   ofr_db:
     image: postgres

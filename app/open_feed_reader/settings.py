@@ -174,19 +174,23 @@ LOGGING = {
             "filename": "/var/log/django.log",
             "formatter": "app",
         },
+        "console": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "app",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
-            "level": "DEBUG",
+            "handlers": ["file", "console"],
+            "level": ("DEBUG" if DEBUG else "INFO"),
             "propagate": True
         },
     },
     "formatters": {
         "app": {
             "format": (
-                u"%(asctime)s [%(levelname)-8s] "
-                "(%(module)s.%(funcName)s) %(message)s"
+                u"%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s"
             ),
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
