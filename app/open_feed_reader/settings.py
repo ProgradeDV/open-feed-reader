@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'axes.middleware.AxesMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'open_feed_reader.urls'
@@ -162,18 +163,23 @@ AUTHENTICATION_BACKENDS = [
 CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
-CSP_DEFAULT_SRC = ["'none'"]
+
+CSP_DEFAULT_SRC = ["'self'"]
 CSP_SCRIPT_SRC = [
-    "https://cdn.jsdelivr.net/",
-    "https://unpkg.com/bootstrap-show-password",
+    "https://unpkg.com",
+    "https://stackpath.bootstrapcdn.com",
+    "https://cdn.jsdelivr.net",
+    "https://code.jquery.com",
 ]
 CSP_STYLE_SRC = [
+    "'self'",
     "https://cdn.jsdelivr.net",
     "https://unpkg.com/bootstrap-show-password",
 ]
-CSP_IMG_SRC = ["'self'"]
+CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
+CSP_IMG_SRC = ["'self'", "https://cdn.jsdelivr.net"]
 #CSP_FRAME_SRC = ["https://docs.google.com"]
-
+CSP_INCLUDE_NONCE_IN = ['script-src']
 
 
 LOGGING = {
