@@ -3,7 +3,7 @@ version: '3'
 services:
 
   ofr_web:
-    image: progradedv/open-feed-reader:v0.2
+    image: progradedv/open-feed-reader:v0.1.1
     command: gunicorn --bind 0.0.0.0:8000 open_feed_reader.wsgi:application
     ports:
       - 8420:8000

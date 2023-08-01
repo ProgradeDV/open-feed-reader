@@ -16,4 +16,5 @@ RUN --mount=type=ssh pip install -r requirements.txt
 # add app
 COPY ./app .
 
+RUN python manage.py collectstatic
 CMD python manage.py runserver 0.0.0.0:8000

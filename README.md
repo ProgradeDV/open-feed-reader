@@ -2,7 +2,7 @@
 An open source rss feed website for those who want to host their own.
 
 ## Build
-`docker build -t progradedv/open-feed-reader:v0.1 --no-cache --ssh default .`
+`docker build -t progradedv/open-feed-reader:v0.1.1 --no-cache --ssh default .`
 
 ## Setup
 
@@ -15,7 +15,7 @@ This project requires you run your own postgresql database, and link to it using
 An example docker-compose.yml is provided.
 
 ### Media
-User uploaded media will be stored internally at "/media" extend a volume to this folder to store the files externally, preserving them through updates.
+User uploaded media will be stored internally at "/media", extend a volume to this folder to store the files externally, preserving them through updates.
 
 ### Required Environment Variables
 | Key | Description |
@@ -25,6 +25,7 @@ User uploaded media will be stored internally at "/media" extend a volume to thi
 | DB_DB | The database name |
 | DB_USER | The database username |
 | DB_PASSWORD | The database password |
+| CSRF_TRUSTED_ORIGINS | A list of trusted origins for unsafe requests (e.g. POST) | 
 
 ### Optional Environment Variables
 | key | Default | Description
