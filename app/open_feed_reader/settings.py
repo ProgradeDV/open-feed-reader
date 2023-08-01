@@ -159,9 +159,22 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # HTTPS settings
-# CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
+CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
+CSP_DEFAULT_SRC = ["'none'"]
+CSP_SCRIPT_SRC = [
+    "https://cdn.jsdelivr.net/",
+    "https://unpkg.com/bootstrap-show-password",
+]
+CSP_STYLE_SRC = [
+    "https://cdn.jsdelivr.net",
+    "https://unpkg.com/bootstrap-show-password",
+]
+CSP_IMG_SRC = ["'self'"]
+#CSP_FRAME_SRC = ["https://docs.google.com"]
+
+
 
 LOGGING = {
     "version": 1,

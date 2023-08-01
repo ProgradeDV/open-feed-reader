@@ -3,12 +3,10 @@ version: '3'
 services:
 
   ofr_web:
-    build:
-      context: .
-      ssh:
-        - default
+    image: progradedv/open-feed-reader:v0.2
+    command: gunicorn --bind 0.0.0.0:8000 open_feed_reader.wsgi:application
     ports:
-      - 8000:8000
+      - 8420:8000
     depends_on:
       - ofr_db
     volumes:
@@ -22,6 +20,7 @@ services:
       - DB_USER
       - DB_HOST=ofr_db
       - ALLOWED_HOSTS
+      - CSRF_TRUSTED_ORIGINS
       - DEBUG
 
   ofr_db:
