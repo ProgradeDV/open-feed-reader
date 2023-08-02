@@ -178,7 +178,7 @@ CSP_STYLE_SRC = [
     "https://unpkg.com/bootstrap-show-password",
 ]
 CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
-CSP_IMG_SRC = ["'self'", "https://cdn.jsdelivr.net"]
+CSP_IMG_SRC = ["'self'", "https:", "data:"]
 #CSP_FRAME_SRC = ["https://docs.google.com"]
 CSP_INCLUDE_NONCE_IN = ['script-src']
 

@@ -58,7 +58,10 @@
                     {% endif %}
                 </div>
                 <!-- title -->
-                <div class="p-1">
+                {% if source.image_url %}
+                <img src="{{ source.image_url }}" height="37" class="rounded" alt="Image">
+                {% endif %}
+                <div class="p-1 mx-1">
                     {{ source.display_name }}
                 </div>
             </div>

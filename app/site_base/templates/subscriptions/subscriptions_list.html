@@ -46,7 +46,10 @@
                     <a href="{{ sub.source.best_link }}" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></a>
                 </div>
                 <!-- source title -->
-                <div class="p-1">
+                {% if sub.source.image_url %}
+                <img src="{{ sub.source.image_url }}" height="37" class="rounded" alt="Image">
+                {% endif %}
+                <div class="p-1 mx-1">
                     {{ sub.source.display_name }}
                 </div>
             </div>
