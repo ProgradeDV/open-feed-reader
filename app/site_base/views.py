@@ -2,7 +2,7 @@
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.urls import reverse
 from feeds.models import Post, Source
 from feeds_extensions.models import SourceSubcription
@@ -197,7 +197,7 @@ def subscribe_source(request: HttpResponse, source_id: int):
     try:
         source = Source.objects.get(id = source_id)
     except Source.DoesNotExist:
-        return HttpResponseRedirect(reverse('subscriptions'))
+        return redirect(request.META['HTTP_REFERER'])
 
     # check if you are already subscribed to that source
     try:
@@ -210,7 +210,7 @@ def subscribe_source(request: HttpResponse, source_id: int):
         sub = SourceSubcription(user = request.user, source = source)
         sub.save()
 
-    return HttpResponseRedirect(reverse('subscriptions'))
+    return redirect(request.META['HTTP_REFERER'])
 
 
 @login_required
