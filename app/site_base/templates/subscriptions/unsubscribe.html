@@ -1,5 +1,4 @@
 {% extends 'site_base/base.html' %}
-{% load bootstrap5 %}
 
 {% block content %}
 <div class="row">
@@ -10,14 +9,12 @@
     </h2>
     <form action="{% url 'unsubscribe_source' source_id=sub.source.id %}" method="post">
       {% csrf_token %}
-      {% buttons %}
       <button type="submit" class="btn btn-danger">
         Unsubscribe
       </button>
       <button type="button" class="btn btn-primary" onclick="history.back()">
         Cancel
       </button>
-      {% endbuttons %}
     </form>
   </div>
 </div>
