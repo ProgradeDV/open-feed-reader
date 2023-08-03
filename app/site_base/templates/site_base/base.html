@@ -20,28 +20,22 @@
   </head>
   <body>
 
-    <div class="row bg-dark-subtle">
+    <div class="row bg-dark-subtle ">
 
-      <div class="col">
-        <nav class="navbar navbar-expand-lg bg-dark-subtle">
-          <div class="container-fluid">
-            <nav class="nav nav-pills">
-              <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house-fill"></i></a>
-              <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/subscriptions/' %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
-              <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/sources/' %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
-              {% block extra_navbar_links %}{% endblock %}
-            </nav>
-          </div>
-        </nav>
-      </div>
+      <nav class="col-md-4 col-8 navbar navbar-expand-md bg-dark-subtle">
+          <nav class="nav nav-pills">
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house-fill"></i></a>
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/subscriptions/' %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/sources/' %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
+            {% block extra_navbar_links %}{% endblock %}
+          </nav>
+      </nav>
 
-      <div class="col">
-        <div class="container-fluid text-center">
+      <div class="col-md-4 d-none d-md-block text-center">
           {% block navbar_title %}{% endblock %}
-        </div>
       </div>
 
-      <div class="col">
+      <div class="col-4">
         {% if user.is_authenticated %}
         <nav class="navbar navbar-expand-md justify-content-end mx-4">
           <ul class="navbar-nav">
