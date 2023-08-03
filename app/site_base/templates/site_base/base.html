@@ -21,15 +21,16 @@
   <body>
 
     <div class="row bg-dark-subtle ">
-
-      <nav class="col-md-4 col-8 navbar navbar-expand-md bg-dark-subtle">
+      <div class="col-md-4 col-8 ms3">
+        <nav class="navbar navbar-expand-md bg-dark-subtle">
           <nav class="nav nav-pills">
             <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/' %}active{% endif %}" href="/"><i class="bi bi-house-fill"></i></a>
             <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/subscriptions/' %}active{% endif %}" href="{% url 'subscriptions' %}">Subscriptions</a>
             <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/sources/' %}active{% endif %}" href="{% url 'all_sources' %}">Sources</a>
             {% block extra_navbar_links %}{% endblock %}
           </nav>
-      </nav>
+        </nav>
+      </div>
 
       <div class="col-md-4 d-none d-md-block text-center">
           {% block navbar_title %}{% endblock %}
