@@ -24,7 +24,7 @@ services:
       - DEBUG
 
   ofr_db:
-    image: postgres
+    image: postgres:15.3
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
