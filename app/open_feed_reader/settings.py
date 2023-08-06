@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'user_management',
     'feeds',
     'feeds_extensions',
+    'django_bleach',
 ]
 
 MIDDLEWARE = [
@@ -181,6 +182,33 @@ CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
 CSP_IMG_SRC = ["'self'", "https:", "data:"]
 #CSP_FRAME_SRC = ["https://docs.google.com"]
 CSP_INCLUDE_NONCE_IN = ['script-src']
+
+
+# Which HTML tags are allowed
+BLEACH_ALLOWED_TAGS = ['p', 'b', 'i', 'u', 'em', 'strong', 'a', 'img', 'h3', 'h4', 'h5', 'h6']
+
+# Which HTML attributes are allowed
+BLEACH_ALLOWED_ATTRIBUTES = ['href', 'title', 'style', 'src']
+
+# Which CSS properties are allowed in 'style' attributes (assuming style is
+# an allowed attribute)
+BLEACH_ALLOWED_STYLES = [
+    'font-family', 'font-weight', 'text-decoration', 'font-variant'
+]
+
+# Which protocols (and pseudo-protocols) are allowed in 'src' attributes
+# (assuming src is an allowed attribute)
+BLEACH_ALLOWED_PROTOCOLS = [
+    'https', 'data'
+]
+
+# Strip unknown tags if True, replace with HTML escaped characters if False
+BLEACH_STRIP_TAGS = True
+
+# Strip HTML comments, or leave them in.
+BLEACH_STRIP_COMMENTS = False
+
+
 
 
 LOGGING = {
