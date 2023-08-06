@@ -8,7 +8,6 @@ from feeds.models import Post, Source
 from feeds_extensions.models import SourceSubcription
 from .forms import EditSourceForm, SourceSearchForm
 
-
 @login_required
 def all_posts(request: HttpResponse):
     """all feeds"""
@@ -116,10 +115,9 @@ def edit_source(request: HttpResponse, source_id: int):
         if form.is_valid():
             source.name        = form.cleaned_data['name']
             source.site_url    = form.cleaned_data['site_url']
-            source.feed_url    = form.cleaned_data['feed_url ']
+            source.feed_url    = form.cleaned_data['feed_url']
             source.image_url   = form.cleaned_data['image_url']
             source.description = form.cleaned_data['description']
-            source.interval    = form.cleaned_data['interval']
 
             source.save()
             return HttpResponseRedirect(reverse('all_sources'))
