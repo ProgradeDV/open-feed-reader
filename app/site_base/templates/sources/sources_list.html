@@ -39,8 +39,6 @@
                 
                 <!-- button group for normal user functions -->
                 <div class="mx-1">
-
-                    
                     {% if source.image_url %}
                     <a href="{% url 'source' source_id=source.id %}">
                         <img src="{{ source.image_url }}" height="40" class="rounded" alt="Image">

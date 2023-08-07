@@ -4,33 +4,34 @@
 <!-- source info -->
 <div class="row mx-auto">
     <div class="col-3">
+        {% if source.image_url %}
         <img src="{{ source.image_url }}" class="rounded float-end" height="100" alt="Image">
+        {% endif %}
     </div>
+
     <div class="col-6">
         <div class="container-flex p-2">
 
             <div class="btn-group me-2" role="group" aria-label="First group">
                 {% if is_subed %}
-                <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-warning"><i class="bi bi-x-lg"></i></a>
+                <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
                 {% else %}
-                <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
+                <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
                 {% endif %}
-                
+
                 <a href="{{ source.best_link }}" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></a>
             </div>
             <div class="btn-group me-2" role="group" aria-label="First group">
                 {% if perms.feeds.edit_source %}
                 <a href="{% url 'edit_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
                 {% endif %}
-                
-                {% if perms.feeds.delete_source %}
-                <a href="{% url 'delete_source' source_id=source.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
-                {% endif %}
+
             </div>
         </div>
         <h1>
             {{ source.display_name }}
         </h1>
+
         <footer class="blockquote-footer mt-1">
             ({{ source.status_code }}) {{ source.last_result }}, {{ source.last_polled }}
         </footer>
