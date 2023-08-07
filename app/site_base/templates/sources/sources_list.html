@@ -30,47 +30,45 @@
 </div>
 
 <!-- list of all the sources -->
-{% for source in sources %}
 <div class="row">
     <div class="col-lg-8 mx-auto">
+        {% for source in sources %}
         <div class="card card-body">
 
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-toolbar g-2" role="toolbar" aria-label="Toolbar with button groups">
+                
+                <!-- button group for normal user functions -->
+                <div class="mx-1">
+
+                    
+                    {% if source.image_url %}
+                    <a href="{% url 'source' source_id=source.id %}">
+                        <img src="{{ source.image_url }}" height="40" class="rounded" alt="Image">
+                    </a>
+                    {% endif %}
+                </div>
 
                 <!-- title -->
-                {% if source.image_url %}
-                <a href="{% url 'source' source_id=source.id %}">
-                    <img src="{{ source.image_url }}" height="37" class="rounded" alt="Image">
-                </a>
-                {% endif %}
-
                 <div class="flex-fill p-1 mx-1">
                     <a href="{% url 'source' source_id=source.id %}">{{ source.display_name }}</a>
                 </div>
 
-                <!-- button group for normal user functions -->
-                <div class="btn-group me-2" role="group" aria-label="First group">
-                    {% if source in subed_sources %}
-                    <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-warning"><i class="bi bi-x-lg"></i></a>
-                    {% else %}
-                    <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                </div>
-
                 <!-- button group for adminiatration functions -->
-                <div class="btn-group me-2" role="group" aria-label="First group">
-                    {% if perms.feeds.edit_source %}
-                    <a href="{% url 'edit_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    {% if source in subed_sources %}
+                    <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                    {% else %}
+                    <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
                     {% endif %}
                     
-                    {% if perms.feeds.delete_source %}
-                    <a href="{% url 'delete_source' source_id=source.id %}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                    {% if perms.feeds.edit_source %}
+                    <a href="{% url 'edit_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
                     {% endif %}
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 </div>
-{% endfor %}
 
 {% endblock %}

@@ -30,17 +30,18 @@
 </div>
 
 <!-- list of subscriptions -->
-{% for sub in subscriptions %}
 <div class="row">
     <div class="col-lg-8 mx-auto">
+        {% for sub in subscriptions %}
         <div class="card card-body">
 
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <!-- button group for user functions -->
+
                 <!-- source title -->
                 {% if sub.source.image_url %}
                 <a href="{% url 'source' source_id=sub.source.id %}">
-                    <img src="{{ sub.source.image_url }}" height="37" class="rounded" alt="Image">
+                    <img src="{{ sub.source.image_url }}" height="40" class="rounded" alt="Image">
                 </a>
                 {% endif %}
 
@@ -50,12 +51,12 @@
 
                 <div class="btn-group me-2" role="group" aria-label="First group">
                     <!-- unsubscribe button -->
-                    <a href="{% url 'unsubscribe_source' source_id=sub.source.id %}" class="btn btn-warning"><i class="bi bi-x-lg"></i></a>
+                    <a href="{% url 'unsubscribe_source' source_id=sub.source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
                 </div>
             </div>
 
         </div>
+        {% endfor %}
     </div>
 </div>
-{% endfor %}
 {% endblock %}
