@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  ofr_db:
+    image: postgres:16.2
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    restart: unless-stopped
+
+volumes:
+  db-data:

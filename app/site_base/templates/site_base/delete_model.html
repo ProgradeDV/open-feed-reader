@@ -1,0 +1,21 @@
+{% extends 'site_base/base.html' %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-8 mx-auto">
+    <h2>
+        {{ title }}
+    </h2>
+    <form action="{{ post_url }}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">
+          Delete
+        </button>
+        <button type="button" class="btn btn-primary" onclick="history.back()">
+          Cancel
+        </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

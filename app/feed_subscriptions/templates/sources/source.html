@@ -14,16 +14,16 @@
 
             <div class="btn-group me-2" role="group" aria-label="First group">
                 {% if is_subed %}
-                <a href="{% url 'unsubscribe_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
                 {% else %}
-                <a href="{% url 'subscribe_source' source_id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
+                <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
                 {% endif %}
 
                 <a href="{{ source.best_link }}" class="btn btn-secondary"><i class="bi bi-arrow-up-right"></i></a>
             </div>
             <div class="btn-group me-2" role="group" aria-label="First group">
                 {% if perms.feeds.edit_source %}
-                <a href="{% url 'edit_source' source_id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
+                <a href="{% url 'edit_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
                 {% endif %}
 
             </div>
@@ -54,7 +54,7 @@
                 {% if post.author %}
                 {{ post.author }} at 
                 {% endif %}
-                <a href="{% url 'source' source_id=post.source.id %}">{{ post.source.name }}</a>,
+                <a href="{% url 'source' id=post.source.id %}">{{ post.source.name }}</a>,
                 {{ post.created }}
             </footer>
         </div>
@@ -69,10 +69,10 @@
 
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="{% url 'source' source_id=source.id %}?page=1">First</a></li>
+                <li class="page-item"><a class="page-link" href="{% url 'source' id=source.id %}?page=1">First</a></li>
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="{% url 'source' source_id=source.id %}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <a class="page-link" href="{% url 'source' id=source.id %}?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
@@ -84,13 +84,13 @@
                         <span class="page-link">{{ i }}</span>
                     </li>
                     {% else %}
-                    <li class="page-item"><a class="page-link" href="{% url 'source' source_id=source.id %}?page={{ i }}">{{ i }}</a></li>
+                    <li class="page-item"><a class="page-link" href="{% url 'source' id=source.id %}?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="{% url 'source' source_id=source.id %}?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <a class="page-link" href="{% url 'source' id=source.id %}?page={{ page_obj.next_page_number }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>

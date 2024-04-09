@@ -39,10 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'site_base',
+    'feed_subscriptions',
     'axes',
     'user_management',
     'feeds',
-    'feeds_extensions',
     'django_bleach',
 ]
 
@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'open_feed_reader.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_DB', ''),
-        'USER': os.getenv('DB_USER', ''),
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
+        'NAME': os.environ['DB_DB'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': os.getenv('DB_HOST', 'localhost'),
         'PORT': 5432,
     }
 }
@@ -209,39 +209,35 @@ BLEACH_STRIP_TAGS = True
 BLEACH_STRIP_COMMENTS = False
 
 
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "root": {"level": "INFO", "handlers": ["file"]},
+    "root": {
+        "level": ("DEBUG" if DEBUG else "INFO"),
+        "handlers": ["file", "console"]},
     "handlers": {
         "file": {
-            "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/var/log/django.log",
+            "filename": "open-feed-reader.log",
             "formatter": "app",
         },
         "console": {
-            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "app",
         },
     },
     "loggers": {
         "django": {
-            "handlers": ["file", "console"],
-            "level": ("DEBUG" if DEBUG else "INFO"),
+            "handlers": ["console"],
             "propagate": True
         },
     },
     "formatters": {
         "app": {
             "format": (
-                u"%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s"
+                "%(asctime)s [%(levelname)-8s] (%(module)s.%(funcName)s) %(message)s"
             ),
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
 }
-

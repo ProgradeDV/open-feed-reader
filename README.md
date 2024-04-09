@@ -33,6 +33,15 @@ User uploaded media will be stored internally at "/media", extend a volume to th
 | DEBUG | False | Set to true to activate debug mode. Do NOT run True in production. |
 | ALLOWED_HOSTS | "[]" | A list of strings representing the host/domain names that this Django site can serve |
 
+#### command to import a .env file
+```bash
+export $(grep -v '^#' .env | xargs -d '\n')
+```
+Or you can add this to .bash_aleases:
+```
+alias senv="export \$(grep -v '^#' .env | xargs -d '\\n')"
+```
+
 ### HTTPS
 This container is not meant to handle https connections. It expects them to be handled via nginx, apache, or other network manager
 
