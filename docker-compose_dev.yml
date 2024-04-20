@@ -16,24 +16,23 @@ services:
       - ./app:/app:Z
       - /tmp/django-logs:/var/log:Z
       - ../django-user-management/src/user_management:/app/user_management:Z
-      - ../django-feed-reader-extensions/src/feeds_extensions/:/app/feeds_extensions:Z
     networks:
       - ofr_network
     environment:
       - SECRET_KEY
-      - DB_DB
-      - DB_PASSWORD
-      - DB_USER
-      - DB_HOST=ofr_db
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_HOST=ofr_db
       - ALLOWED_HOSTS
       - DEBUG
 
   ofr_db:
     image: postgres:15.3
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DB}
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     volumes:
       - db-data:/var/lib/postgresql/data/
     networks:

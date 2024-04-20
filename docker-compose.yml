@@ -15,10 +15,10 @@ services:
       - ofr_network
     environment:
       - SECRET_KEY
-      - DB_DB
-      - DB_PASSWORD
-      - DB_USER
-      - DB_HOST=ofr_db
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - POSTGRES_HOST=ofr_db
       - ALLOWED_HOSTS
       - CSRF_TRUSTED_ORIGINS
       - DEBUG
@@ -26,9 +26,9 @@ services:
   ofr_db:
     image: postgres:15.3
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_DB}
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     volumes:
       - db-data:/var/lib/postgresql/data/
     networks:
