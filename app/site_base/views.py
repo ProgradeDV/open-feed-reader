@@ -36,7 +36,7 @@ def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_ur
 
     return render(
         request,
-        "site_base/edit_model.html",
+        "site_base/edit_form.html",
         context={
             "form": form,
             "title":title,
@@ -81,7 +81,7 @@ def edit_model_form_view(request: HttpResponse, model: Model, form_class: ModelF
 
     return render(
         request,
-        "site_base/edit_model.html",
+        "site_base/edit_form.html",
         context={
             "form": form,
             "title":title,
