@@ -7,7 +7,7 @@
     <h2>
       Unsubscribe from <b>{{ sub.source.name }}</b> ?
     </h2>
-    <form action="{% url 'unsubscribe_source' source_id=sub.source.id %}" method="post">
+    <form action="{% url 'unsubscribe_source' id=sub.source.id %}" method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger">
         Unsubscribe

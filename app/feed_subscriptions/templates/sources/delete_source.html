@@ -6,7 +6,7 @@
     <h2>
         Delete source <b>{{ source.name }}</b>?
     </h2>
-    <form action="{% url 'delete_source' source_id=source.id %}" method="post">
+    <form action="{% url 'delete_source' id=source.id %}" method="post">
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">
           Delete

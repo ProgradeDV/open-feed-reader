@@ -40,18 +40,18 @@
 
                 <!-- source title -->
                 {% if sub.source.image_url %}
-                <a href="{% url 'source' source_id=sub.source.id %}">
+                <a href="{% url 'one_source' id=sub.source.id %}">
                     <img src="{{ sub.source.image_url }}" height="40" class="rounded" alt="Image">
                 </a>
                 {% endif %}
 
                 <div class="flex-fill p-1 mx-1">
-                    <a href="{% url 'source' source_id=sub.source.id %}">{{ sub.source.display_name }}</a>
+                    <a href="{% url 'one_source' id=sub.source.id %}">{{ sub.source.display_name }}</a>
                 </div>
 
                 <div class="btn-group me-2" role="group" aria-label="First group">
                     <!-- unsubscribe button -->
-                    <a href="{% url 'unsubscribe_source' source_id=sub.source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                    <a href="{% url 'unsubscribe_source' id=sub.source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
                 </div>
             </div>
 
