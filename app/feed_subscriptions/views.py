@@ -13,28 +13,21 @@ from .models import SourceSubcription
 from .forms import EditSourceForm
 
 
+ITEMS_PER_PAGE = 10
+
+
 @login_required
 def all_posts(request: HttpResponse):
     """all posts from the users subscribed feeds"""
     posts = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
 
-    paginator = Paginator(posts, 20)
-
-    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
-    page_obj = paginator.get_page(page_number)
-
-    page_range = range(max(1, page_number - 3), min(paginator.num_pages, page_number + 4))
+    context = paginator_args(request, posts)
+    context['title'] = 'Open Feed Reader - Posts'
 
     return render(
         request,
         'posts/posts_list.html',
-        context={
-            'page_obj':page_obj,
-            'page_range':page_range,
-            'page_number':page_number,
-            'num_pages':paginator.num_pages,
-            'title':'Open Feed Reader - Posts',
-            },
+        context=context,
         )
 
 
@@ -121,25 +114,15 @@ def one_source(request: HttpResponse, id: int):
     posts = Entry.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
 
-    paginator = Paginator(posts, 20)
-
-    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
-    page_obj = paginator.get_page(page_number)
-
-    page_range = range(max(1, page_number - 3), min(paginator.num_pages, page_number + 4))
+    context = paginator_args(request, posts)
+    context['source'] = source
+    context['title'] = source.display_name
+    context['is_subed'] = is_subed
 
     return render(
         request,
         'sources/source.html',
-        context={
-            'source':source,
-            'is_subed':is_subed,
-            'page_obj':page_obj,
-            'page_range':page_range,
-            'page_number':page_number,
-            'num_pages':paginator.num_pages,
-            'title':source.name,
-            },
+        context=context,
         )
 
 
@@ -206,3 +189,22 @@ def subscriptions(request: HttpResponse):
             'title':'Open Feed Reader - Subscriptions',
             },
         )
+
+
+def paginator_args(request, items) -> dict:
+    """
+    Calculate the paginator context for use with the paginator template
+    """
+    paginator = Paginator(items, ITEMS_PER_PAGE)
+
+    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
+    page_obj = paginator.get_page(page_number)
+
+    page_range = range(max(1, page_number - 3), min(paginator.num_pages+1, page_number + 4))
+
+    return {
+        'page_obj':page_obj,
+        'page_range':page_range,
+        'page_number':page_number,
+        'page_num_pages':paginator.num_pages,
+    }
