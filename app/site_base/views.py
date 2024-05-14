@@ -115,7 +115,7 @@ def delete_model_form_view(request: HttpResponse, model: Model, success_url: str
 
     return render(
         request,
-        "site_base/delete_model.html",
+        "site_base/delete_form.html",
         context={
             "model": model,
             "title": title,
