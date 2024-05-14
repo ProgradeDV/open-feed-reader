@@ -8,7 +8,7 @@ class EditSourceForm(forms.ModelForm):
 
     class Meta:
         model = Source
-        fields = ["name", "site_url", "feed_url", "image_url", "description"]
+        fields = ["name", "title", "site_url", "feed_url", "image_url", "description"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

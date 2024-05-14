@@ -44,7 +44,7 @@
     <div class="col-lg-8 mx-auto">
         <div class="card card-body">
             <!-- link to post page -->
-            <a href="{% url 'post' post_id=post.id %}">
+            <a href="{% url 'one_post' post_id=post.id %}">
                 <span>
                     <h5>{{ post.title }}</h5>
                 </span>
@@ -54,7 +54,7 @@
                 {% if post.author %}
                 {{ post.author }} at 
                 {% endif %}
-                <a href="{% url 'source' id=post.source.id %}">{{ post.source.name }}</a>,
+                <a href="{% url 'one_source' id=post.source.id %}">{{ post.source.display_name }}</a>,
                 {{ post.created }}
             </footer>
         </div>
