@@ -9,24 +9,38 @@
 <!-- list of posts -->
 {% for post in page_obj.object_list %}
 <div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card card-body">
-            <!-- link to post page -->
-            <a href="{% url 'one_post' post_id=post.id %}">
-                <span>
-                    <h5>{{ post.title }}</h5>
-                </span>
-            </a>
-            <!-- credit -->
-            <footer class="blockquote-footer mt-1">
-                {% if post.author %}
-                {{ post.author }} at 
-                {% endif %}
-                <a href="{% url 'one_source' id=post.source.id %}" class="subtle">{{ post.source.display_name }}</a>,
-                {{ post.created }}
-            </footer>
+  <div class="col-lg-8 mx-auto">
+    <div class="card card-body">
+      <div class="row">
+
+        {% if post.image_url %}
+        <div class="col-md-2 mx-auto">
+          <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
         </div>
+        {% endif %}
+
+        <div class="col-md-10 mx-auto">
+
+          <!-- link to post page -->
+          <a href="{% url 'one_post' post_id=post.id %}">
+            <span>
+              <h4>{{ post.title }}</h4>
+            </span>
+          </a>
+
+          <!-- credit -->
+          <footer class="blockquote-footer mt-1">
+            {% if post.author %}
+            {{ post.author }} at 
+            {% endif %}
+            <a href="{% url 'one_source' id=post.source.id %}" class="subtle">{{ post.source.display_name }}</a>,
+            {{ post.created }}
+          </footer>
+
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endfor %}
 

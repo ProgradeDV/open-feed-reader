@@ -3,32 +3,43 @@
 
 {% block content %}
 <div class="row">
-  
-  {% if post.image_url %}
-  <div class="col-md-6 mx-auto">
-    <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
-  </div>
-  {% endif %}
-
   <div class="col-md-10 mx-auto">
     <div class="card">
+
       <div class="card-header">
-        <a href="{{post.link}}">
-          <h5 class="card-title">
-            {{ post.title }}
-          </h5>
-        </a>
-        <footer class="blockquote-footer mt-1">
-          {% if post.author %}
-          {{ post.author }} at 
+        <div class="row">
+
+          {% if post.image_url %}
+          <div class="col-md-2 mx-auto">
+            <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
+          </div>
           {% endif %}
-          <a href="{% url 'one_source' id=post.source.id %}">{{ post.source.name }}</a>,
-          {{ post.created }}
-        </footer>
+
+          <!-- title -->
+          <div class="col-md-10 mx-auto">
+            <a href="{{post.link}}">
+              <h2 class="card-title">
+                {{ post.title }}
+              </h2>
+            </a>
+
+            <!-- credit -->
+            <footer class="blockquote-footer mt-1">
+              {% if post.author %}
+              {{ post.author }} at 
+              {% endif %}
+              <a href="{% url 'one_source' id=post.source.id %}">{{ post.source.display_name }}</a>,
+              {{ post.created }}
+            </footer>
+          </div>
+
+        </div>
       </div>
+
       <div class="card-body">
         {{ post.body|bleach }}
       </div>
+
     </div>
   </div>
 </div>
