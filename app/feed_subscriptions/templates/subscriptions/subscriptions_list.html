@@ -51,7 +51,9 @@
 
                 <div class="btn-group me-2" role="group" aria-label="First group">
                     <!-- unsubscribe button -->
-                    <a href="{% url 'unsubscribe_source' id=sub.source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                    <a href="{% url 'unsubscribe_source' id=sub.source.id %}" class="btn btn-secondary">
+                        <i class="bi bi-dash-lg"></i>
+                    </a>
                 </div>
             </div>
 

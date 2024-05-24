@@ -54,7 +54,7 @@
                 <!-- button group for adminiatration functions -->
                 <div class="btn-group" role="group" aria-label="Basic example">
                     {% if source in subed_sources %}
-                    <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                    <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-dash-lg"></i></a>
                     {% else %}
                     <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
                     {% endif %}

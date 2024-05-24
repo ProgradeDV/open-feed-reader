@@ -14,7 +14,7 @@
 
             <div class="btn-group me-2" role="group" aria-label="First group">
                 {% if is_subed %}
-                <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-x-lg"></i></a>
+                <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-dash-lg"></i></a>
                 {% else %}
                 <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
                 {% endif %}
