@@ -180,9 +180,9 @@ CSP_STYLE_SRC = [
 ]
 CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
 CSP_IMG_SRC = ["'self'", "https:", "data:"]
-#CSP_FRAME_SRC = ["https://docs.google.com"]
+CSP_FRAME_SRC = ["self", "https://www.youtube.com"]
+CSP_MEDIA_SRC = ["self", 'https://media.transistor.fm', 'https://audio.transistor.fm']
 CSP_INCLUDE_NONCE_IN = ['script-src']
-
 
 # Which HTML tags are allowed
 BLEACH_ALLOWED_TAGS = ['p', 'b', 'i', 'u', 'em', 'strong', 'a', 'img', 'h3', 'h4', 'h5', 'h6']
@@ -207,7 +207,8 @@ BLEACH_STRIP_TAGS = True
 
 # Strip HTML comments, or leave them in.
 BLEACH_STRIP_COMMENTS = False
-
+SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 LOGGING = {
     "version": 1,
