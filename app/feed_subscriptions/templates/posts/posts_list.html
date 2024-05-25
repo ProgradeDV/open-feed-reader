@@ -14,12 +14,12 @@
       <div class="row">
 
         {% if post.image_url %}
-        <div class="col-md-2 mx-auto">
+        <div class="col-md-2">
           <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
         </div>
         {% endif %}
 
-        <div class="col-md-10 mx-auto">
+        <div class="col-md-auto">
 
           <!-- link to post page -->
           <a href="{% url 'one_post' post_id=post.id %}">
