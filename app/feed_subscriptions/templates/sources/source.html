@@ -67,9 +67,8 @@
           <!-- credit -->
           <footer class="blockquote-footer mt-1">
             {% if post.author %}
-            {{ post.author }} at 
+            {{ post.author }}, 
             {% endif %}
-            <a href="{% url 'one_source' id=post.source.id %}" class="subtle">{{ post.source.display_name }}</a>,
             {{ post.created }}
           </footer>
 
