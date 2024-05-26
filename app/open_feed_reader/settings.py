@@ -126,8 +126,6 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static'
 
@@ -181,8 +179,18 @@ CSP_STYLE_SRC = [
 CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
 CSP_IMG_SRC = ["'self'", "https:", "data:"]
 CSP_FRAME_SRC = ["self", "https://www.youtube.com"]
-CSP_MEDIA_SRC = ["self", 'https://media.transistor.fm', 'https://audio.transistor.fm']
 CSP_INCLUDE_NONCE_IN = ['script-src']
+CSP_MEDIA_SRC = [
+    "self",
+    'https://media.transistor.fm',
+    'https://audio.transistor.fm',
+    'https://dcs.megaphone.fm',
+    'https://chrt.fm',
+    'https://prfx.byspotify.com',
+    'https://play.podtrac.com',
+    'https://traffic.megaphone.fm',
+]
+
 
 # Which HTML tags are allowed
 BLEACH_ALLOWED_TAGS = ['p', 'b', 'i', 'u', 'em', 'strong', 'a', 'img', 'h3', 'h4', 'h5', 'h6']
