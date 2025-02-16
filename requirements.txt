@@ -1,5 +1,5 @@
 Django >= 5
-psycopg2 >= 2.9.9
+psycopg2-binary >= 2.9.9
 django-axes >= 6.4
 pillow >= 10.3
 gunicorn >= 22

@@ -15,7 +15,6 @@ services:
       - db-media:/media
       - ./app:/app:Z
       - /tmp/django-logs:/var/log:Z
-      - ../django-user-management/src/user_management:/app/user_management:Z
     networks:
       - ofr_network
     environment:
