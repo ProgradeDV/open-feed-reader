@@ -6,7 +6,7 @@ from django.urls import reverse
 
 
 def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_url: str,
-                        title: str = None) -> HttpResponse:
+                        title: str = None, initial_model: Model = None) -> HttpResponse:
     """
     generic view to create a new model
 
@@ -29,7 +29,7 @@ def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_ur
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        form = form_class()
+        form = form_class(instance=initial_model)
 
     if title is None:
         title = f"Create New: {form_class.Meta.model}"

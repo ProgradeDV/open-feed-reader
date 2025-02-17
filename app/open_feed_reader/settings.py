@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'site_base',
     'feed_subscriptions',
+    'feed_sources',
     'axes',
     'user_management',
     'feeds',

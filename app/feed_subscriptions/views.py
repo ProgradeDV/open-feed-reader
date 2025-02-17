@@ -77,9 +77,9 @@ def all_sources(request: HttpResponse):
 
 
 @permission_required('feeds.add_source')
-def new_source(request: HttpResponse):
+def new_source(request: HttpResponse, initial_source:Source=None):
     """create a new source"""
-    return new_model_form_view(request, EditSourceForm, 'one_source')
+    return new_model_form_view(request, EditSourceForm, 'one_source', initial_model=initial_source)
 
 
 
