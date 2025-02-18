@@ -10,7 +10,6 @@ from site_base.views import new_model_form_view, edit_model_form_view, delete_mo
 from site_base.forms import SearchForm
 
 from .models import SourceSubcription
-from .forms import EditSourceForm
 
 
 ITEMS_PER_PAGE = 10
@@ -73,37 +72,6 @@ def all_sources(request: HttpResponse):
             'title':'Open Feed Reader - Sources',
             },
         )
-
-
-
-@permission_required('feeds.add_source')
-def new_source(request: HttpResponse, initial_source:Source=None):
-    """create a new source"""
-    return new_model_form_view(request, EditSourceForm, 'one_source', initial_model=initial_source)
-
-
-
-@permission_required('feeds.change_source')
-def edit_source(request: HttpResponse, id: int):
-    """Edit a source"""
-    try:
-        source = Source.objects.get(id = id)
-    except Source.DoesNotExist:
-        HttpResponseRedirect(reverse('all_sources'))
-
-    return edit_model_form_view(request, source, EditSourceForm, 'one_source', delete_url='delete_source')
-
-
-
-@permission_required('feeds.delete_source')
-def delete_source(request: HttpResponse, id: int):
-    """delete a source"""
-    try:
-        source = Source.objects.get(id = id)
-    except SourceSubcription.DoesNotExist:
-        return HttpResponseRedirect(reverse('all_sources'))
-
-    return delete_model_form_view(request, source, 'all_sources')
 
 
 
