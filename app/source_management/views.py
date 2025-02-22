@@ -5,7 +5,7 @@ from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view
 from feeds.models import Source
-from feeds.feed_updates import init_feed
+from feeds.fetch import init_feed
 from .forms import EditSourceForm
 from . import source_urls
 
