@@ -1,6 +1,7 @@
 """views for managing feed sources"""
 from urllib.parse import urlencode
 from django.contrib.auth.decorators import permission_required
+from django.contrib import messages
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view
@@ -50,6 +51,9 @@ def new_source(request: HttpResponse):
     if feed_url := request.GET.get('feed_url', ''):
         source = Source(feed_url=feed_url)
         init_feed(source)
+
+        if source.status_code > 400:
+            messages.add_message(request, messages.ERROR, f"({source.status_code}) {source.last_result}")
 
         return new_model_form_view(request, EditSourceForm, 'one_source', initial_model=source)
     return new_model_form_view(request, EditSourceForm, 'one_source')
