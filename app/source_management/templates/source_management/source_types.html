@@ -12,27 +12,31 @@
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-rss"></i>
                 </span>
-                <input type="text" name="feed_url" maxlength="512" class="form-control" placeholder="Feed URL" title="" required=False id="id_feed_url">
+                <input type="text" name="feed_url" maxlength="512" class="form-control" placeholder="Feed URL" title="" id="id_feed_url">
             </div>
 
+            <!-- youtube channel link -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
-                        <path fill="#ff0033" d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube" viewBox="0 0 31 20">
+                        <path d="M14.4848 20C14.4848 20 23.5695 20 25.8229 19.4C27.0917 19.06 28.0459 18.08 28.3808 16.87C29 14.65 29 9.98 29 9.98C29 9.98 29 5.34 28.3808 3.14C28.0459 1.9 27.0917 0.94 25.8229 0.61C23.5695 0 14.4848 0 14.4848 0C14.4848 0 5.42037 0 3.17711 0.61C1.9286 0.94 0.954148 1.9 0.59888 3.14C0 5.34 0 9.98 0 9.98C0 9.98 0 14.65 0.59888 16.87C0.954148 18.08 1.9286 19.06 3.17711 19.4C5.42037 20 14.4848 20 14.4848 20Z" fill="#FF0033"></path>
+                        <path d="M19 10L11.5 5.75V14.25L19 10Z" fill="white"></path>    
                     </svg>
                 </span>
-                <input type="text" name="youtube_link" maxlength="512" class="form-control" placeholder="Youtube Channel" title="" required=False id="id_youtube_link">
+                <input type="text" name="youtube_link" maxlength="512" class="form-control" placeholder="Youtube Channel" title="" id="id_youtube_link">
             </div>
 
+            <!-- blusky link -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" class="bi bi-youtube" viewBox="0 0 64 57">
                         <path fill="#0085ff" d="M13.873 3.805C21.21 9.332 29.103 20.537 32 26.55v15.882c0-.338-.13.044-.41.867-1.512 4.456-7.418 21.847-20.923 7.944-7.111-7.32-3.819-14.64 9.125-16.85-7.405 1.264-15.73-.825-18.014-9.015C1.12 23.022 0 8.51 0 6.55 0-3.268 8.579-.182 13.873 3.805ZM50.127 3.805C42.79 9.332 34.897 20.537 32 26.55v15.882c0-.338.13.044.41.867 1.512 4.456 7.418 21.847 20.923 7.944 7.111-7.32 3.819-14.64-9.125-16.85 7.405 1.264 15.73-.825 18.014-9.015C62.88 23.022 64 8.51 64 6.55c0-9.818-8.578-6.732-13.873-2.745Z"></path>
                     </svg>
                 </span>
-                <input type="text" name="youtube_link" maxlength="512" class="form-control" placeholder="Bluesky Account" title="" required=False id="id_youtube_link">
+                <input type="text" name="blusky_link" maxlength="512" class="form-control" placeholder="Bluesky Account" title="" id="id_blusky_link">
             </div>
 
+            <!-- subreddit link -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-reddit" viewBox="0 0 16 16">
@@ -40,7 +44,7 @@
                         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.828-1.165c-.315 0-.602.124-.812.325-.801-.573-1.9-.945-3.121-.993l.534-2.501 1.738.372a.83.83 0 1 0 .83-.869.83.83 0 0 0-.744.468l-1.938-.41a.2.2 0 0 0-.153.028.2.2 0 0 0-.086.134l-.592 2.788c-1.24.038-2.358.41-3.17.992-.21-.2-.496-.324-.81-.324a1.163 1.163 0 0 0-.478 2.224q-.03.17-.029.353c0 1.795 2.091 3.256 4.669 3.256s4.668-1.451 4.668-3.256c0-.114-.01-.238-.029-.353.401-.181.688-.592.688-1.069 0-.65-.525-1.165-1.165-1.165"/>
                     </svg>
                 </span>
-                <input type="text" name="subreddit_link" maxlength="512" class="form-control" placeholder="Subreddit" title="" required=False id="id_subreddit">
+                <input type="text" name="subreddit_link" maxlength="512" class="form-control" placeholder="Subreddit" title="" id="id_subreddit">
             </div>
 
             <button type="submit" class="btn btn-primary">
