@@ -38,7 +38,6 @@ def one_post(request: HttpResponse, post_id: int):
         'posts/post.html',
         context={
             'post':post,
-            'navbar_title':f'{post.title}'
             },
         )
 
