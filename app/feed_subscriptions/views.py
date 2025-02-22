@@ -1,12 +1,11 @@
 """site_base.views"""
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.urls import reverse
 
 from feeds.models import Entry, Source
-from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view
 from site_base.forms import SearchForm
 
 from .models import SourceSubcription
@@ -16,12 +15,12 @@ ITEMS_PER_PAGE = 10
 
 
 @login_required
-def all_posts(request: HttpResponse):
+def user_feed(request: HttpResponse):
     """all posts from the users subscribed feeds"""
     posts = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
 
     context = paginator_args(request, posts)
-    context['title'] = 'Open Feed Reader - Posts'
+    context['navbar_title'] = 'My Feed'
 
     return render(
         request,
@@ -39,7 +38,7 @@ def one_post(request: HttpResponse, post_id: int):
         'posts/post.html',
         context={
             'post':post,
-            'title':f'{post.title}'
+            'navbar_title':f'{post.title}'
             },
         )
 
@@ -54,7 +53,10 @@ def all_sources(request: HttpResponse):
         # check whether it's valid:
         if form.is_valid():
             # get the source object with the given feel url
-            sources = Source.objects.filter(Q(feed_url__icontains = form.cleaned_data['search_text']) | Q(name__icontains = form.cleaned_data['search_text']))
+            sources = Source.objects.filter(
+                Q(feed_url__icontains = form.cleaned_data['search_text']) |
+                Q(name__icontains = form.cleaned_data['search_text'])
+                )
         else:
             sources = []
     else:
@@ -69,7 +71,7 @@ def all_sources(request: HttpResponse):
             'form':form,
             'sources':sources,
             'subed_sources':subed_sources,
-            'title':'Open Feed Reader - Sources',
+            'navbar_title':'Feed Sources',
             },
         )
 
@@ -84,7 +86,7 @@ def one_source(request: HttpResponse, id: int):
 
     context = paginator_args(request, posts)
     context['source'] = source
-    context['title'] = source.display_name
+    context['navbar_title'] = source.display_name
     context['is_subed'] = is_subed
 
     return render(
@@ -135,7 +137,7 @@ def unsubscribe_source(request: HttpResponse, id: int):
 
 
 @login_required
-def subscriptions(request: HttpResponse):
+def user_subscriptions(request: HttpResponse):
     """view a list of your subscriptions"""
     subs = SourceSubcription.objects.filter(user = request.user).order_by('source__name')
 
@@ -144,7 +146,10 @@ def subscriptions(request: HttpResponse):
         # check whether it's valid:
         if form.is_valid():
             # get the source object with the given feel url
-            subs = subs.filter(Q(source__feed_url__icontains = form.cleaned_data['search_text']) | Q(source__name__icontains = form.cleaned_data['search_text']))
+            subs = subs.filter(
+                Q(source__feed_url__icontains = form.cleaned_data['search_text']) |
+                Q(source__name__icontains = form.cleaned_data['search_text'])
+            )
     else:
         form = SearchForm()
 
@@ -154,7 +159,7 @@ def subscriptions(request: HttpResponse):
         context={
             'subscriptions':subs,
             'form':form,
-            'title':'Open Feed Reader - Subscriptions',
+            'navbar_title':'Subscriptions',
             },
         )
 
