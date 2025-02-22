@@ -36,7 +36,7 @@ def generate_new_source(request: HttpResponse):
             return HttpResponseRedirect(reverse('new_source')+ '?' + urlencode({'feed_url':feed_url}))
 
     return render(request,
-        'source_management/source_types.html',
+        'source_management/source_gen_form.html',
         context={
             'title':'Source Types'
             },
