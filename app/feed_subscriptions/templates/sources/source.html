@@ -37,6 +37,10 @@
           </h2>
         </a>
 
+        {% if source.subtitle %}
+        {{ source.subtitle }}
+        {% endif %}
+
         <!-- title footer -->
         <footer class="blockquote-footer mt-1">
           Updated {{ source.last_polled }}
