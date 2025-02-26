@@ -17,11 +17,14 @@
 
           <!-- title -->
           <div class="col-md-10 mx-auto">
-            <a href="{{post.link}}">
-              <h2 class="card-title">
-                {{ post.title }}
-              </h2>
-            </a>
+            <div class="row">
+              <h1>
+                <a target="_blank" rel="noopener noreferrer" href="{{post.link}}">
+                  {{ post.title }}
+                </a>
+              </h1>
+
+            </div>
 
             <!-- credit -->
             <footer class="blockquote-footer mt-1">
@@ -60,8 +63,7 @@
         {% endfor %}
 
         <div class="row p-2">
-          {{ post.body|bleach|linebreaks }}
-
+          {{ post.body|bleach|urlizetrunc:40|linebreaks }}
         </div>
       </div>
 

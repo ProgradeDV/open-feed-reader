@@ -9,5 +9,5 @@ urlpatterns = [
     path('feeds/<int:id>/',             views.one_source,         name='one_source'),
     path('feeds/<int:id>/subscribe/',   views.subscribe_source,   name='subscribe_source'),
     path('feeds/<int:id>/unsubscribe/', views.unsubscribe_source, name='unsubscribe_source'),
-    path('subscriptions/',              views.user_subscriptions,      name='subscriptions'),
+    path('subscriptions/',              views.user_subscriptions, name='subscriptions'),
 ]

@@ -85,7 +85,6 @@ def one_source(request: HttpResponse, id: int):
 
     context = paginator_args(request, posts)
     context['source'] = source
-    context['navbar_title'] = source.display_name
     context['is_subed'] = is_subed
 
     return render(

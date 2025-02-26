@@ -1,12 +1,16 @@
 {% extends 'site_base/base.html' %}
+{% load bleach_tags %}
 
 {% block extra_navbar_links %}
 <div class="btn-group me-2" role="group" aria-label="First group">
+  <a target="_blank" rel="noopener noreferrer" href="{{ source.best_link }}" class="btn btn-secondary">
+    <i class="bi bi-arrow-up-right"></i>
+  </a>
 
   {% if is_subed %}
-  <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-dash-lg"></i></a>
+  <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-person-dash-fill"></i></a>
   {% else %}
-  <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-light"><i class="bi bi-plus-lg"></i></a>
+  <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-person-add"></i></a>
   {% endif %}
 
   {% if perms.feeds.edit_source %}
@@ -24,27 +28,34 @@
     <div class="row">
 
       {% if source.image_url %}
-      <div class="col-md-2 mx-auto">
+      <div class="col-md-2 mx-auto my-2">
         <img class="card-img-top" src="{{ source.image_url }}" alt="Card image cap">
       </div>
+
+      <div class="col-md-10 mx-auto">
+      {% else %}
+      <div class="col-md-12 mx-auto">
       {% endif %}
 
-      <!-- title -->
-      <div class="col-md-10 mx-auto">
-        <a href="{{ source.best_link }}">
-          <h2 class="card-title">
-            {{ source.display_name }}
-          </h2>
-        </a>
+        <!-- title -->
+        <h1 class="card-title">
+          {{ source.display_name }}
+        </h1>
 
         {% if source.subtitle %}
-        {{ source.subtitle }}
+        {{ source.subtitle|bleach|urlizetrunc:40 }}
         {% endif %}
 
         <!-- title footer -->
         <footer class="blockquote-footer mt-1">
-          Updated {{ source.last_polled }}
+          Updated {{ source.last_feched }}
         </footer>
+
+        {% if source.description %}
+        <div class="row">
+          {{ source.description|bleach|urlizetrunc:40|linebreaks }}
+        </div>
+        {% endif %}
       </div>
 
     </div>
@@ -63,9 +74,7 @@
         <div class="col-md-auto">
           <!-- link to post page -->
           <a href="{% url 'one_post' post_id=post.id %}">
-            <span>
-              <h4>{{ post.title }}</h4>
-            </span>
+            <h4>{{ post.title }}</h4>
           </a>
 
           <!-- credit -->
