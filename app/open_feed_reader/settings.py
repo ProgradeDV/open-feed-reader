@@ -178,10 +178,10 @@ CSP_STYLE_SRC = [
 ]
 CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
 CSP_IMG_SRC = ["'self'", "https:", "data:"]
-CSP_FRAME_SRC = ["self", "https://www.youtube.com"]
+CSP_FRAME_SRC = ["'self'", "https://www.youtube.com"]
 CSP_INCLUDE_NONCE_IN = ['script-src']
 CSP_MEDIA_SRC = [
-    "self",
+    "'self'",
     'https://media.transistor.fm',
     'https://audio.transistor.fm',
     'https://dcs.megaphone.fm',
