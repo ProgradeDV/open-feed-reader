@@ -18,23 +18,24 @@ def generate_new_source(request: HttpResponse):
     if request.method == "POST":
 
         feed_url = None
+        site_url = None
 
         # convert the given url to an rss url
         if request.POST.get('feed_url', ''):
             feed_url = request.POST.get('feed_url', '')
 
-        elif request.POST.get('youtube_link', ''):
-            feed_url = source_urls.convert_youtube_channel(request.POST.get('youtube_link', ''))
+        elif site_url := request.POST.get('youtube_link', ''):
+            feed_url = source_urls.convert_youtube_channel(site_url)
 
-        elif request.POST.get('blusky_link', ''):
-            feed_url = source_urls.convert_bluesky_account(request.POST.get('blusky_link', ''))
+        elif site_url := request.POST.get('blusky_link', ''):
+            feed_url = source_urls.convert_bluesky_account(site_url)
 
-        elif request.POST.get('subreddit_link', ''):
-            feed_url = source_urls.convert_subreddit(request.POST.get('subreddit_link', ''))
+        elif site_url := request.POST.get('subreddit_link', ''):
+            feed_url = source_urls.convert_subreddit(site_url)
 
         if feed_url:
             # redirect to the new source form
-            return HttpResponseRedirect(reverse('new_source')+ '?' + urlencode({'feed_url':feed_url}))
+            return HttpResponseRedirect(reverse('new_source')+ '?' + urlencode({'feed_url':feed_url, 'site_url':site_url}))
 
     return render(request,
         'source_management/source_gen_form.html',
@@ -49,7 +50,8 @@ def generate_new_source(request: HttpResponse):
 def new_source(request: HttpResponse):
     """create a new source"""
     if feed_url := request.GET.get('feed_url', ''):
-        source = Source(feed_url=feed_url)
+        site_url = request.GET.get('site_url', '')
+        source = Source(feed_url=feed_url, site_url=site_url)
         init_feed(source)
 
         if source.status_code > 400:
