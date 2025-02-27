@@ -1,5 +1,5 @@
 """functions for converting links related to a feed to the feed url"""
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -10,13 +10,18 @@ def convert_youtube_channel(url:str) -> str:
     parsed_url = urlparse(url)
 
     assert parsed_url.netloc == 'www.youtube.com'
-    assert re.match(r"^/@\w+$", parsed_url.path) # mathces "/@{channelname_name}"
+    if re.match(r"^/@\w+$", parsed_url.path): # mathces "/@{channelname_name}"
 
-    # pull the url
-    page = requests.get(url, timeout=5)
-    soup = BeautifulSoup(page.content)
-    link = soup.find(title='RSS')
-    return link['href']
+        # pull the url
+        page = requests.get(url, timeout=5)
+        soup = BeautifulSoup(page.content)
+        link = soup.find(title='RSS')
+        return link['href']
+
+    if 'list' in (query := parse_qs(parsed_url.query)):
+        return f"https://www.youtube.com/feeds/videos.xml?playlist_id={query['list'][0]}"
+
+    raise ValueError('Unreconized link')
 
 
 def convert_bluesky_account(url:str) -> str:
