@@ -247,7 +247,6 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["console"],
             "propagate": True
         },
     },
