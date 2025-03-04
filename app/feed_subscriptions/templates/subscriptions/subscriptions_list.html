@@ -1,4 +1,5 @@
 {% extends 'site_base/base.html' %}
+{% load static %}
 
 {% block content %}
 <!-- search bar form -->
@@ -28,36 +29,10 @@
 <div class="row">
     <div class="col-lg-8 mx-auto">
         {% for sub in subscriptions %}
-        <div class="card card-body">
-
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-
-                <!-- source image -->
-                {% if sub.source.image_url %}
-                <a href="{% url 'one_source' id=sub.source.id %}">
-                    <img src="{{ sub.source.image_url }}" height="40" class="rounded" alt="Image">
-                </a>
-                {% endif %}
-
-                <!-- source title -->
-                <div class="flex-fill p-1 mx-1">
-                    <a href="{% url 'one_source' id=sub.source.id %}">{{ sub.source.display_name }}</a>
-                </div>
-
-                <!-- button group -->
-                <div class="btn-group" role="group" aria-label="First group">
-                    <!-- unsubscribe button -->
-                    <a href="{% url 'unsubscribe_source' id=sub.source.id %}" class="btn btn-primary">
-                        <i class="bi bi-person-dash-fill"></i>
-                    </a>
-                    {% if perms.feeds.edit_source %}
-                    <a href="{% url 'edit_source' id=sub.source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
-                    {% endif %}
-                </div>
-            </div>
-
-        </div>
+            {% include 'sources/sources_list_item.html' with source=sub.source is_subed=True %}
         {% endfor %}
     </div>
 </div>
+
+<script src="{% static 'site_base/htmx.min.js' %}" ></script>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'site_base/base.html' %}
+{% load static %}
 
 {% block content %}
 <!-- search bar / form -->
@@ -28,38 +29,14 @@
 <div class="row">
     <div class="col-lg-8 mx-auto">
         {% for source in sources %}
-        <div class="card card-body">
-
-            <div class="btn-toolbar g-2" role="toolbar" aria-label="Toolbar with button groups">
-
-                <!-- button group for normal user functions -->
-                {% if source.image_url %}
-                <a href="{% url 'one_source' id=source.id %}">
-                    <img src="{{ source.image_url }}" height="40" class="rounded" alt="Image">
-                </a>
-                {% endif %}
-
-                <!-- title -->
-                <div class="flex-fill p-1 mx-1">
-                    <a href="{% url 'one_source' id=source.id %}">{{ source.display_name }}</a>
-                </div>
-
-                <!-- button group for adminiatration functions -->
-                <div class="btn-group" role="group" aria-label="Basic example">
-                    {% if source in subed_sources %}
-                    <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-primary"><i class="bi bi-person-dash-fill"></i></a>
-                    {% else %}
-                    <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-person-add"></i></a>
-                    {% endif %}
-
-                    {% if perms.feeds.edit_source %}
-                    <a href="{% url 'edit_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+            {% if source in subed_sources %}
+                {% include 'sources/sources_list_item.html' with is_subed=True%}
+            {% else %}
+                {% include 'sources/sources_list_item.html' with is_subed=False%}
+            {% endif %}
         {% endfor %}
     </div>
 </div>
 
+<script src="{% static 'site_base/htmx.min.js' %}" ></script>
 {% endblock %}
