@@ -165,9 +165,7 @@ CSP_DEFAULT_SRC = ["'self'"]
 CSP_SCRIPT_SRC = [
     "'self'",
     "https://unpkg.com",
-    "https://stackpath.bootstrapcdn.com",
     "https://cdn.jsdelivr.net",
-    "https://code.jquery.com",
 ]
 CSP_STYLE_SRC = [
     "'self'",
@@ -189,7 +187,7 @@ CSP_MEDIA_SRC = [
     'https://traffic.megaphone.fm',
 ]
 
-
+# idk why this needs to be a setting, but here we are
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
     messages.INFO: 'alert-info',
