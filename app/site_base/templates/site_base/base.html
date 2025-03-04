@@ -32,7 +32,7 @@
             <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/subscriptions/' %}active{% endif %}" href="{% url 'subscriptions' %}">
               <i class="bi bi-person-rolodex"></i>
             </a>
-            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/sources/' %}active{% endif %}" href="{% url 'all_sources' %}">
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/feeds/' %}active{% endif %}" href="{% url 'all_sources' %}">
               <i class="bi bi-rss"></i>
             </a>
             {% comment %} designated zone for extra navbar links {% endcomment %}
