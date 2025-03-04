@@ -1,4 +1,5 @@
 """site_base.views"""
+from logging import getLogger
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -9,6 +10,8 @@ from feeds.models import Entry, Source
 from site_base.forms import SearchForm
 
 from .models import SourceSubcription
+
+logger = getLogger('feed_subscriptions/views.py')
 
 
 ITEMS_PER_PAGE = 10
@@ -98,39 +101,54 @@ def one_source(request: HttpResponse, id: int):
 @login_required
 def subscribe_source(request: HttpResponse, id: int):
     """subscribe to the source with the given id"""
+    # reject non post requests
+    if request.method != "POST":
+        return None
+
+    # reject subscriptions to sources that don't exist
     try:
         source = Source.objects.get(id = id)
     except Source.DoesNotExist:
-        return redirect(request.META['HTTP_REFERER'])
+        return None
 
     # check if you are already subscribed to that source
     try:
-        sub = SourceSubcription.objects.get(source = source)
-    except SourceSubcription.DoesNotExist:
-        sub = None
+        sub = SourceSubcription.objects.filter(user = request.user).get(source = source)
 
-    if sub is None:
-        # add a subscription
+    except SourceSubcription.DoesNotExist:
+        # if the subscription doesn't exist, subscribe
+        logger.debug('%s subscribing to %s', request.user, source.name)
         sub = SourceSubcription(user = request.user, source = source)
         sub.save()
 
-    return redirect(request.META['HTTP_REFERER'])
+    else:
+        # if you're already subscribed
+        logger.debug('%s is already subscribed to %s', request.user, source.name)
+
+    # return an unsubscribe button
+    return render(request, 'subscriptions/unsubscribe.html', context={'id':id})
 
 
 
 @login_required
 def unsubscribe_source(request: HttpResponse, id: int):
     """remove a subscription from a user"""
+    if request.method != "POST":
+        return None
+
     try:
+        # find the subscription
         sub = SourceSubcription.objects.filter(user = request.user).get(source = id)
+
     except SourceSubcription.DoesNotExist:
-        return HttpResponseRedirect(reverse('subscriptions'))
+        logger.debug('%s is not subscribed to %s', request.user, id)
 
-    if request.method == "POST":
+    else:
+        logger.debug('%s unsubscribing from %s', request.user, sub.source.name)
         sub.delete()
-        return HttpResponseRedirect(reverse('subscriptions'))
 
-    return render(request, "subscriptions/unsubscribe.html", {"sub": sub})
+    # return a subscribe button
+    return render(request, 'subscriptions/subscribe.html', context={'id':id})
 
 
 
