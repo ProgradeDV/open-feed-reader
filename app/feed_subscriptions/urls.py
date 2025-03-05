@@ -3,8 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('',                            views.user_feed,          name='all_posts'),
-    path('post/<int:post_id>/',         views.one_post,           name='one_post'),
+    path('',                            views.user_feed,          name='all_entries'),
+    path('entry/<int:entry_id>/',       views.one_entry,          name='one_entry'),
     path('feeds/',                      views.all_sources,        name='all_sources'),
     path('feeds/<int:id>/',             views.one_source,         name='one_source'),
     path('feeds/<int:id>/subscribe/',   views.subscribe_source,   name='subscribe_source'),

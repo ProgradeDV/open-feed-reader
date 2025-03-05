@@ -19,28 +19,28 @@ ITEMS_PER_PAGE = 10
 
 @login_required
 def user_feed(request: HttpResponse):
-    """all posts from the users subscribed feeds"""
-    posts = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
+    """all entries from the users subscribed feeds"""
+    entries = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
 
-    context = paginator_args(request, posts)
+    context = paginator_args(request, entries)
     context['navbar_title'] = 'My Feed'
 
     return render(
         request,
-        'posts/posts_list.html',
+        'entries/entries_list.html',
         context=context,
         )
 
 
 
 @login_required
-def one_post(request: HttpResponse, post_id: int):
-    """view for a single post"""
-    post = Entry.objects.get(id=post_id)
+def one_entry(request: HttpResponse, entry_id: int):
+    """view for a single entry"""
+    entry = Entry.objects.get(id=entry_id)
     return render(request,
-        'posts/post.html',
+        'entries/entry.html',
         context={
-            'post':post,
+            'entry':entry,
             },
         )
 
@@ -48,7 +48,7 @@ def one_post(request: HttpResponse, post_id: int):
 
 @login_required
 def all_sources(request: HttpResponse):
-    """view for a list of posts"""
+    """view for a list of entries"""
 
     if request.method == "POST":
         form = SearchForm(request.POST)
@@ -81,12 +81,12 @@ def all_sources(request: HttpResponse):
 
 @login_required
 def one_source(request: HttpResponse, id: int):
-    """view for a list of posts"""
+    """view for a list of entries"""
     source = Source.objects.get(id=id)
-    posts = Entry.objects.filter(source = source).order_by('-created')
+    entries = Entry.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
 
-    context = paginator_args(request, posts)
+    context = paginator_args(request, entries)
     context['source'] = source
     context['is_subed'] = is_subed
 

@@ -60,29 +60,29 @@
 
     </div>
 
-    <!-- list of posts -->
-    {% for post in page_obj.object_list %}
+    <!-- list of entries -->
+    {% for entry in page_obj.object_list %}
     <div class="card card-body">
       <div class="row">
 
-        {% if post.image_url %}
+        {% if entry.image_url %}
         <div class="col-md-2">
-          <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
+          <img class="card-img-top" src="{{ entry.image_url }}" alt="Card image cap">
         </div>
         {% endif %}
 
         <div class="col-md-auto">
-          <!-- link to post page -->
-          <a href="{% url 'one_post' post_id=post.id %}">
-            <h4>{{ post.title }}</h4>
+          <!-- link to entry page -->
+          <a href="{% url 'one_entry' entry_id=entry.id %}">
+            <h4>{{ entry.title }}</h4>
           </a>
 
           <!-- credit -->
           <footer class="blockquote-footer mt-1">
-            {% if post.author %}
-            {{ post.author }}, 
+            {% if entry.author %}
+            {{ entry.author }}, 
             {% endif %}
-            {{ post.created }}
+            {{ entry.created }}
           </footer>
 
         </div>

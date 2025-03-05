@@ -20,8 +20,8 @@ class SourcesFolder(models.Model):
     subscriptions = models.ManyToManyField(SourceSubcription, related_name='folders')
 
 
-class PostsFolder(models.Model):
+class EntriesFolder(models.Model):
     """a folder to put posts in"""
     name = models.CharField(max_length=64)
-    user = models.ForeignKey(User, related_name='post_folders', on_delete=models.CASCADE)
-    posts = models.ManyToManyField(Entry, related_name='saved_folders')
+    user = models.ForeignKey(User, related_name='entry_folders', on_delete=models.CASCADE)
+    entries = models.ManyToManyField(Entry, related_name='saved_folders')

@@ -9,9 +9,9 @@
       <div class="card-header">
         <div class="row">
 
-          {% if post.image_url %}
+          {% if entry.image_url %}
           <div class="col-md-2 mx-auto">
-            <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
+            <img class="card-img-top" src="{{ entry.image_url }}" alt="Card image cap">
           </div>
           {% endif %}
 
@@ -19,8 +19,8 @@
           <div class="col-md-10 mx-auto">
             <div class="row">
               <h1>
-                <a target="_blank" rel="noopener noreferrer" href="{{post.link}}">
-                  {{ post.title }}
+                <a target="_blank" rel="noopener noreferrer" href="{{entry.link}}">
+                  {{ entry.title }}
                 </a>
               </h1>
 
@@ -28,11 +28,11 @@
 
             <!-- credit -->
             <footer class="blockquote-footer mt-1">
-              {% if post.author %}
-              {{ post.author }} at 
+              {% if entry.author %}
+              {{ entry.author }} at 
               {% endif %}
-              <a href="{% url 'one_source' id=post.source.id %}">{{ post.source.display_name }}</a>,
-              {{ post.created }}
+              <a href="{% url 'one_source' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
+              {{ entry.created }}
             </footer>
           </div>
 
@@ -40,14 +40,14 @@
       </div>
 
       <div class="card-body">
-        {% for enclosure in post.enclosures.all %}
+        {% for enclosure in entry.enclosures.all %}
           <div class="row p-2">
             {% if enclosure.type == 'youtube' %}
-              {% include 'posts/enclosure_youtube.html' %}
+              {% include 'entries/enclosure_youtube.html' %}
             {% elif 'audio' in enclosure.type %}
-              {% include 'posts/enclosure_audio.html' %}
+              {% include 'entries/enclosure_audio.html' %}
             {% elif 'video' in enclosure.type %}
-              {% include 'posts/enclosure_video.html' %}
+              {% include 'entries/enclosure_video.html' %}
             {% else %}
               Unknown Media: <a href="{{ enclosure.href }}">{{ enclosure.href }}</a>
             {% endif %}
@@ -55,10 +55,10 @@
         {% endfor %}
 
         <div class="row p-2">
-          {% if '<a' in post.body %}
-            {{ post.body|bleach }}
+          {% if '<a' in entry.body %}
+            {{ entry.body|bleach }}
           {% else %}
-            {{ post.body|bleach|urlizetrunc:40|linebreaks }}
+            {{ entry.body|bleach|urlizetrunc:40|linebreaks }}
           {% endif %}
         </div>
       </div>

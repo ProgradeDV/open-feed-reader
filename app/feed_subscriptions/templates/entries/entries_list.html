@@ -1,35 +1,35 @@
 {% extends 'site_base/base.html' %}
 
 {% block content %}
-<!-- list of posts -->
-{% for post in page_obj.object_list %}
+<!-- list of entries -->
+{% for entry in page_obj.object_list %}
 <div class="row">
   <div class="col-lg-8 mx-auto">
     <div class="card card-body">
       <div class="row">
 
-        {% if post.image_url %}
+        {% if entry.image_url %}
         <div class="col-md-2">
-          <img class="card-img-top" src="{{ post.image_url }}" alt="Card image cap">
+          <img class="card-img-top" src="{{ entry.image_url }}" alt="Card image cap">
         </div>
         {% endif %}
 
         <div class="col-md-auto">
 
-          <!-- link to post page -->
-          <a href="{% url 'one_post' post_id=post.id %}">
+          <!-- link to entry page -->
+          <a href="{% url 'one_entry' entry_id=entry.id %}">
             <span>
-              <h4>{{ post.title }}</h4>
+              <h4>{{ entry.title }}</h4>
             </span>
           </a>
 
           <!-- credit -->
           <footer class="blockquote-footer mt-1">
-            {% if post.author %}
-            {{ post.author }} at 
+            {% if entry.author %}
+            {{ entry.author }} at 
             {% endif %}
-            <a href="{% url 'one_source' id=post.source.id %}" class="subtle">{{ post.source.display_name }}</a>,
-            {{ post.created }}
+            <a href="{% url 'one_source' id=entry.source.id %}" class="subtle">{{ entry.source.display_name }}</a>,
+            {{ entry.created }}
           </footer>
 
         </div>
