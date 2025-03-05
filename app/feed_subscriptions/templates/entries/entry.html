@@ -1,4 +1,10 @@
 {% extends 'site_base/base.html' %}
+{% comment %} 
+This is the template for a page providing a single feed entry
+
+Required Context:
+  entry: the feeds.models.Entry model to display
+{% endcomment %}
 {% load bleach_tags %}
 
 {% block content %}
@@ -29,7 +35,7 @@
             <!-- credit -->
             <footer class="blockquote-footer mt-1">
               {% if entry.author %}
-              {{ entry.author }} at 
+                {{ entry.author }} at 
               {% endif %}
               <a href="{% url 'one_source' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
               {{ entry.created }}

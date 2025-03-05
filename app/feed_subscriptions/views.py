@@ -3,6 +3,7 @@ from logging import getLogger
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.db.models.query import QuerySet
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
 from django.urls import reverse
 
@@ -14,7 +15,7 @@ from .models import SourceSubcription
 logger = getLogger('feed_subscriptions/views.py')
 
 
-ITEMS_PER_PAGE = 10
+ITEMS_PER_PAGE = 20
 
 
 @login_required
@@ -180,11 +181,16 @@ def user_subscriptions(request: HttpResponse):
         )
 
 
-def paginator_args(request, items) -> dict:
+def paginator_args(request:HttpResponse, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
     """
     Calculate the paginator context for use with the paginator template
+
+    Parameters:
+    - request: the http response object for the view
+    - items: a django QuerySet for all of the items to be paged
+    - items_per_page: integer number of items to put on each page
     """
-    paginator = Paginator(items, ITEMS_PER_PAGE)
+    paginator = Paginator(items, items_per_page)
 
     page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
     page_obj = paginator.get_page(page_number)
