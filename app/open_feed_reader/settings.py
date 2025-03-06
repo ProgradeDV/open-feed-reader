@@ -161,31 +161,15 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
 
+CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src', 'style-src-elem', 'media-src']
 CSP_DEFAULT_SRC = ["'self'"]
-CSP_SCRIPT_SRC = [
-    "'self'",
-    "https://unpkg.com",
-    "https://cdn.jsdelivr.net",
-]
-CSP_STYLE_SRC = [
-    "'self'",
-    "https://cdn.jsdelivr.net",
-    "https://unpkg.com/bootstrap-show-password",
-]
+CSP_SCRIPT_SRC = ["'self'",]
+CSP_STYLE_SRC = ["'self'",]
+CSP_STYLE_SRC_ELEM = ["'self'",]
 CSP_FONT_SRC = ["https://cdn.jsdelivr.net"]
 CSP_IMG_SRC = ["'self'", "https:", "data:"]
 CSP_FRAME_SRC = ["'self'", "https://www.youtube.com"]
-CSP_INCLUDE_NONCE_IN = ['script-src']
-CSP_MEDIA_SRC = [
-    "'self'",
-    'https://media.transistor.fm',
-    'https://audio.transistor.fm',
-    'https://dcs.megaphone.fm',
-    'https://chrt.fm',
-    'https://prfx.byspotify.com',
-    'https://play.podtrac.com',
-    'https://traffic.megaphone.fm',
-]
+CSP_MEDIA_SRC = ["'self'",]
 
 # idk why this needs to be a setting, but here we are
 MESSAGE_TAGS = {
