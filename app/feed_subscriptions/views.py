@@ -48,7 +48,7 @@ def one_entry(request: HttpResponse, entry_id: int):
 
 
 @login_required
-def all_sources(request: HttpResponse):
+def all_feeds(request: HttpResponse):
     """view for a list of entries"""
 
     if request.method == "POST":
@@ -74,14 +74,14 @@ def all_sources(request: HttpResponse):
             'form':form,
             'sources':sources,
             'subed_sources':subed_sources,
-            'navbar_title':'Feed Sources',
+            'navbar_title':'All Feeds',
             },
         )
 
 
 
 @login_required
-def one_source(request: HttpResponse, id: int):
+def one_feed(request: HttpResponse, id: int):
     """view for a list of entries"""
     source = Source.objects.get(id=id)
     entries = Entry.objects.filter(source = source).order_by('-created')
@@ -100,7 +100,7 @@ def one_source(request: HttpResponse, id: int):
 
 
 @login_required
-def subscribe_source(request: HttpResponse, id: int):
+def subscribe_feed(request: HttpResponse, id: int):
     """subscribe to the source with the given id"""
     # reject non post requests
     if request.method != "POST":
@@ -132,7 +132,7 @@ def subscribe_source(request: HttpResponse, id: int):
 
 
 @login_required
-def unsubscribe_source(request: HttpResponse, id: int):
+def unsubscribe_feed(request: HttpResponse, id: int):
     """remove a subscription from a user"""
     if request.method != "POST":
         return None
