@@ -93,7 +93,7 @@ def one_feed(request: HttpResponse, id: int):
 
     return render(
         request,
-        'sources/source.html',
+        'feeds/feed.html',
         context=context,
         )
 

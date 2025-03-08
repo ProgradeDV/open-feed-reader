@@ -1,0 +1,33 @@
+{% extends 'site_base/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- search bar / form -->
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="d-flex m-2">
+
+            <!-- new source link -->
+            <a href="{% url 'gen_source' %}" class="btn btn-secondary mx-2"><i class="bi bi-plus-lg"></i></a>
+            <input class="form-control" type="search"
+                name="search" placeholder="Search Feeds"
+                hx-post="{% url 'feeds_search' %}"
+                hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
+                hx-target="#search-results"
+                {% comment %} hx-indicator=".htmx-indicator" {% endcomment %}
+                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                >
+
+        </div>
+    </div>
+</div>
+
+<!-- list of all the sources -->
+<div class="row">
+    <div class="col-lg-8 mx-auto" id="search-results">
+        {% include 'feeds/sources_list.html' %}
+    </div>
+</div>
+
+<script src="{% static 'site_base/htmx.min.js' %}" ></script>
+{% endblock %}

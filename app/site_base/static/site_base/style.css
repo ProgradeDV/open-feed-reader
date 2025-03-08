@@ -18,3 +18,7 @@ a:active {
 a.subtle {
     color: var(--bs-body-color);
 }
+
+.htmx-indicator{opacity:0}
+.htmx-request .htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}
+.htmx-request.htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}
