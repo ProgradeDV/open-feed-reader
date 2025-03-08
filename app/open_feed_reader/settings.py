@@ -161,7 +161,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
 
-CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src', 'style-src-elem', 'media-src', 'font-src']
+CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
 CSP_DEFAULT_SRC = ["'self'",]
 CSP_SCRIPT_SRC = ["'self'",]
 CSP_STYLE_SRC = ["'self'",]
@@ -169,8 +169,7 @@ CSP_STYLE_SRC_ELEM = ["'self'",]
 CSP_FONT_SRC = ["'self'",]
 CSP_IMG_SRC = ["'self'", "https:"]
 CSP_FRAME_SRC = ["'self'", "https://www.youtube.com"]
-CSP_MEDIA_SRC = ["'self'",]
-CSP_CONNECT_SRC = ["'self'",]
+CSP_MEDIA_SRC = ["'self'", "https:"]
 
 # idk why this needs to be a setting, but here we are
 MESSAGE_TAGS = {
