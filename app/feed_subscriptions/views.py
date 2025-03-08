@@ -69,7 +69,7 @@ def all_feeds(request: HttpResponse):
     subed_sources = Source.objects.filter(subscriptions__user = request.user)
     return render(
         request,
-        'sources/sources_list.html',
+        'feeds/searchable_feeds.html',
         context={
             'form':form,
             'sources':sources,
@@ -77,6 +77,41 @@ def all_feeds(request: HttpResponse):
             'navbar_title':'All Feeds',
             },
         )
+
+
+@login_required
+def all_feeds_search(request: HttpResponse):
+    """view for a list of entries"""
+    if request.method != "POST":
+        return None
+
+    form = SearchForm(request.POST)
+    # check whether it's valid:
+    if not form.is_valid():
+        return None
+
+    search_text = form.cleaned_data['search_text']
+
+    if not search_text:
+        sources = Source.objects.all()
+
+    else:
+        sources = Source.objects.filter(
+            Q(feed_url__icontains = form.cleaned_data['search_text']) |
+            Q(name__icontains = form.cleaned_data['search_text'])
+            )
+
+    subed_sources = Source.objects.filter(subscriptions__user = request.user)
+    context = paginator_args(request, sources)
+    context['sources'] = sources
+    context['subed_sources'] = subed_sources
+
+    return render(
+        request,
+        'feeds/sources_list.html',
+        context=context
+    )
+
 
 
 
