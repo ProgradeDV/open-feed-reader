@@ -10,7 +10,7 @@
             <!-- new source link -->
             <a href="{% url 'gen_source' %}" class="btn btn-secondary mx-2"><i class="bi bi-plus-lg"></i></a>
             <input class="form-control" type="search"
-                name="search" placeholder="Search Feeds"
+                name="search_text" placeholder="Search Feeds"
                 hx-post="{% url 'feeds_search' %}"
                 hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
                 hx-target="#search-results"
