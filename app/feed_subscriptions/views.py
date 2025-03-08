@@ -49,29 +49,14 @@ def one_entry(request: HttpResponse, entry_id: int):
 
 @login_required
 def all_feeds(request: HttpResponse):
-    """view for a list of entries"""
-
-    if request.method == "POST":
-        form = SearchForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # get the source object with the given feel url
-            sources = Source.objects.filter(
-                Q(feed_url__icontains = form.cleaned_data['search_text']) |
-                Q(name__icontains = form.cleaned_data['search_text'])
-                )
-        else:
-            sources = []
-    else:
-        form = SearchForm()
-        sources = Source.objects.all()
-
+    """view for the page of all known feeds"""
+    sources = Source.objects.all()
     subed_sources = Source.objects.filter(subscriptions__user = request.user)
+
     return render(
         request,
         'feeds/searchable_feeds.html',
         context={
-            'form':form,
             'sources':sources,
             'subed_sources':subed_sources,
             'navbar_title':'All Feeds',
@@ -81,7 +66,7 @@ def all_feeds(request: HttpResponse):
 
 @login_required
 def all_feeds_search(request: HttpResponse):
-    """view for a list of entries"""
+    """view for the responst to the htmx request for a filtered list of all feeds"""
     if request.method != "POST":
         return None
 
@@ -117,7 +102,7 @@ def all_feeds_search(request: HttpResponse):
 
 @login_required
 def one_feed(request: HttpResponse, id: int):
-    """view for a list of entries"""
+    """the view for a single feed and it's entries"""
     source = Source.objects.get(id=id)
     entries = Entry.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
@@ -168,7 +153,7 @@ def subscribe_feed(request: HttpResponse, id: int):
 
 @login_required
 def unsubscribe_feed(request: HttpResponse, id: int):
-    """remove a subscription from a user"""
+    """Unsubscribe the user from the feed with the given id"""
     if request.method != "POST":
         return None
 
