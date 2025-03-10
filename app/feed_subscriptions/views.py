@@ -15,7 +15,7 @@ from .models import SourceSubcription
 logger = getLogger('feed_subscriptions/views.py')
 
 
-ITEMS_PER_PAGE = 20
+ITEMS_PER_PAGE = 3
 
 
 @login_required
@@ -23,7 +23,8 @@ def user_feed(request: HttpResponse):
     """all entries from the users subscribed feeds"""
     entries = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
 
-    context = paginator_args(request, entries)
+    page = int(request.GET.get("page", 1))
+    context = paginator_args(page, entries)
     context['navbar_title'] = 'My Feed'
 
     return render(
@@ -50,15 +51,11 @@ def one_entry(request: HttpResponse, entry_id: int):
 @login_required
 def all_feeds(request: HttpResponse):
     """view for the page of all known feeds"""
-    sources = Source.objects.all()
-    subed_sources = Source.objects.filter(subscriptions__user = request.user)
 
     return render(
         request,
-        'feeds/searchable_feeds.html',
+        'feeds/all_feeds_page.html',
         context={
-            'sources':sources,
-            'subed_sources':subed_sources,
             'navbar_title':'All Feeds',
             },
         )
@@ -76,6 +73,7 @@ def all_feeds_search(request: HttpResponse):
         return None
 
     search_text = form.cleaned_data['search_text']
+    page = int(request.GET.get("page", 1))
 
     if not search_text:
         sources = Source.objects.all()
@@ -87,13 +85,12 @@ def all_feeds_search(request: HttpResponse):
             )
 
     subed_sources = Source.objects.filter(subscriptions__user = request.user)
-    context = paginator_args(request, sources)
-    context['sources'] = sources
+    context = paginator_args(page, sources)
     context['subed_sources'] = subed_sources
 
     return render(
         request,
-        'feeds/sources_list.html',
+        'feeds/paginated_feeds_list.html',
         context=context
     )
 
@@ -107,7 +104,8 @@ def one_feed(request: HttpResponse, id: int):
     entries = Entry.objects.filter(source = source).order_by('-created')
     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
 
-    context = paginator_args(request, entries)
+    page = int(request.GET.get("page", 1))
+    context = paginator_args(page, entries)
     context['source'] = source
     context['is_subed'] = is_subed
 
@@ -201,7 +199,7 @@ def user_subscriptions(request: HttpResponse):
         )
 
 
-def paginator_args(request:HttpResponse, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
+def paginator_args(page_index:int, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
     """
     Calculate the paginator context for use with the paginator template
 
@@ -212,7 +210,7 @@ def paginator_args(request:HttpResponse, items:QuerySet, items_per_page:int=ITEM
     """
     paginator = Paginator(items, items_per_page)
 
-    page_number = max(min(int(request.GET.get("page", 1)), paginator.num_pages), 1)
+    page_number = max(min(page_index, paginator.num_pages), 1)
     page_obj = paginator.get_page(page_number)
 
     page_range = range(max(1, page_number - 3), min(paginator.num_pages+1, page_number + 4))

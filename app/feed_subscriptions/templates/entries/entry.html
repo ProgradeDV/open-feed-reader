@@ -37,7 +37,7 @@ Required Context:
               {% if entry.author %}
                 {{ entry.author }} at 
               {% endif %}
-              <a href="{% url 'one_source' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
+              <a href="{% url 'one_feed' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
               {{ entry.created }}
             </footer>
           </div>

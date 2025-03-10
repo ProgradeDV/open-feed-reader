@@ -1,0 +1,8 @@
+<!-- list sources -->
+{% for source in sources %}
+    {% if source in subed_sources %}
+        {% include 'feeds/feeds_list_item.html' with is_subed=True%}
+    {% else %}
+        {% include 'feeds/feeds_list_item.html' with is_subed=False%}
+    {% endif %}
+{% endfor %}

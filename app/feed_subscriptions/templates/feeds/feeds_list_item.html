@@ -4,14 +4,14 @@
 
         <!-- button group for normal user functions -->
         {% if source.image_url %}
-        <a href="{% url 'one_source' id=source.id %}">
+        <a href="{% url 'one_feed' id=source.id %}">
             <img src="{{ source.image_url }}" height="40" class="rounded" alt="Image">
         </a>
         {% endif %}
 
         <!-- title -->
         <div class="flex-fill p-1 mx-1">
-            <a href="{% url 'one_source' id=source.id %}">{{ source.display_name }}</a>
+            <a href="{% url 'one_feed' id=source.id %}">{{ source.display_name }}</a>
         </div>
 
         <!-- button group for adminiatration functions -->

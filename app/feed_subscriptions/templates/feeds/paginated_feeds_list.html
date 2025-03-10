@@ -1,0 +1,70 @@
+
+{% include 'feeds/feeds_list.html' with sources=page_obj.object_list %}
+<div class="row">
+    <div class="col-lg-8 mx-auto my-4">
+        <!-- pagination -->
+        {% if page_num_pages > 1 %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+
+                <li class="page-item">
+                    <button class="page-link" aria-label="Previous"
+                        hx-post="{% url 'feeds_search' %}?search_text={{ search_text }}&page=1"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-target="#search-results"
+                        hx-swap="innerHTML"
+                        hx-trigger="click">
+                        First
+                    </button>
+                </li>
+
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <button class="page-link" aria-label="Previous"
+                        hx-post="{% url 'feeds_search' %}?search_text={{ search_text }}&page={{ page_obj.previous_page_number }}"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-target="#search-results"
+                        hx-swap="innerHTML"
+                        hx-trigger="click">
+                        <span aria-hidden="true">&laquo;</span>
+                    </button>
+                </li>
+                {% endif %}
+
+                {% for i in page_range %}
+                    {% if i == page_number %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <button class="page-link"
+                            hx-post="{% url 'feeds_search' %}?search_text={{ search_text }}&page={{ i }}"
+                            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                            hx-target="#search-results"
+                            hx-swap="innerHTML"
+                            hx-trigger="click">
+                            {{ i }}
+                        </button>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <button class="page-link" aria-label="Next"
+                        hx-post="{% url 'feeds_search' %}?search_text={{ search_text }}&page={{ page_obj.next_page_number }}"
+                        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-target="#search-results"
+                        hx-swap="innerHTML"
+                        hx-trigger="click">
+                        <span aria-hidden="true">&raquo;</span>
+                    </button>
+                </li>
+                {% endif %}
+
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
