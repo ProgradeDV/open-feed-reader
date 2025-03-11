@@ -15,7 +15,7 @@ from .models import SourceSubcription
 logger = getLogger('feed_subscriptions/views.py')
 
 
-ITEMS_PER_PAGE = 3
+ITEMS_PER_PAGE = 20
 
 
 @login_required
