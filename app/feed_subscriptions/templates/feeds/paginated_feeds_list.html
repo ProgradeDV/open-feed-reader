@@ -1,12 +1,13 @@
 
 {% include 'feeds/feeds_list.html' with sources=page_obj.object_list %}
 <div class="row">
-    <div class="col-lg-8 mx-auto my-4">
+    <div class="col-lg-8 mx-auto my-4 d-flex justify-content-center">
         <!-- pagination -->
         {% if page_num_pages > 1 %}
         <nav aria-label="Page navigation">
             <ul class="pagination">
 
+                {% if page_range.start > 3 %}
                 <li class="page-item">
                     <button class="page-link" aria-label="Previous"
                         hx-post="{% url 'feeds_search' %}?search_text={{ search_text }}&page=1"
@@ -17,6 +18,7 @@
                         First
                     </button>
                 </li>
+                {% endif %}
 
                 {% if page_obj.has_previous %}
                 <li class="page-item">
