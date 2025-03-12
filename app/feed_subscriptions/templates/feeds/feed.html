@@ -1,5 +1,6 @@
 {% extends 'site_base/base.html' %}
 {% load bleach_tags %}
+{% load static %}
 
 {% block extra_navbar_links %}
 <div class="btn-group me-2" role="group" aria-label="First group">
@@ -8,9 +9,9 @@
   </a>
 
   {% if is_subed %}
-  <a href="{% url 'unsubscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-person-dash-fill"></i></a>
+    {% include 'subscriptions/unsubscribe.html' with id=source.id %}
   {% else %}
-  <a href="{% url 'subscribe_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-person-add"></i></a>
+    {% include 'subscriptions/subscribe.html' with id=source.id %}
   {% endif %}
 
   {% if perms.feeds.edit_source %}
@@ -71,4 +72,5 @@
 <!-- pagination -->
 {% include 'site_base/paginator.html' %}
 
+<script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}
