@@ -12,8 +12,8 @@ WORKDIR /app
 # import requirements
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
-RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-user-management.git@main
-RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@main
+RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-user-management.git@v0.2.0
+RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@v0.2.0
 
 # add app
 COPY ./app .

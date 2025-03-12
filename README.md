@@ -4,7 +4,7 @@ An open source rss feed website for those who want to host their own.
 ## Docker
 Build the docker container using:
 ```bash
-docker build -t progradedv/open-feed-reader:v0.1.1 --no-cache --ssh default.
+docker build -t progradedv/open-feed-reader:v0.2.0 --no-cache --ssh default.
 ```
 
 ### Port
