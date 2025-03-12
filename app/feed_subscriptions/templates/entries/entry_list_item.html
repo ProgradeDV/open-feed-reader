@@ -23,7 +23,7 @@ This template is for rendering a list item that is an entry in a list of entries
         {% if entry.author %}
           {{ entry.author }} at 
         {% endif %}
-        <a href="{% url 'one_source' id=entry.source.id %}" class="subtle">{{ entry.source.display_name }}</a>,
+        <a href="{% url 'one_feed' id=entry.source.id %}" class="subtle">{{ entry.source.display_name }}</a>,
         {{ entry.created }}
       </footer>
 
