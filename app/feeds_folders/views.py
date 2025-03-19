@@ -2,6 +2,7 @@ from logging import getLogger
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.http import Http404
 from feeds.models import Source, Entry
 from site_base.views import paginator_args
 
@@ -12,10 +13,11 @@ logger=getLogger('Feeds Folders')
 @login_required
 def folder_page(request: HttpResponse, folder_id: int):
     """view the posts in a folder"""
-    try:
-        folder = FeedsFolder.objects.get(id=folder_id)
-    except FeedsFolder.DoesNotExist:
-        return None
+    folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't view folders that are not yours
+    if folder.user is not request.user:
+        raise Http404("Folder Not Found")
 
     if folder.feeds.count() == 0:
         return HttpResponseRedirect(reverse('edit_folder', kwargs={'folder_id':folder_id}))
@@ -31,7 +33,8 @@ def folder_page(request: HttpResponse, folder_id: int):
         context=context,
         )
 
-@permission_required('feeds.add_folder')
+
+@login_required
 def create_folder(request: HttpResponse):
     """return the html for a new folder form"""
     if request.method == "GET":
@@ -45,14 +48,16 @@ def create_folder(request: HttpResponse):
     return None
 
 
+@login_required
 def edit_folder(request: HttpResponse, folder_id:int):
     """edit the feeds in a folder"""
-    try:
-        folder = FeedsFolder.objects.get(id=folder_id)
-    except FeedsFolder.DoesNotExist:
-        return None
 
-    # all_feeds = Source.objects.all()
+    folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't edit folders that are not yours
+    if folder.user is not request.user:
+        raise Http404("Folder Not Found")
+
     subed_feeds = Source.objects.filter(subscriptions__user = request.user).order_by('name')
     ordered_feeds = sorted(subed_feeds, key=lambda f: (f not in folder.feeds.all()))
 
@@ -73,12 +78,13 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
     if request.method != "POST":
         return None
 
-    try:
-        feed = Source.objects.get(id=feed_id)
-    except Source.DoesNotExist:
-        return None
-
+    feed = Source.objects.get(id=feed_id)
     folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't edit folders that are not yours
+    if folder.user is not request.user:
+        raise Http404("Folder Not Found")
+
     folder.feeds.add(feed)
     folder.save()
 
@@ -86,18 +92,20 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
     return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
 
 
+@login_required
 def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
     """remove a feed from a folder"""
     # reject non post requests
     if request.method != "POST":
         return None
 
-    try:
-        feed = Source.objects.get(id=feed_id)
-    except Source.DoesNotExist:
-        return None
-
+    feed = Source.objects.get(id=feed_id)
     folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't edit folders that are not yours
+    if folder.user is not request.user:
+        raise Http404("Folder Not Found")
+
     folder.feeds.remove(feed)
     folder.save()
 
