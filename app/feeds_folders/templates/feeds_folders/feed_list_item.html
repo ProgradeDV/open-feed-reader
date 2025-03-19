@@ -1,18 +1,18 @@
 <div class="card card-body"
-    {% if feed in folder.sources.all %}
-    hx-post="{% url 'remove_feed_from_folder' id=folder.id feed_id=feed.id %}"
+    {% if feed in folder.feeds.all %}
+    hx-post="{% url 'remove_feed_from_folder' folder_id=folder.id feed_id=feed.id %}"
     {% else %}
-    hx-post="{% url 'add_feed_to_folder' id=folder.id feed_id=feed.id %}"
+    hx-post="{% url 'add_feed_to_folder' folder_id=folder.id feed_id=feed.id %}"
     {% endif %}
     hx-swap="outerHTML"
     hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
     hx-trigger="click">
 
   <div class="btn-toolbar g-2" role="toolbar" aria-label="Toolbar with button groups">
-    
+
     <!-- button group for adminiatration functions -->
     <div class="btn-group pe-3 pt-1" role="group" aria-label="Basic example">
-      {% if feed in folder.sources.all %}
+      {% if feed in folder.feeds.all %}
         <i class="bi bi-check-square-fill"></i>
       {% else %}
         <i class="bi bi-square"></i>

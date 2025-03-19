@@ -1,6 +1,7 @@
 from logging import getLogger
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from feeds.models import Source, Entry
 from site_base.views import paginator_args
 
@@ -9,12 +10,15 @@ from .models import FeedsFolder
 logger=getLogger('Feeds Folders')
 
 @login_required
-def folder_page(request: HttpResponse, id: int):
+def folder_page(request: HttpResponse, folder_id: int):
     """view the posts in a folder"""
     try:
-        folder = FeedsFolder.objects.get(id=id)
+        folder = FeedsFolder.objects.get(id=folder_id)
     except FeedsFolder.DoesNotExist:
         return None
+
+    if folder.feeds.count() == 0:
+        return HttpResponseRedirect(reverse('edit_folder', kwargs={'folder_id':folder_id}))
 
     entries = Entry.objects.filter(source__folders = folder).order_by('-created')
     page = int(request.GET.get("page", 1))
@@ -41,10 +45,10 @@ def create_folder(request: HttpResponse):
     return None
 
 
-def edit_folder(request: HttpResponse, id:int):
+def edit_folder(request: HttpResponse, folder_id:int):
     """edit the feeds in a folder"""
     try:
-        folder = FeedsFolder.objects.get(id=id)
+        folder = FeedsFolder.objects.get(id=folder_id)
     except FeedsFolder.DoesNotExist:
         return None
 
@@ -63,18 +67,18 @@ def edit_folder(request: HttpResponse, id:int):
 
 
 @login_required
-def add_feed_to_folder(request: HttpResponse, id:int, feed_id:int):
+def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
     """add a feed to a folder"""
     # reject non post requests
     if request.method != "POST":
         return None
 
     try:
-        feed = Source.objects.get(id = feed_id)
+        feed = Source.objects.get(id=feed_id)
     except Source.DoesNotExist:
         return None
 
-    folder = FeedsFolder.objects.get(id=id)
+    folder = FeedsFolder.objects.get(id=folder_id)
     folder.feeds.add(feed)
     folder.save()
 
@@ -82,18 +86,18 @@ def add_feed_to_folder(request: HttpResponse, id:int, feed_id:int):
     return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
 
 
-def remove_feed_from_folder(request: HttpResponse, id:int, feed_id:int):
+def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
     """remove a feed from a folder"""
     # reject non post requests
     if request.method != "POST":
         return None
 
     try:
-        feed = Source.objects.get(id = feed_id)
+        feed = Source.objects.get(id=feed_id)
     except Source.DoesNotExist:
         return None
 
-    folder = FeedsFolder.objects.get(id=id)
+    folder = FeedsFolder.objects.get(id=folder_id)
     folder.feeds.remove(feed)
     folder.save()
 

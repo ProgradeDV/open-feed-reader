@@ -3,8 +3,9 @@
 
 {% block extra_navbar_links %}
 <div class="btn-group me-2" role="group" aria-label="First group">
-  <a href="{% url 'edit_folder' id=folder.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
-
+  <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-secondary">
+    <i class="bi bi-gear"></i>
+  </a>
 </div>
 {% endblock %}
 
