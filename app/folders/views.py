@@ -46,8 +46,8 @@ def edit_folder(request: HttpResponse, id:int):
         return None
 
     # all_feeds = Source.objects.all()
-    all_feeds = Source.objects.all().order_by('name')
-    ordered_feeds = sorted(all_feeds, key=lambda f: (f not in folder.sources.all()))
+    subed_sources = Source.objects.filter(subscriptions__user = request.user).order_by('name')
+    ordered_feeds = sorted(subed_sources, key=lambda f: (f not in folder.sources.all()))
 
     return render(
         request,
