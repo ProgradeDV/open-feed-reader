@@ -13,16 +13,6 @@ class SourceSubcription(models.Model):
     source = models.ForeignKey(Source, related_name='subscriptions', on_delete=models.CASCADE)
 
 
-class SourcesFolder(models.Model):
-    """a folder to put feed sources in"""
-    name = models.CharField(max_length=64)
-    user = models.ForeignKey(User, related_name='source_folders', on_delete=models.CASCADE)
-    subscriptions = models.ManyToManyField(SourceSubcription, related_name='folders')
-
-    def __str__(self):
-        return str(self.name)
-
-
 class EntriesFolder(models.Model):
     """a folder to put posts in"""
     name = models.CharField(max_length=64)

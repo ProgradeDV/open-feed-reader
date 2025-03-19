@@ -6,4 +6,4 @@ class FeedSubscriptionsConfig(AppConfig):
     name = 'feed_subscriptions'
 
     def ready(self):
-        from . import signals
+        from folders import signals

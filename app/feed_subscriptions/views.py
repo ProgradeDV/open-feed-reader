@@ -1,17 +1,12 @@
 """site_base.views"""
 from logging import getLogger
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.db.models.query import QuerySet
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
-from django.urls import reverse
-
-from feeds.models import Entry, Source
+from django.shortcuts import render, HttpResponse
 from site_base.forms import SearchForm
 from site_base.views import paginator_args
-
-from .models import SourceSubcription, SourcesFolder
+from feeds.models import Entry, Source
+from .models import SourceSubcription
 
 logger = getLogger('feed_subscriptions/views.py')
 
@@ -196,52 +191,5 @@ def user_subscriptions(request: HttpResponse):
             'subscriptions':subs,
             'form':form,
             'navbar_title':'Subscriptions',
-            },
-        )
-
-
-@login_required
-def folder_page(request: HttpResponse, id: int):
-    """view the posts in a folder"""
-    try:
-        folder = SourcesFolder.objects.get(id=id)
-    except SourcesFolder.DoesNotExist:
-        return None
-
-
-    return render(
-        request,
-        'folders/folder_page.html',
-        context={
-            "folder":folder
-            },
-        )
-
-@permission_required('feeds.add_folder')
-def create_folder(request: HttpResponse):
-    """return the html for a new folder form"""
-    if request.method == "GET":
-        return render(request, 'folders/create_folder_form.html')
-
-    if request.method == "POST":
-        new_folder = SourcesFolder(name=request.POST.get('folder_name'), user=request.user)
-        new_folder.save()
-        return render(request, 'folders/created_folder.html', context={'folder':new_folder})
-
-    return None
-
-
-def edit_folder(request: HttpResponse, id:int):
-    """edit the sources in a folder"""
-    try:
-        folder = SourcesFolder.objects.get(id=id)
-    except SourcesFolder.DoesNotExist:
-        return None
-
-    return render(
-        request,
-        'folders/edit_folder.html',
-        context={
-            "folder":folder
             },
         )

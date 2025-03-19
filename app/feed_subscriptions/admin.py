@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import SourceSubcription, SourcesFolder
+from .models import SourceSubcription
 
 # Register your models here.
 admin.site.register(SourceSubcription)
-admin.site.register(SourcesFolder)
