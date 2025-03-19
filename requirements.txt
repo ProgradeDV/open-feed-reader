@@ -6,3 +6,4 @@ gunicorn >= 22
 django-csp >= 3.8
 django_bleach >= 3.1
 ptpython >= 3
+django_extensions
