@@ -1,7 +1,8 @@
 from logging import getLogger
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, HttpResponse
-from feeds.models import Source
+from feeds.models import Source, Entry
+from site_base.views import paginator_args
 
 from .models import SourcesFolder
 
@@ -15,13 +16,15 @@ def folder_page(request: HttpResponse, id: int):
     except SourcesFolder.DoesNotExist:
         return None
 
+    entries = Entry.objects.filter(source__folders = folder).order_by('-created')
+    page = int(request.GET.get("page", 1))
+    context = paginator_args(page, entries)
+    context['folder'] = folder
 
     return render(
         request,
         'folders/folder_page.html',
-        context={
-            "folder":folder
-            },
+        context=context,
         )
 
 @permission_required('feeds.add_folder')
