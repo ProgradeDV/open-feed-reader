@@ -1,0 +1,10 @@
+{% extends 'site_base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<!-- pagination -->
+{% include 'site_base/paginator.html' %}
+<script src="{% static 'htmx.min.js' %}" ></script>
+{% endblock %}

@@ -1,13 +1,15 @@
 {% extends 'site_base/base.html' %}
 {% load static %}
-{% comment %} 
-This template renders a page of feed entries
 
-Requires the contect values for the standard paginator
-{% endcomment %}
+{% block extra_navbar_links %}
+<div class="btn-group me-2" role="group" aria-label="First group">
+  <a href="{% url 'edit_folder' id=folder.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
+
+</div>
+{% endblock %}
+
 
 {% block content %}
-<!-- list of entries -->
 <div class="row">
   <div class="col-lg-2">
     {% include "folders/folder_menu.html" %}
@@ -18,6 +20,7 @@ Requires the contect values for the standard paginator
     {% endfor %}
   </div>
 </div>
+
 
 <!-- pagination -->
 {% include 'site_base/paginator.html' %}

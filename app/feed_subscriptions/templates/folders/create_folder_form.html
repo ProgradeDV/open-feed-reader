@@ -1,0 +1,10 @@
+<li class="nav-item" id="add_folder">
+    <input class="form-control py-2"
+        name="folder_name" placeholder="New Folder"
+        hx-post="{% url 'create_folder' %}"
+        {% comment %} hx-trigger="keyup[key=='Enter']" {% endcomment %}
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-target="#add_folder"
+        hx-swap="outerHTML"
+        >
+</li>

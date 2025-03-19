@@ -3,6 +3,10 @@ from django.db.models import Model
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.forms import ModelForm
 from django.urls import reverse
+from django.db.models.query import QuerySet
+from django.core.paginator import Paginator
+
+ITEMS_PER_PAGE = 20
 
 
 def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_url: str,
@@ -122,3 +126,27 @@ def delete_model_form_view(request: HttpResponse, model: Model, success_url: str
             "post_url": request.path
             },
         )
+
+
+def paginator_args(page_index:int, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
+    """
+    Calculate the paginator context for use with the paginator template
+
+    Parameters:
+    - request: the http response object for the view
+    - items: a django QuerySet for all of the items to be paged
+    - items_per_page: integer number of items to put on each page
+    """
+    paginator = Paginator(items, items_per_page)
+
+    page_number = max(min(page_index, paginator.num_pages), 1)
+    page_obj = paginator.get_page(page_number)
+
+    page_range = range(max(1, page_number - 3), min(paginator.num_pages+1, page_number + 4))
+
+    return {
+        'page_obj':page_obj,
+        'page_range':page_range,
+        'page_number':page_number,
+        'page_num_pages':paginator.num_pages,
+    }

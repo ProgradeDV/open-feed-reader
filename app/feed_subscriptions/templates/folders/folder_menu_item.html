@@ -1,0 +1,6 @@
+{% comment %} Contains the dropdown menu item for the given folder {% endcomment %}
+<li class="list-group-item {% if lifolder == folder %}active{% endif %}">
+  <a href="{% url 'folder_page' id=lifolder.id %}">
+    {{ lifolder.name }}
+  </a>
+</li>

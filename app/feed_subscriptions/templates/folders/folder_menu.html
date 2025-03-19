@@ -1,0 +1,9 @@
+<ul class="list-group flex-column mb-auto">
+  <li class="list-group-item {% if request.path == '/' %}active{% endif %}">
+    <a href="{% url 'all_entries' %}">All</a>
+  </li>
+  {% for lifolder in request.user.source_folders.all %}
+    {% include 'folders/folder_menu_item.html' %}
+  {% endfor %}
+  {% include 'folders/create_folder_btn.html' %}
+</ul>

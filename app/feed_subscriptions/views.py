@@ -1,7 +1,7 @@
 """site_base.views"""
 from logging import getLogger
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect, redirect
@@ -9,8 +9,9 @@ from django.urls import reverse
 
 from feeds.models import Entry, Source
 from site_base.forms import SearchForm
+from site_base.views import paginator_args
 
-from .models import SourceSubcription
+from .models import SourceSubcription, SourcesFolder
 
 logger = getLogger('feed_subscriptions/views.py')
 
@@ -199,25 +200,48 @@ def user_subscriptions(request: HttpResponse):
         )
 
 
-def paginator_args(page_index:int, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
-    """
-    Calculate the paginator context for use with the paginator template
+@login_required
+def folder_page(request: HttpResponse, id: int):
+    """view the posts in a folder"""
+    try:
+        folder = SourcesFolder.objects.get(id=id)
+    except SourcesFolder.DoesNotExist:
+        return None
 
-    Parameters:
-    - request: the http response object for the view
-    - items: a django QuerySet for all of the items to be paged
-    - items_per_page: integer number of items to put on each page
-    """
-    paginator = Paginator(items, items_per_page)
 
-    page_number = max(min(page_index, paginator.num_pages), 1)
-    page_obj = paginator.get_page(page_number)
+    return render(
+        request,
+        'folders/folder_page.html',
+        context={
+            "folder":folder
+            },
+        )
 
-    page_range = range(max(1, page_number - 3), min(paginator.num_pages+1, page_number + 4))
+@permission_required('feeds.add_folder')
+def create_folder(request: HttpResponse):
+    """return the html for a new folder form"""
+    if request.method == "GET":
+        return render(request, 'folders/create_folder_form.html')
 
-    return {
-        'page_obj':page_obj,
-        'page_range':page_range,
-        'page_number':page_number,
-        'page_num_pages':paginator.num_pages,
-    }
+    if request.method == "POST":
+        new_folder = SourcesFolder(name=request.POST.get('folder_name'), user=request.user)
+        new_folder.save()
+        return render(request, 'folders/created_folder.html', context={'folder':new_folder})
+
+    return None
+
+
+def edit_folder(request: HttpResponse, id:int):
+    """edit the sources in a folder"""
+    try:
+        folder = SourcesFolder.objects.get(id=id)
+    except SourcesFolder.DoesNotExist:
+        return None
+
+    return render(
+        request,
+        'folders/edit_folder.html',
+        context={
+            "folder":folder
+            },
+        )

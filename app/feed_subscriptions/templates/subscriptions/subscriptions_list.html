@@ -28,6 +28,26 @@
 <!-- list of subscriptions -->
 <div class="row">
     <div class="col-lg-8 mx-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+          <i class="bi bi-three-dots-vertical"></i>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{% url 'all_entries' %}">All</a></li>
+          {% for folder in request.user.source_folders.all %}
+            {% include 'folders/folder_menu_item.html' %}
+          {% endfor %}
+          {% include 'folders/create_folder_btn.html' %}
+        </ul>
+      </li>
+
+      <li class="nav-item">
+        <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/feeds/' %}active{% endif %}" href="{% url 'all_feeds' %}">
+          <i class="bi bi-rss"></i>
+        </a>
+      </li>
+    </div>
+    <div class="col-lg-8 mx-auto">
         {% for sub in subscriptions %}
             {% include 'feeds/feeds_list_item.html' with source=sub.source is_subed=True %}
         {% endfor %}
