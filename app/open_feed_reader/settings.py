@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'site_base',
     'feed_subscriptions',
     'source_management',
-    'folders',
+    'feeds_folders',
     'axes',
     'user_management',
     'feeds',
