@@ -16,7 +16,7 @@ def folder_page(request: HttpResponse, folder_id: int):
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't view folders that are not yours
-    if folder.user is not request.user:
+    if folder.user != request.user:
         raise Http404("Folder Not Found")
 
     if folder.feeds.count() == 0:
@@ -55,7 +55,7 @@ def edit_folder(request: HttpResponse, folder_id:int):
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't edit folders that are not yours
-    if folder.user is not request.user:
+    if folder.user != request.user:
         raise Http404("Folder Not Found")
 
     subed_feeds = Source.objects.filter(subscriptions__user = request.user).order_by('name')
@@ -82,7 +82,7 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't edit folders that are not yours
-    if folder.user is not request.user:
+    if folder.user != request.user:
         raise Http404("Folder Not Found")
 
     folder.feeds.add(feed)
@@ -98,16 +98,4 @@ def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
     # reject non post requests
     if request.method != "POST":
         return None
-
-    feed = Source.objects.get(id=feed_id)
-    folder = FeedsFolder.objects.get(id=folder_id)
-
-    # can't edit folders that are not yours
-    if folder.user is not request.user:
-        raise Http404("Folder Not Found")
-
-    folder.feeds.remove(feed)
-    folder.save()
-
-    # return an unsubscribe button
-    return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
+is notxt={'folder':folder, 'feed':feed})
