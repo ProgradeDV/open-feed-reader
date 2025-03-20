@@ -1,0 +1,8 @@
+<input class="form-control py-2"
+  name="folder_name" value="{{ folder.name }}"
+  hx-post="{% url 'edit_folder_name' folder_id=folder.id %}"
+  {% comment %} hx-trigger="keyup[key=='Enter']" {% endcomment %}
+  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+  hx-swap="none"
+  hx-trigger"keyup[key=='Enter']"
+>

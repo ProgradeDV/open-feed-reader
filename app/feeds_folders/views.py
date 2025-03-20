@@ -1,5 +1,5 @@
 from logging import getLogger
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.http import Http404
@@ -49,9 +49,8 @@ def create_folder(request: HttpResponse):
 
 
 @login_required
-def edit_folder(request: HttpResponse, folder_id:int):
-    """edit the feeds in a folder"""
-
+def edit_folder_page(request: HttpResponse, folder_id:int):
+    """poge to edit the attributes of and content of a foldder"""
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't edit folders that are not yours
@@ -90,6 +89,27 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
 
     # return an unsubscribe button
     return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
+
+
+
+@login_required
+def edit_folder_name(request: HttpResponse, folder_id:int):
+    """add a feed to a folder"""
+    # reject non post requests
+    if request.method != "POST":
+        return None
+
+    folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't edit folders that are not yours
+    if folder.user != request.user:
+        raise Http404("Folder Not Found")
+
+    folder.name = request.POST.get('folder_name')
+    folder.save()
+
+    # return a no change
+    return HttpResponse(status=204)
 
 
 @login_required

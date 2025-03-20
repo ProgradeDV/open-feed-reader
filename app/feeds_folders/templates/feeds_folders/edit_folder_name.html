@@ -1,8 +1,0 @@
-<li class="nav-item" id="edit_folder" hx-target="this">
-  <input class="form-control"
-    name="folder_name" placeholder="Name"
-    hx-post="{% url 'create_folder' %}"
-    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-target="#add_folder"
-    >
-</li>

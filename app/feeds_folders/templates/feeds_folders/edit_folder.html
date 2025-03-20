@@ -6,6 +6,9 @@
 <!-- list of all the sources -->
 <div class="row">
   <div class="col-lg-8 mx-auto" id="search-results">
+    <div>
+      {% include 'feeds_folders/edit_folder_name_form.html' %}
+    </div>
 
   {% for feed in all_feeds %}
     {% include "feeds_folders/feed_list_item.html" %}
