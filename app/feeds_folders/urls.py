@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:folder_id>/edit_name/',           views.edit_folder_name,        name='edit_folder_name'),
     path('<int:folder_id>/add/<int:feed_id>',    views.remove_feed_from_folder, name='remove_feed_from_folder'),
     path('<int:folder_id>/remove/<int:feed_id>', views.add_feed_to_folder,      name='add_feed_to_folder'),
+    path('<int:folder_id>/delete',               views.delete_folder,           name='delete_folder'),
 ]

@@ -131,3 +131,17 @@ def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
 
     # return an unsubscribe button
     return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
+
+
+@login_required
+def delete_folder(request: HttpResponse, folder_id:int):
+    """delete a folder"""
+    folder = FeedsFolder.objects.get(id=folder_id)
+
+    # can't edit folders that are not yours
+    if folder.user != request.user:
+        raise Http404("Folder Not Found")
+
+    folder.delete()
+
+    return HttpResponseRedirect(reverse('all_entries'))
