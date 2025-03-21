@@ -3,7 +3,7 @@ from django import forms
 from feeds.models import Source
 
 
-class EditSourceForm(forms.ModelForm):
+class EditFeedForm(forms.ModelForm):
     """form for creating a new source or edit existing source"""
 
     class Meta:

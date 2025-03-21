@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FeedGeneratorConfig(AppConfig):
+class FeedManagementConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'source_management'
+    name = 'feed_management'

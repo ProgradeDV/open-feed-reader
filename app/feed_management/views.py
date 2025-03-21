@@ -7,14 +7,14 @@ from django.urls import reverse
 from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view
 from feeds.models import Source
 from feeds.fetch import init_feed
-from .forms import EditSourceForm
+from .forms import EditFeedForm
 from . import source_urls
 
-# Create your views here.
+
 
 @permission_required('feeds.add_source')
-def generate_new_source(request: HttpResponse):
-    """the form for initializing a source creation from a related link"""
+def generate_new_feed(request: HttpResponse):
+    """the form for initializing a feed creation from a related link"""
     if request.method == "POST":
 
         feed_url = None
@@ -34,52 +34,52 @@ def generate_new_source(request: HttpResponse):
             feed_url = source_urls.convert_subreddit(site_url)
 
         if feed_url:
-            # redirect to the new source form
-            return HttpResponseRedirect(reverse('new_source')+ '?' + urlencode({'feed_url':feed_url, 'site_url':site_url}))
+            # redirect to the new feed form
+            return HttpResponseRedirect(reverse('new_feed') + '?' + urlencode({'feed_url':feed_url, 'site_url':site_url}))
 
     return render(request,
-        'source_management/source_gen_form.html',
+        'feed_management/feed_gen_form.html',
         context={
-            'title':'Source Types'
+            'title':'Feed Types'
             },
         )
 
 
 
 @permission_required('feeds.add_source')
-def new_source(request: HttpResponse):
-    """create a new source"""
+def new_feed(request: HttpResponse):
+    """create a new feed"""
     if feed_url := request.GET.get('feed_url', ''):
         site_url = request.GET.get('site_url', '')
-        source = Source(feed_url=feed_url, site_url=site_url)
-        init_feed(source)
+        feed = Source(feed_url=feed_url, site_url=site_url)
+        init_feed(feed)
 
-        if source.status_code > 400:
-            messages.add_message(request, messages.ERROR, f"({source.status_code}) {source.last_result}")
+        if feed.status_code > 400:
+            messages.add_message(request, messages.ERROR, f"({feed.status_code}) {feed.last_result}")
 
-        return new_model_form_view(request, EditSourceForm, 'one_source', initial_model=source)
-    return new_model_form_view(request, EditSourceForm, 'one_source')
+        return new_model_form_view(request, EditFeedForm, 'one_feed', initial_model=feed)
+    return new_model_form_view(request, EditFeedForm, 'one_feed')
 
 
 
 @permission_required('feeds.change_source')
-def edit_source(request: HttpResponse, id: int):
-    """Edit a source"""
+def edit_feed(request: HttpResponse, id: int):
+    """Edit a feed"""
     try:
-        source = Source.objects.get(id = id)
+        feed = Source.objects.get(id = id)
     except Source.DoesNotExist:
-        HttpResponseRedirect(reverse('all_sources'))
+        HttpResponseRedirect(reverse('all_feeds'))
 
-    return edit_model_form_view(request, source, EditSourceForm, 'one_source', delete_url='delete_source')
+    return edit_model_form_view(request, feed, EditFeedForm, 'one_feed', delete_url='delete_feed')
 
 
 
 @permission_required('feeds.delete_source')
-def delete_source(request: HttpResponse, id: int):
-    """delete a source"""
+def delete_feed(request: HttpResponse, id: int):
+    """delete a feed"""
     try:
-        source = Source.objects.get(id = id)
+        feed = Source.objects.get(id = id)
     except Source.DoesNotExist:
-        return HttpResponseRedirect(reverse('all_sources'))
+        return HttpResponseRedirect(reverse('all_feeds'))
 
-    return delete_model_form_view(request, source, 'all_sources')
+    return delete_model_form_view(request, feed, 'all_feeds')

@@ -2,27 +2,27 @@
   <div class="btn-toolbar g-2" role="toolbar" aria-label="Toolbar with button groups">
 
     <!-- button group for normal user functions -->
-    {% if source.image_url %}
-    <a href="{% url 'one_feed' id=source.id %}">
-      <img src="{{ source.image_url }}" height="40" class="rounded" alt="Image">
+    {% if feed.image_url %}
+    <a href="{% url 'one_feed' id=feed.id %}">
+      <img src="{{ feed.image_url }}" height="40" class="rounded" alt="Image">
     </a>
     {% endif %}
 
     <!-- title -->
     <div class="flex-fill p-1 mx-1">
-      <a href="{% url 'one_feed' id=source.id %}">{{ source.display_name }}</a>
+      <a href="{% url 'one_feed' id=feed.id %}">{{ feed.display_name }}</a>
     </div>
 
     <!-- button group for adminiatration functions -->
     <div class="btn-group" role="group" aria-label="Basic example">
       {% if is_subed %}
-        {% include 'subscriptions/unsubscribe.html' with id=source.id %}
+        {% include 'subscriptions/unsubscribe.html' with id=feed.id %}
       {% else %}
-        {% include 'subscriptions/subscribe.html' with id=source.id %}
+        {% include 'subscriptions/subscribe.html' with id=feed.id %}
       {% endif %}
 
       {% if perms.feeds.edit_source %}
-        <a href="{% url 'edit_source' id=source.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
+        <a href="{% url 'edit_feed' id=feed.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
       {% endif %}
     </div>
   </div>

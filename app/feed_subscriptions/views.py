@@ -72,17 +72,17 @@ def all_feeds_search(request: HttpResponse):
     page = int(request.GET.get("page", 1))
 
     if not search_text:
-        sources = Source.objects.all()
+        feeds = Source.objects.all()
 
     else:
-        sources = Source.objects.filter(
+        feeds = Source.objects.filter(
             Q(feed_url__icontains = form.cleaned_data['search_text']) |
             Q(name__icontains = form.cleaned_data['search_text'])
             )
 
-    subed_sources = Source.objects.filter(subscriptions__user = request.user)
-    context = paginator_args(page, sources)
-    context['subed_sources'] = subed_sources
+    subed_feeds = Source.objects.filter(subscriptions__user = request.user)
+    context = paginator_args(page, feeds)
+    context['subed_feeds'] = subed_feeds
 
     return render(
         request,
@@ -96,13 +96,13 @@ def all_feeds_search(request: HttpResponse):
 @login_required
 def one_feed(request: HttpResponse, id: int):
     """the view for a single feed and it's entries"""
-    source = Source.objects.get(id=id)
-    entries = Entry.objects.filter(source = source).order_by('-created')
-    is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = source).exists()
+    feed = Source.objects.get(id=id)
+    entries = Entry.objects.filter(source = feed).order_by('-created')
+    is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = feed).exists()
 
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
-    context['source'] = source
+    context['feed'] = feed
     context['is_subed'] = is_subed
 
     return render(
@@ -115,30 +115,30 @@ def one_feed(request: HttpResponse, id: int):
 
 @login_required
 def subscribe_feed(request: HttpResponse, id: int):
-    """subscribe to the source with the given id"""
+    """subscribe to the feed with the given id"""
     # reject non post requests
     if request.method != "POST":
         return None
 
-    # reject subscriptions to sources that don't exist
+    # reject subscriptions to feeds that don't exist
     try:
-        source = Source.objects.get(id = id)
+        feed = Source.objects.get(id = id)
     except Source.DoesNotExist:
         return None
 
-    # check if you are already subscribed to that source
+    # check if you are already subscribed to that feed
     try:
-        sub = SourceSubcription.objects.filter(user = request.user).get(source = source)
+        sub = SourceSubcription.objects.filter(user = request.user).get(source = feed)
 
     except SourceSubcription.DoesNotExist:
         # if the subscription doesn't exist, subscribe
-        logger.debug('%s subscribing to %s', request.user, source.name)
-        sub = SourceSubcription(user = request.user, source = source)
+        logger.debug('%s subscribing to %s', request.user, feed.name)
+        sub = SourceSubcription(user = request.user, source = feed)
         sub.save()
 
     else:
         # if you're already subscribed
-        logger.debug('%s is already subscribed to %s', request.user, source.name)
+        logger.debug('%s is already subscribed to %s', request.user, feed.name)
 
     # return an unsubscribe button
     return render(request, 'subscriptions/unsubscribe.html', context={'id':id})

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'site_base',
     'feed_subscriptions',
-    'source_management',
+    'feed_management',
     'feeds_folders',
     'axes',
     'user_management',

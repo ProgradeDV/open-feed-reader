@@ -1,13 +1,13 @@
 {% extends 'site_base/base.html' %}
 
 {% block content %}
-<!-- source link bar / form -->
+<!-- feed link bar / form -->
 <div class="row">
     <div class="col-lg-8 mx-auto">
-        <form action="{% url 'gen_source' %}" method="post">
+        <form action="{% url 'gen_feed' %}" method="post">
             {% csrf_token %}
 
-            <!-- source link -->
+            <!-- feed link -->
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon1">
                     <i class="bi bi-rss"></i>
