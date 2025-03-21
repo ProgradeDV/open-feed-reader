@@ -28,6 +28,7 @@
                 <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
                 {% endif %}
             {% endfor %}
+            {% block more_fields %}{% endblock %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
@@ -37,6 +38,7 @@
                     <i class="bi bi-save pe-1"></i>
                     Save
                 </button>
+                {% block more_buttons %}{% endblock %}
                 <button type="button" class="btn btn-secondary" onclick="history.back()">
                     <i class="bi bi-x-lg pe-1"></i>
                     Cancel
