@@ -13,41 +13,41 @@
         <form action="{{ post_url }}" method="post">
             {% csrf_token %}
             {% for field in form.visible_fields %}
-            <div class="mb-3 row">
-
-                <label class="col-sm-2 col-form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="form-floating mb-3">
+                    {{ field }}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                </div>
 
                 {% if field.help_text %}
-                <div class="col-auto">{{ field }}</div>
-                <div class="col-auto">
-                    <span class="form-text">
-                        {{ field.help_text }}
-                    </span>
+                <div class="row mb-3 ms-3">
+                    {{ field.help_text }}
                 </div>
-                {% else %}
-                <div class="col-ms-10">{{ field }}</div>
                 {% endif %}
 
                 {% if field.errors %}
                 <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
                 {% endif %}
-            </div>
+            {% endfor %}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
             {% endfor %}
 
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save pe-1"></i>
-                Save
-            </button>
-            <button type="button" class="btn btn-secondary" onclick="history.back()">
-                <i class="bi bi-x-lg pe-1"></i>
-                Cancel
-            </button>
-            {% if delete_url %}
-            <a href="{{ delete_url }}" class="btn btn-danger">
-                <i class="bi bi-trash3 pe-1"></i>
-                Delete
-            </a>
-            {% endif %}
+            <div class="container">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save pe-1"></i>
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="history.back()">
+                    <i class="bi bi-x-lg pe-1"></i>
+                    Cancel
+                </button>
+                {% if delete_url %}
+                <a href="{{ delete_url }}" class="btn btn-danger">
+                    <i class="bi bi-trash3 pe-1"></i>
+                    Delete
+                </a>
+                {% endif %}
+            </div>
         </form>
     </div>
 </div>
