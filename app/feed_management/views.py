@@ -1,12 +1,15 @@
 """views for managing feed sources"""
 from urllib.parse import urlencode
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib import messages
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view
-from feeds.models import Source
+from django.db.models import Q
+from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view, paginator_args
+from site_base.forms import SearchForm
+from feeds.models import Source, Entry
 from feeds.fetch import init_feed
+from feed_subscriptions.models import SourceSubcription
 from .forms import EditFeedForm
 from . import source_urls
 
@@ -38,7 +41,7 @@ def generate_new_feed(request: HttpResponse):
             return HttpResponseRedirect(reverse('new_feed') + '?' + urlencode({'feed_url':feed_url, 'site_url':site_url}))
 
     return render(request,
-        'feed_management/feed_gen_form.html',
+        'feeds/feed_gen_form.html',
         context={
             'title':'Feed Types'
             },
@@ -83,3 +86,72 @@ def delete_feed(request: HttpResponse, id: int):
         return HttpResponseRedirect(reverse('all_feeds'))
 
     return delete_model_form_view(request, feed, 'all_feeds')
+
+
+
+@login_required
+def feed_page(request: HttpResponse, id: int):
+    """the view for a single feed and it's entries"""
+    feed = Source.objects.get(id=id)
+    entries = Entry.objects.filter(source = feed).order_by('-created')
+    is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = feed).exists()
+
+    page = int(request.GET.get("page", 1))
+    context = paginator_args(page, entries)
+    context['feed'] = feed
+    context['is_subed'] = is_subed
+
+    return render(
+        request,
+        'feeds/feed.html',
+        context=context,
+        )
+
+
+
+@login_required
+def all_feeds(request: HttpResponse):
+    """view for the page of all known feeds"""
+
+    return render(
+        request,
+        'feeds/all_feeds_page.html',
+        context={
+            'navbar_title':'All Feeds',
+            },
+        )
+
+
+
+@login_required
+def all_feeds_search(request: HttpResponse):
+    """view for the responst to the htmx request for a filtered list of all feeds"""
+    if request.method != "POST":
+        return None
+
+    form = SearchForm(request.POST)
+    # check whether it's valid:
+    if not form.is_valid():
+        return None
+
+    search_text = form.cleaned_data['search_text']
+    page = int(request.GET.get("page", 1))
+
+    if not search_text:
+        feeds = Source.objects.all()
+
+    else:
+        feeds = Source.objects.filter(
+            Q(feed_url__icontains = form.cleaned_data['search_text']) |
+            Q(name__icontains = form.cleaned_data['search_text'])
+            )
+
+    subed_feeds = Source.objects.filter(subscriptions__user = request.user)
+    context = paginator_args(page, feeds)
+    context['subed_feeds'] = subed_feeds
+
+    return render(
+        request,
+        'feeds/paginated_feeds_list.html',
+        context=context
+    )

@@ -44,72 +44,72 @@ def one_entry(request: HttpResponse, entry_id: int):
 
 
 
-@login_required
-def all_feeds(request: HttpResponse):
-    """view for the page of all known feeds"""
+# @login_required
+# def all_feeds(request: HttpResponse):
+#     """view for the page of all known feeds"""
 
-    return render(
-        request,
-        'feeds/all_feeds_page.html',
-        context={
-            'navbar_title':'All Feeds',
-            },
-        )
-
-
-@login_required
-def all_feeds_search(request: HttpResponse):
-    """view for the responst to the htmx request for a filtered list of all feeds"""
-    if request.method != "POST":
-        return None
-
-    form = SearchForm(request.POST)
-    # check whether it's valid:
-    if not form.is_valid():
-        return None
-
-    search_text = form.cleaned_data['search_text']
-    page = int(request.GET.get("page", 1))
-
-    if not search_text:
-        feeds = Source.objects.all()
-
-    else:
-        feeds = Source.objects.filter(
-            Q(feed_url__icontains = form.cleaned_data['search_text']) |
-            Q(name__icontains = form.cleaned_data['search_text'])
-            )
-
-    subed_feeds = Source.objects.filter(subscriptions__user = request.user)
-    context = paginator_args(page, feeds)
-    context['subed_feeds'] = subed_feeds
-
-    return render(
-        request,
-        'feeds/paginated_feeds_list.html',
-        context=context
-    )
+#     return render(
+#         request,
+#         'feeds/all_feeds_page.html',
+#         context={
+#             'navbar_title':'All Feeds',
+#             },
+#         )
 
 
+# @login_required
+# def all_feeds_search(request: HttpResponse):
+#     """view for the responst to the htmx request for a filtered list of all feeds"""
+#     if request.method != "POST":
+#         return None
+
+#     form = SearchForm(request.POST)
+#     # check whether it's valid:
+#     if not form.is_valid():
+#         return None
+
+#     search_text = form.cleaned_data['search_text']
+#     page = int(request.GET.get("page", 1))
+
+#     if not search_text:
+#         feeds = Source.objects.all()
+
+#     else:
+#         feeds = Source.objects.filter(
+#             Q(feed_url__icontains = form.cleaned_data['search_text']) |
+#             Q(name__icontains = form.cleaned_data['search_text'])
+#             )
+
+#     subed_feeds = Source.objects.filter(subscriptions__user = request.user)
+#     context = paginator_args(page, feeds)
+#     context['subed_feeds'] = subed_feeds
+
+#     return render(
+#         request,
+#         'feeds/paginated_feeds_list.html',
+#         context=context
+#     )
 
 
-@login_required
-def one_feed(request: HttpResponse, id: int):
-    """the view for a single feed and it's entries"""
-    feed = Source.objects.get(id=id)
-    entries = Entry.objects.filter(source = feed).order_by('-created')
-    is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = feed).exists()
 
-    page = int(request.GET.get("page", 1))
-    context = paginator_args(page, entries)
-    context['feed'] = feed
-    context['is_subed'] = is_subed
 
-    return render(
-        request,
-        'feeds/feed.html',
-        context=context,
-        )
+# @login_required
+# def one_feed(request: HttpResponse, id: int):
+#     """the view for a single feed and it's entries"""
+#     feed = Source.objects.get(id=id)
+#     entries = Entry.objects.filter(source = feed).order_by('-created')
+#     is_subed = SourceSubcription.objects.filter(user = request.user).filter(source = feed).exists()
+
+#     page = int(request.GET.get("page", 1))
+#     context = paginator_args(page, entries)
+#     context['feed'] = feed
+#     context['is_subed'] = is_subed
+
+#     return render(
+#         request,
+#         'feeds/feed.html',
+#         context=context,
+#         )
 
 
 
