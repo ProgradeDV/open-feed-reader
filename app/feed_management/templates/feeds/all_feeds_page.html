@@ -30,7 +30,12 @@
                 hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
                 hx-target="#search-results"
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                hx-indicator="#search-spinner"
                 >
+                <div class="spinner-border text-secondary htmx-indicator" role="status" id='search-spinner'>
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+
 
         </div>
     </div>
