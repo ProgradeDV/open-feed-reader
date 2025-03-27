@@ -1,13 +1,11 @@
 """views for managing feed sources"""
 import logging
-from urllib.parse import urlencode, urlparse, ParseResult
+from urllib.parse import  urlparse, ParseResult
 from django.contrib.auth.decorators import permission_required, login_required
-from django.contrib import messages
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
-from django.http import Http404
-from site_base.views import new_model_form_view, edit_model_form_view, delete_model_form_view, paginator_args
+from site_base.views import edit_model_form_view, delete_model_form_view, paginator_args
 from site_base.forms import SearchForm
 from feeds.models import Source, Entry
 from feeds.fetch import init_feed
@@ -89,11 +87,26 @@ def all_feeds_search(request: HttpResponse):
 
     search_text = form.cleaned_data['search_text']
 
-    # TODO: do normal search if the url exists and is already a feed
-
+    # if the url is valid
     if (parsed_url := urlparse(search_text)).scheme:
-        return new_feed_form(request, parsed_url)
+        # if a feed of that url exists, return just that feed
+        try:
+            feed = Source.objects.get(feed_url=search_text)
 
+        except Source.DoesNotExist:
+            # mif it does not exist, return the new feed form
+            return new_feed_form(request, parsed_url)
+
+        subed_feeds = Source.objects.filter(subscriptions__user = request.user)
+        return render(
+            request,
+            'feeds/feeds_list_item.html',
+            context={
+                'feed': feed,
+                'is_subed': (feed in subed_feeds),
+            }
+        )
+    # search for feeds for ones matching the given text
     return feeds_search_result(request, search_text)
 
 
