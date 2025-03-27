@@ -12,7 +12,7 @@ This template is for rendering a list item that is an entry in a list of entries
     <div class="col-md-auto">
 
       <!-- link to entry page -->
-      <a href="{% url 'one_entry' entry_id=entry.id %}">
+      <a href="{% url 'entry_page' entry_id=entry.id %}">
         <span>
           <h4>{{ entry.title }}</h4>
         </span>

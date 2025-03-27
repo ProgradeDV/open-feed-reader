@@ -174,3 +174,15 @@ def new_feed(request: HttpResponse):
             'form': form,
         }
     )
+
+
+@login_required
+def entry_page(request: HttpResponse, entry_id: int):
+    """view for a single entry"""
+    entry = Entry.objects.get(id=entry_id)
+    return render(request,
+        'entries/entry.html',
+        context={
+            'entry':entry,
+            },
+        )
