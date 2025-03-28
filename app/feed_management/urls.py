@@ -8,6 +8,6 @@ urlpatterns = [
     path('<int:id>/delete/',      views.delete_feed,      name='delete_feed'),
     path('all/',                  views.all_feeds,        name='all_feeds'),
     path('search/',               views.all_feeds_search, name='feeds_search'),
-    path('new/',                  views.new_feed,         name='new_feed'),
+    path('new/',                  views.new_feed_submit,  name='new_feed'),
     path('entry/<int:entry_id>/', views.entry_page,       name='entry_page'),
 ]

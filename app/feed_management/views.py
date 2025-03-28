@@ -8,7 +8,7 @@ from django.db.models import Q
 from site_base.views import edit_model_form_view, delete_model_form_view, paginator_args
 from site_base.forms import SearchForm
 from feeds.models import Source, Entry
-from feeds.fetch import init_feed
+from feeds.fetch import init_feed, fetch_feed
 from feed_subscriptions.models import SourceSubcription
 from .forms import EditFeedForm
 from . import source_urls
@@ -152,7 +152,7 @@ def new_feed_form(request: HttpResponse, parsed_url:ParseResult):
 
 
 @login_required
-def new_feed(request: HttpResponse):
+def new_feed_submit(request: HttpResponse):
     """this is the view for when a user hits submit on a new feed form"""
     if request.method != "POST":
         return HttpResponse(status=405) # Method Not Allowed
@@ -161,9 +161,11 @@ def new_feed(request: HttpResponse):
 
     # if the form is valid, save the new feed and redirect the user to the feed page
     if form.is_valid():
-        new_model = form.save()
+        new_feed = form.save()
+        fetch_feed(new_feed)
+
         response = HttpResponse(content='')
-        response.headers['HX-Redirect'] = reverse('one_feed', kwargs={'id': new_model.id})
+        response.headers['HX-Redirect'] = reverse('one_feed', kwargs={'id': new_feed.id})
         return response
 
     # return a rendered form html
