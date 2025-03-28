@@ -1,9 +1,8 @@
 """site_base.views"""
 from logging import getLogger
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 from django.shortcuts import render, HttpResponse
-from site_base.forms import SearchForm
+from django.http import Http404
 from site_base.views import paginator_args
 from feeds.models import Entry, Source
 from .models import SourceSubcription
@@ -36,13 +35,13 @@ def subscribe_feed(request: HttpResponse, id: int):
     """subscribe to the feed with the given id"""
     # reject non post requests
     if request.method != "POST":
-        return None
+        return HttpResponse(status=405) # Method Not Allowed
 
     # reject subscriptions to feeds that don't exist
     try:
         feed = Source.objects.get(id = id)
     except Source.DoesNotExist:
-        return None
+        return Http404("Feed not Found")
 
     # check if you are already subscribed to that feed
     try:
@@ -67,7 +66,7 @@ def subscribe_feed(request: HttpResponse, id: int):
 def unsubscribe_feed(request: HttpResponse, id: int):
     """Unsubscribe the user from the feed with the given id"""
     if request.method != "POST":
-        return None
+        return HttpResponse(status=405) # Method Not Allowed
 
     try:
         # find the subscription
@@ -75,10 +74,16 @@ def unsubscribe_feed(request: HttpResponse, id: int):
 
     except SourceSubcription.DoesNotExist:
         logger.debug('%s is not subscribed to %s', request.user, id)
+        return Http404("Subscription not Found")
 
-    else:
-        logger.debug('%s unsubscribing from %s', request.user, sub.source.name)
-        sub.delete()
+    logger.debug('%s unsubscribing from %s', request.user, sub.source.name)
+    feed = sub.source
+
+    # remove the feed from all of the users folders
+    for folder in request.user.source_folders.all():
+        folder.feeds.remove(feed)
+
+    sub.delete()
 
     # return a subscribe button
     return render(request, 'subscriptions/subscribe.html', context={'id':id})
