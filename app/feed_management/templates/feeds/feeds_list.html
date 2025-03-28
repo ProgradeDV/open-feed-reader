@@ -1,8 +1,14 @@
 <!-- list feeds -->
-{% for feed in feeds %}
-    {% if feed in subed_feeds %}
-        {% include 'feeds/feeds_list_item.html' with is_subed=True%}
-    {% else %}
-        {% include 'feeds/feeds_list_item.html' with is_subed=False%}
-    {% endif %}
-{% endfor %}
+{% if feeds %}
+    {% for feed in feeds %}
+        {% if feed in subed_feeds %}
+            {% include 'feeds/feeds_list_item.html' with is_subed=True%}
+        {% else %}
+            {% include 'feeds/feeds_list_item.html' with is_subed=False%}
+        {% endif %}
+    {% endfor %}
+{% else %}
+<div class="text-center p-4">
+    <h2>[ No Match ]</h2>
+</div>
+{% endif %}
