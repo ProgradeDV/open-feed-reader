@@ -18,7 +18,7 @@
     </div>
 
     <!-- feeds to add -->
-    {% if all_feeds.count %}
+    {% if all_feeds %}
       {% for feed in all_feeds %}
         {% include "feeds_folders/feed_list_item.html" %}
       {% endfor %}
