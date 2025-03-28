@@ -26,6 +26,8 @@ def folder_page(request: HttpResponse, folder_id: int):
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
     context['folder'] = folder
+    context["title"] = f"Open Feed Reader: {folder.name}"
+    context["navbar_title"] = folder.name
 
     return render(
         request,
@@ -66,6 +68,8 @@ def edit_folder_page(request: HttpResponse, folder_id:int):
         context={
             "folder":folder,
             "all_feeds":ordered_feeds,
+            "title":f"Open Feed Reader: {folder.name}",
+            "navbar_title":f"Edit Folder: {folder.name}",
             },
         )
 

@@ -1,27 +1,32 @@
 {% extends 'site_base/base.html' %}
 {% load static %}
+{% comment %} 
+This template renders a page of feed entries
 
-{% block extra_navbar_links %}
-<div class="btn-group me-2" role="group" aria-label="First group">
-  <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-secondary">
-    <i class="bi bi-gear"></i>
-  </a>
-</div>
-{% endblock %}
-
+Requires the contect values for the standard paginator
+{% endcomment %}
 
 {% block content %}
 <div class="row">
+  <!-- folder menu -->
   <div class="col-lg-2">
     {% include "feeds_folders/folder_menu.html" %}
   </div>
-  <div class="col-lg-8">
-    {% for entry in page_obj.object_list %}
-      {% include 'entries/entry_list_item.html' %}
-    {% endfor %}
+
+  <div class="col-lg-8 p-3">
+    <!-- list of entries -->
+    {% if page_obj.object_list %}
+      {% for entry in page_obj.object_list %}
+        {% include 'entries/entry_list_item.html' %}
+      {% endfor %}
+    {% else %}
+      <div class="text-center p-5">
+        <h2>[ Empty List ]</h2>
+      </div>
+    {% endif %}
+
   </div>
 </div>
-
 
 <!-- pagination -->
 {% include 'site_base/paginator.html' %}

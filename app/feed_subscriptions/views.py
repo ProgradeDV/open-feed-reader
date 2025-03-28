@@ -21,11 +21,11 @@ def user_feed(request: HttpResponse):
 
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
-    context['navbar_title'] = 'My Feed'
+    context['navbar_title'] = 'My Feeds'
 
     return render(
         request,
-        'entries/entries_list.html',
+        'feeds_folders/folder_page.html',
         context=context,
         )
 

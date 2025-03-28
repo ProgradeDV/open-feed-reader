@@ -2,20 +2,31 @@
 {% load static %}
 
 {% block content %}
-
-<!-- list of all the sources -->
 <div class="row">
-  <div class="col-lg-8 mx-auto" id="search-results">
+  <!-- menu -->
+  <div class="col-lg-2">
+    {% include "feeds_folders/folder_menu.html" %}
+  </div>
+
+  <div class="col-lg-8" id="search-results">
     <div class="d-flex gap-3 p-3 align-items-center">
+      <!-- form for edit/delete -->
       <h4>Name:</h4>
       {% include 'feeds_folders/edit_folder_name_form.html' %}
       <div class="vr"></div>
       <a class="btn btn-danger" href="{% url 'delete_folder' folder_id=folder.id %}">Delete</a>
     </div>
 
-  {% for feed in all_feeds %}
-    {% include "feeds_folders/feed_list_item.html" %}
-  {% endfor %}
+    <!-- feeds to add -->
+    {% if all_feeds.count %}
+      {% for feed in all_feeds %}
+        {% include "feeds_folders/feed_list_item.html" %}
+      {% endfor %}
+    {% else %}
+      <div class="text-center p-5">
+        <h2>[ Subscribe to Feeds to add  them to folders. ]</h2>
+      </div>
+    {% endif %}
 
   </div>
 </div>
