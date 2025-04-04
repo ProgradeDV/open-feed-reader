@@ -1,3 +1,5 @@
+{% load static %}
+
 {% if form.errors.non_field_errors %}
 <div class="alert alert-danger">
     {{ form.errors.non_field_errors }}
@@ -31,13 +33,13 @@
         {{ hidden }}
     {% endfor %}
 
-    <div class="container">
+    <div class="d-inline-flex gap-2">
         <button type="submit" class="btn btn-primary">
             <i class="bi bi-save pe-1"></i>
             Save
         </button>
-        <div class="spinner-border text-secondary htmx-indicator" role="status" id='new-feed-spinner'>
-            <span class="visually-hidden">Loading...</span>
+        <div id='new-feed-spinner'>
+            <img class='loading-spinner' src="{% static 'loading.gif' %}">
         </div>
     </div>
 </form>

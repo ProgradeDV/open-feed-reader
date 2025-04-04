@@ -32,8 +32,8 @@
                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                 hx-indicator="#search-spinner"
                 >
-                <div class="spinner-border text-secondary htmx-indicator" role="status" id='search-spinner'>
-                    <span class="visually-hidden">Loading...</span>
+                <div class='htmx-indicator' id='search-spinner'>
+                    <img class='loading-spinner' src="{% static 'loading.gif' %}">
                 </div>
 
 
