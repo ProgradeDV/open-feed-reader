@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.http import Http404
 from feeds.models import Source, Entry
 from site_base.views import paginator_args
+from django.contrib import messages
 
 from .models import FeedsFolder
 
@@ -147,5 +148,6 @@ def delete_folder(request: HttpResponse, folder_id:int):
         raise Http404("Folder Not Found")
 
     folder.delete()
+    messages.success(request, f"{folder} Saved")
 
     return HttpResponseRedirect(reverse('all_entries'))

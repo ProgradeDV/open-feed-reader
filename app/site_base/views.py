@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from django.urls import reverse
 from django.db.models.query import QuerySet
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 ITEMS_PER_PAGE = 20
 
@@ -71,7 +72,8 @@ def edit_model_form_view(request: HttpResponse, model: Model, form_class: ModelF
         form = form_class(request.POST, instance = model)
         # check whether it's valid:
         if form.is_valid():
-            form.save()
+            model = form.save()
+            messages.success(request, f"{model} Saved")
             return HttpResponseRedirect(reverse(success_url, kwargs={'id':model.id}))
 
     else:
@@ -115,6 +117,7 @@ def delete_model_form_view(request: HttpResponse, model: Model, success_url: str
 
     if request.method == "POST":
         model.delete()
+        messages.success(request, f"{model} Deleted")
         return HttpResponseRedirect(reverse(success_url))
 
     return render(

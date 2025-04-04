@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
+from django.contrib import messages
 from site_base.views import edit_model_form_view, delete_model_form_view, paginator_args
 from site_base.forms import SearchForm
 from feeds.models import Source, Entry
@@ -166,6 +167,7 @@ def new_feed_submit(request: HttpResponse):
 
         response = HttpResponse(content='')
         response.headers['HX-Redirect'] = reverse('one_feed', kwargs={'id': new_feed.id})
+        messages.success(request, f"{new_feed} Created")
         return response
 
     # return a rendered form html
