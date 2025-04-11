@@ -133,7 +133,7 @@ def feeds_search_result(request: HttpResponse, search_text:str):
         context=context
     )
 
-
+@permission_required('feeds.create_source')
 def new_feed_form(request: HttpResponse, parsed_url:ParseResult):
     """generate a form for a new feed"""
     # convert the given url to to the correct feed url
@@ -143,16 +143,25 @@ def new_feed_form(request: HttpResponse, parsed_url:ParseResult):
     # update the feed atributes
     init_feed(feed)
 
+    if request.user.has_perm('feeds.change_source'):
+        return render(
+            request,
+            'feeds/new_feed_form.html',
+            context={
+                'form': EditFeedForm(instance=feed),
+            }
+        )
+
     return render(
         request,
-        'feeds/new_feed_form.html',
+        'feeds/new_feed_prompt.html',
         context={
             'form': EditFeedForm(instance=feed),
         }
     )
 
 
-@login_required
+@permission_required('feeds.create_source')
 def new_feed_submit(request: HttpResponse):
     """this is the view for when a user hits submit on a new feed form"""
     if request.method != "POST":
