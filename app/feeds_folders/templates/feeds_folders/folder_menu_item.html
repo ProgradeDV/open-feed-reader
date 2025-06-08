@@ -7,16 +7,14 @@
         {{ lifolder.name }}
       </span>
 
-      <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-secondary btn-sm float-end">
-        <i class="bi bi-gear"></i>
+      <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-primary btn-sm float-end">
+        <i class="bi bi-pencil-square"></i>
       </a>
     </div>
   </row>
 </li>
 {% else %}
-<li class="list-group-item">
-  <a href="{% url 'folder_page' folder_id=lifolder.id %}">
-    {{ lifolder.name }}
-  </a>
-</li>
+<a href="{% url 'folder_page' folder_id=lifolder.id %}" class="list-group-item list-group-item-action">
+  {{ lifolder.name }}
+</a>
 {% endif %}
