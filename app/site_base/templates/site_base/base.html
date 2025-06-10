@@ -26,10 +26,8 @@
         <nav class="navbar navbar-expand-md bg-dark-subtle">
           <nav class="nav nav-pills">
 
-            <a class="flex-sm-fill text-sm-center nav-link ms-2 {% if request.path == '/' %}active{% endif %}" href="/">
-              <i class="bi bi-house-fill"></i>
-            </a>
-            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == '/feeds/' %}active{% endif %}" href="{% url 'all_feeds' %}">
+            {% url 'all_feeds' as all_feeds_url %}
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{% url 'all_feeds' %}">
               <i class="bi bi-rss"></i>
             </a>
             {% comment %} designated zone for extra navbar links {% endcomment %}

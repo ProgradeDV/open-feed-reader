@@ -8,12 +8,6 @@
     <i class="bi bi-arrow-up-right"></i>
   </a>
 
-  {% if is_subed %}
-    {% include 'subscriptions/unsubscribe.html' with id=feed.id %}
-  {% else %}
-    {% include 'subscriptions/subscribe.html' with id=feed.id %}
-  {% endif %}
-
   {% if perms.feeds.edit_source %}
   <a href="{% url 'edit_feed' id=feed.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
   {% endif %}

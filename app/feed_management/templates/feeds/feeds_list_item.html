@@ -2,15 +2,6 @@
   <div class="row align-items-center">
     <div class="col-sm-12 my-auto">
 
-      <!-- button group for normal user functions -->
-      <div class="btn-group" role="group" aria-label="Basic example">
-        {% if is_subed %}
-          {% include 'subscriptions/unsubscribe.html' with id=feed.id %}
-        {% else %}
-          {% include 'subscriptions/subscribe.html' with id=feed.id %}
-        {% endif %}
-      </div>
-
       <!-- icon -->
       {% if feed.image_url %}
       <a href="{% url 'one_feed' id=feed.id %}">

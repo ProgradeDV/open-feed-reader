@@ -150,4 +150,4 @@ def delete_folder(request: HttpResponse, folder_id:int):
     folder.delete()
     messages.success(request, f"{folder} Saved")
 
-    return HttpResponseRedirect(reverse('all_entries'))
+    return HttpResponseRedirect(reverse('all_subed_feed'))
