@@ -1,32 +1,28 @@
-<div class="card card-body"
-    {% if feed in folder.feeds.all %}
-    hx-post="{% url 'remove_feed_from_folder' folder_id=folder.id feed_id=feed.id %}"
-    {% else %}
-    hx-post="{% url 'add_feed_to_folder' folder_id=folder.id feed_id=feed.id %}"
-    {% endif %}
-    hx-swap="outerHTML"
-    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    hx-trigger="click">
-
+<div class="card card-body">
   <div class="btn-toolbar g-2" role="toolbar" aria-label="Toolbar with button groups">
 
-    <!-- button group for adminiatration functions -->
+    {% comment %} left button group {% endcomment %}
     <div class="btn-group pe-3 pt-1" role="group" aria-label="Basic example">
       {% if feed in folder.feeds.all %}
-        <i class="bi bi-check-square-fill"></i>
+        {% include "feeds_folders/remove_from_folder_btn.html" %}
       {% else %}
-        <i class="bi bi-square"></i>
+        {% include "feeds_folders/add_to_folder_btn.html" %}
       {% endif %}
     </div>
 
-    <!-- button group for normal user functions -->
+    {% comment %} image if available {% endcomment %}
     {% if feed.image_url %}
       <img src="{{ feed.image_url }}" height="40" class="rounded" alt="Image">
     {% endif %}
 
-    <!-- title -->
+    {% comment %} title {% endcomment %}
     <div class="flex-fill p-1 mx-1">
       {{ feed.display_name }}
+    </div>
+
+    {% comment %} right button group {% endcomment %}
+    <div class="btn-group pe-3 pt-1" role="group" aria-label="Basic example">
+      {% include "subscriptions/unsubscribe_btn.html" with id=feed.id %}
     </div>
   </div>
 </div>

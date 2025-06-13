@@ -76,7 +76,7 @@ def subscribe_feed(request: HttpResponse, id: int):
         logger.debug('%s is already subscribed to %s', request.user, feed.name)
 
     # return an unsubscribe button
-    return render(request, 'subscriptions/unsubscribe.html', context={'id':id})
+    return render(request, 'subscriptions/unsubscribe_btn.html', context={'id':id})
 
 
 
@@ -104,7 +104,7 @@ def unsubscribe_feed(request: HttpResponse, id: int):
     sub.delete()
 
     # return a subscribe button
-    return render(request, 'subscriptions/subscribe.html', context={'id':id})
+    return render(request, 'subscriptions/resubscribe_btn.html', context={'id':id})
 
 
 

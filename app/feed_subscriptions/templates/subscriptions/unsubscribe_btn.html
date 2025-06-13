@@ -1,7 +1,7 @@
-<button class="btn btn-primary"
+<button class="btn btn-danger"
       hx-post="{% url 'unsubscribe_feed' id=id %}"
       hx-swap="outerHTML"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
       hx-trigger="click">
-    <i class="bi bi-person-dash-fill"></i>
+    <i class="bi bi-trash3"></i>
 </button>

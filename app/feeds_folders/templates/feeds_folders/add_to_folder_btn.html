@@ -1,0 +1,7 @@
+<button class="btn btn-dark"
+      hx-post="{% url 'add_feed_to_folder' folder_id=folder.id feed_id=feed.id %}"
+      hx-swap="outerHTML"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      hx-trigger="click">
+    <i class="bi bi-square"></i>
+</button>
