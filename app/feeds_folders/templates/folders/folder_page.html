@@ -34,7 +34,9 @@ Requires the contect values for the standard paginator
 {% endblock %}
 
 {% block extra_navbar_links %}
-  <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-dark btn-sm">
-    <i class="bi bi-pencil-square"></i>
-  </a>
+  {% if folder %}
+    <a href="{% url 'edit_folder' folder_id=folder.id %}" class="flex-sm-fill text-sm-center nav-link">
+      <i class="bi bi-pencil-square"></i>
+    </a>
+  {% endif %}
 {% endblock %}
