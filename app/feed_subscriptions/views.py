@@ -23,7 +23,7 @@ def edit_subscriptions_page(request: HttpResponse):
 
     return render(
         request,
-        'subscriptions/all_subs_page.html',
+        'subscriptions/edit_subs_page.html',
         context={
             'navbar_title':'All Feeds',
             },
