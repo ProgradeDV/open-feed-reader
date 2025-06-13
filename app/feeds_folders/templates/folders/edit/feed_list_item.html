@@ -4,9 +4,9 @@
     {% comment %} left button group {% endcomment %}
     <div class="btn-group pe-3 pt-1" role="group" aria-label="Basic example">
       {% if feed in folder.feeds.all %}
-        {% include "feeds_folders/remove_from_folder_btn.html" %}
+        {% include "folders/edit/remove_from_folder_btn.html" %}
       {% else %}
-        {% include "feeds_folders/add_to_folder_btn.html" %}
+        {% include "folders/edit/add_to_folder_btn.html" %}
       {% endif %}
     </div>
 

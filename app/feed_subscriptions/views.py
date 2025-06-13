@@ -42,7 +42,7 @@ def all_subed_feed(request: HttpResponse):
 
     return render(
         request,
-        'feeds_folders/folder_page.html',
+        'folders/folder_page.html',
         context=context,
         )
 

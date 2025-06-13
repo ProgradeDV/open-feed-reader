@@ -32,7 +32,7 @@ def folder_page(request: HttpResponse, folder_id: int):
 
     return render(
         request,
-        'feeds_folders/folder_page.html',
+        'folders/folder_page.html',
         context=context,
         )
 
@@ -41,12 +41,12 @@ def folder_page(request: HttpResponse, folder_id: int):
 def create_folder(request: HttpResponse):
     """return the html for a new folder form"""
     if request.method == "GET":
-        return render(request, 'feeds_folders/create_folder_form.html')
+        return render(request, 'folders/sidebar/create_folder_form.html')
 
     if request.method == "POST":
         new_folder = FeedsFolder(name=request.POST.get('folder_name'), user=request.user)
         new_folder.save()
-        return render(request, 'feeds_folders/created_folder.html', context={'lifolder':new_folder})
+        return render(request, 'folders/sidebar/created_folder.html', context={'lifolder':new_folder})
 
     return None
 
@@ -65,7 +65,7 @@ def edit_folder_page(request: HttpResponse, folder_id:int):
 
     return render(
         request,
-        'feeds_folders/edit_folder.html',
+        'folders/edit/edit_folder.html',
         context={
             "folder":folder,
             "all_feeds":ordered_feeds,
@@ -93,7 +93,7 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
     folder.save()
 
     # return an unsubscribe button
-    return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
+    return render(request, 'folders/edit/remove_from_folder_btn.html', context={'folder':folder, 'feed':feed})
 
 
 
@@ -135,7 +135,7 @@ def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
     folder.save()
 
     # return an unsubscribe button
-    return render(request, 'feeds_folders/feed_list_item.html', context={'folder':folder, 'feed':feed})
+    return render(request, 'folders/edit/add_to_folder_btn.html', context={'folder':folder, 'feed':feed})
 
 
 @login_required
