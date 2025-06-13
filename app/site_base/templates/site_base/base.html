@@ -26,10 +26,10 @@
         <nav class="navbar navbar-expand-md bg-dark-subtle">
           <nav class="nav nav-pills">
 
-            {% url 'all_feeds' as all_feeds_url %}
-            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{% url 'all_feeds' %}">
+            {% comment %} {% url 'subscriptions' as all_feeds_url %}
+            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{% url 'subscriptions' %}">
               <i class="bi bi-rss"></i>
-            </a>
+            </a> {% endcomment %}
             {% comment %} designated zone for extra navbar links {% endcomment %}
             {% block extra_navbar_links %}{% endblock %}
           </nav>

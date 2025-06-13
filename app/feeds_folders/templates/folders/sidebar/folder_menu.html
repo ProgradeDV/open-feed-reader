@@ -1,10 +1,29 @@
 <ul class="list-group flex-column mb-auto">
-  <a href="{% url 'all_subed_feed' %}" class="list-group-item list-group-item-action {% if request.path == '/' %}active{% endif%}">
-    All
-  </a>
 
+  {% comment %} the "All" feed {% endcomment %}
+  {% url 'all_subed_feed' as all_url %}
+  {% if request.path == all_url %}
+    <li class="list-group-item py-1 active">
+      <span class="align-middle">
+        All
+      </span>
+
+      <a href="{% url 'subscriptions' %}" class="btn btn-primary btn-sm float-end">
+        <i class="bi bi-pencil-square"></i>
+      </a>
+    </li>
+
+  {% else %}
+    <a href="{% url 'all_subed_feed' %}" class="list-group-item list-group-item-action">
+      All
+    </a>
+  {% endif %}
+
+  {% comment %} list of all folders {% endcomment %}
   {% for lifolder in request.user.source_folders.all %}
     {% include 'folders/sidebar/folder_menu_item.html' %}
   {% endfor %}
+
+  {% comment %} new folder button {% endcomment %}
   {% include 'folders/sidebar/create_folder_btn.html' %}
 </ul>

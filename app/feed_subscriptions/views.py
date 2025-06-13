@@ -18,7 +18,7 @@ ITEMS_PER_PAGE = 20
 
 
 @login_required
-def all_subs(request: HttpResponse):
+def edit_subscriptions_page(request: HttpResponse):
     """view for the page of all known feeds"""
 
     return render(
