@@ -1,16 +1,4 @@
 {% comment %} Contains the dropdown menu item for the given folder {% endcomment %}
-{% if lifolder == folder %}
-<li class="list-group-item py-1 active">
-  <span class="align-middle">
-    {{ lifolder.name }}
-  </span>
-
-  <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-primary btn-sm float-end">
-    <i class="bi bi-pencil-square"></i>
-  </a>
-</li>
-{% else %}
-<a href="{% url 'folder_page' folder_id=lifolder.id %}" class="list-group-item list-group-item-action">
+<a href="{% url 'folder_page' folder_id=lifolder.id %}" class="list-group-item list-group-item-action {% if lifolder == folder %}active{% endif %}">
   {{ lifolder.name }}
 </a>
-{% endif %}

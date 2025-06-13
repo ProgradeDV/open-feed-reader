@@ -36,3 +36,9 @@
 {% include 'site_base/paginator.html' %}
 <script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}
+
+{% block extra_navbar_links %}
+  <a href="{% url 'edit_folder' folder_id=folder.id %}" class="btn btn-dark btn-sm active">
+    <i class="bi bi-pencil-square"></i>
+  </a>
+{% endblock %}
