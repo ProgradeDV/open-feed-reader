@@ -121,47 +121,43 @@ def all_subs_search(request: HttpResponse):
 
     search_text = form.cleaned_data['search_text']
 
-    # if the url is valid
-    if (parsed_url := urlparse(search_text)).scheme:
-        # if a feed of that url exists, return just that feed
-        try:
-            feed = Source.objects.get(feed_url=search_text)
+    mached_feeds = feeds_search(request, search_text)
 
-        except Source.DoesNotExist:
-            # mif it does not exist, return the new feed form
-            return new_feed_form(request, parsed_url)
+    if mached_feeds.count():
+        page = int(request.GET.get("page", 1))
+        context = paginator_args(page, mached_feeds)
 
-        subed_feeds = Source.objects.filter(subscriptions__user = request.user)
         return render(
             request,
-            'feeds/feeds_list_item.html',
-            context={
-                'feed': feed,
-                'is_subed': (feed in subed_feeds),
-            }
+            'subscriptions/paginated_feeds_list.html',
+            context=context
         )
-    # search for feeds for ones matching the given text
-    return feeds_search_result(request, search_text)
+
+    return HttpResponse('')
 
 
-def feeds_search_result(request: HttpResponse, search_text:str):
-    """search the database for feeds matching the given text and return the http response"""
+def feeds_search(request: HttpResponse, search_text:str):
+    """search the database for feeds matching the given text and return the http response
+    
+    Returns a set of matches
+    """
     # if no search, return all feeds
     if not search_text:
-        feeds = Source.objects.filter(subscriptions__user = request.user).order_by('title')
+        return Source.objects\
+            .filter(subscriptions__user = request.user)\
+            .order_by('title')
 
-    else:
+    # if the text is not a valid url
+    parsed_url = urlparse(search_text)
+    if not parsed_url.scheme:
         # matches if search_text is in the name or title
-        feeds = Source.objects.filter(subscriptions__user = request.user).filter(Q(feed_url__icontains = search_text) | Q(name__icontains = search_text)).order_by('title')
+        return Source.objects\
+            .filter(subscriptions__user = request.user)\
+            .filter(Q(title__icontains = search_text) | Q(name__icontains = search_text))\
+            .order_by('title')
 
-    page = int(request.GET.get("page", 1))
-    subed_feeds = Source.objects.filter(subscriptions__user = request.user)
-
-    context = paginator_args(page, feeds)
-    context['subed_feeds'] = subed_feeds
-
-    return render(
-        request,
-        'feeds/paginated_feeds_list.html',
-        context=context
-    )
+    # matches if the source exists
+    return Source.objects\
+        .filter(subscriptions__user = request.user)\
+        .filter(Q(feed_url = search_text) | Q(site_url = search_text))\
+        .order_by('title')
