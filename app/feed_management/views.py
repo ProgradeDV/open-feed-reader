@@ -1,18 +1,16 @@
 """views for managing feed sources"""
 import logging
-from urllib.parse import  urlparse, ParseResult
+from urllib.parse import ParseResult
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Q
 from django.contrib import messages
 from site_base.views import edit_model_form_view, delete_model_form_view, paginator_args
-from site_base.forms import SearchForm
 from feeds.models import Source, Entry
 from feeds.fetch import init_feed, fetch_feed
+from feeds.url_converters import get_rss_url
 from feed_subscriptions.models import SourceSubcription
 from .forms import EditFeedForm
-from . import source_urls
 
 logger = logging.getLogger("feed_management")
 
@@ -61,85 +59,11 @@ def feed_page(request: HttpResponse, id: int):
 
 
 
-# @login_required
-# def all_feeds(request: HttpResponse):
-#     """view for the page of all known feeds"""
-
-#     return render(
-#         request,
-#         'feeds/all_feeds_page.html',
-#         context={
-#             'navbar_title':'All Feeds',
-#             },
-#         )
-
-
-
-# @login_required
-# def all_feeds_search(request: HttpResponse):
-#     """view for the responst to the htmx request for searching for a feed"""
-#     if request.method != "POST":
-#         return HttpResponse(status=405) # Method Not Allowed
-
-#     form = SearchForm(request.POST)
-#     # check whether it's valid:
-#     if not form.is_valid():
-#         return HttpResponse(content='Invalid Form')
-
-#     search_text = form.cleaned_data['search_text']
-
-#     # if the url is valid
-#     if (parsed_url := urlparse(search_text)).scheme:
-#         # if a feed of that url exists, return just that feed
-#         try:
-#             feed = Source.objects.get(feed_url=search_text)
-
-#         except Source.DoesNotExist:
-#             # mif it does not exist, return the new feed form
-#             return new_feed_form(request, parsed_url)
-
-#         subed_feeds = Source.objects.filter(subscriptions__user = request.user)
-#         return render(
-#             request,
-#             'feeds/feeds_list_item.html',
-#             context={
-#                 'feed': feed,
-#                 'is_subed': (feed in subed_feeds),
-#             }
-#         )
-#     # search for feeds for ones matching the given text
-#     return feeds_search_result(request, search_text)
-
-
-# def feeds_search_result(request: HttpResponse, search_text:str):
-#     """search the database for feeds matching the given text and return the http response"""
-#     # if no search, return all feeds
-#     if not search_text:
-#         feeds = Source.objects.filter(subscriptions__user = request.user).order_by('title')
-#         # feeds = Source.objects.all()
-
-#     else:
-#         # matches if search_text is in the name or title
-#         feeds = Source.objects.filter(Q(feed_url__icontains = search_text) | Q(name__icontains = search_text))
-
-#     page = int(request.GET.get("page", 1))
-#     subed_feeds = Source.objects.filter(subscriptions__user = request.user)
-
-#     context = paginator_args(page, feeds)
-#     context['subed_feeds'] = subed_feeds
-
-#     return render(
-#         request,
-#         'feeds/paginated_feeds_list.html',
-#         context=context
-#     )
-
-
 @permission_required('feeds.create_source')
 def new_feed_form(request: HttpResponse, parsed_url:ParseResult):
     """generate a form for a new feed"""
     # convert the given url to to the correct feed url
-    actual_url = source_urls.get_rss_url(parsed_url)
+    actual_url = get_rss_url(parsed_url)
     # create a new feed
     feed = Source(feed_url=actual_url, site_url=parsed_url.geturl())
     # update the feed atributes

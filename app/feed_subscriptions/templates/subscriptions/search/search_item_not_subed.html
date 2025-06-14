@@ -1,0 +1,5 @@
+{% extends "subscriptions/search/search_item.html" %}
+
+{% block subscription_action %}
+{% include "subscriptions/actions/subscribe_btn.html" with id=feed.id %}
+{% endblock subscription_action %}

@@ -1,6 +1,6 @@
 """site_base.views"""
 from logging import getLogger
-from urllib.parse import  urlparse
+from urllib.parse import  urlparse, ParseResult
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponse
 from django.http import Http404
@@ -8,7 +8,8 @@ from django.db.models import Q
 from site_base.forms import SearchForm
 from site_base.views import paginator_args
 from feeds.models import Entry, Source
-from feed_management.views import new_feed_form
+from feeds.url_converters import get_rss_url
+from feeds.fetch import fetch_feed
 from .models import SourceSubcription
 
 logger = getLogger('feed_subscriptions/views.py')
@@ -76,7 +77,7 @@ def subscribe_feed(request: HttpResponse, id: int):
         logger.debug('%s is already subscribed to %s', request.user, feed.name)
 
     # return an unsubscribe button
-    return render(request, 'subscriptions/unsubscribe_btn.html', context={'id':id})
+    return render(request, 'subscriptions/actions/unsubscribe_btn.html', context={'id':id})
 
 
 
@@ -104,7 +105,7 @@ def unsubscribe_feed(request: HttpResponse, id: int):
     sub.delete()
 
     # return a subscribe button
-    return render(request, 'subscriptions/resubscribe_btn.html', context={'id':id})
+    return render(request, 'subscriptions/actions/resubscribe_btn.html', context={'id':id})
 
 
 
@@ -114,50 +115,79 @@ def all_subs_search(request: HttpResponse):
     if request.method != "POST":
         return HttpResponse(status=405) # Method Not Allowed
 
-    form = SearchForm(request.POST)
     # check whether it's valid:
+    form = SearchForm(request.POST)
     if not form.is_valid():
         return HttpResponse(content='Invalid Form')
 
+    # get the search results
     search_text = form.cleaned_data['search_text']
+    parsed_url = urlparse(search_text)
+    if parsed_url.scheme:
+        rss_url = get_rss_url(parsed_url)
+        matched_feeds = feeds_search_url(request, rss_url)
 
-    mached_feeds = feeds_search(request, search_text)
+        if not matched_feeds.count():
+            return new_feed_search(request, rss_url)
+    else:
+        matched_feeds = feeds_search_text(request, search_text)
 
-    if mached_feeds.count():
+    if matched_feeds.count():
         page = int(request.GET.get("page", 1))
-        context = paginator_args(page, mached_feeds)
+        context = paginator_args(page, matched_feeds)
 
         return render(
             request,
-            'subscriptions/paginated_feeds_list.html',
+            'subscriptions/search/paginated_feeds_list.html',
             context=context
         )
 
     return HttpResponse('')
 
 
-def feeds_search(request: HttpResponse, search_text:str):
-    """search the database for feeds matching the given text and return the http response
+def feeds_search_text(request: HttpResponse, search_text:str):
+    """search the database for feeds matching the given text
     
     Returns a set of matches
     """
-    # if no search, return all feeds
+    # if empty search text, return all feeds
     if not search_text:
         return Source.objects\
             .filter(subscriptions__user = request.user)\
             .order_by('title')
 
-    # if the text is not a valid url
-    parsed_url = urlparse(search_text)
-    if not parsed_url.scheme:
-        # matches if search_text is in the name or title
+    # matches if search_text is in the name or title
+    return Source.objects\
+        .filter(subscriptions__user = request.user)\
+        .filter(Q(title__icontains = search_text) | Q(name__icontains = search_text))\
+        .order_by('title')
+
+
+def feeds_search_url(request: HttpResponse, search_text:str):
+    """search the database for feeds matching the given text
+    
+    Returns a set of matches
+    """
+    # if empty search text, return all feeds
+    if not search_text:
         return Source.objects\
             .filter(subscriptions__user = request.user)\
-            .filter(Q(title__icontains = search_text) | Q(name__icontains = search_text))\
             .order_by('title')
 
-    # matches if the source exists
+    # valid links matching the feed or site url
     return Source.objects\
         .filter(subscriptions__user = request.user)\
         .filter(Q(feed_url = search_text) | Q(site_url = search_text))\
         .order_by('title')
+
+
+def new_feed_search(request: HttpResponse, rss_url:str):
+    """create a new feed, return a search result"""
+    new_source = Source(feed_url=rss_url)
+    fetch_feed(new_source, no_cache=True)
+
+    return render(
+        request,
+        'subscriptions/search/search_item_not_subed.html',
+        context={'feed':new_source},
+    )
