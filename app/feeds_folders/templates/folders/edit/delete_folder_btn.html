@@ -1,0 +1,31 @@
+{% comment %} Delete Button triggers modal {% endcomment %}
+<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Delete
+</button>
+{% comment %} Modal to delete the folder {% endcomment %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Are You Sure?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        This will perminently delete {{folder.name}}!
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"
+            hx-post="{% url 'delete_folder' folder_id=folder.id %}"
+            hx-swap="none"
+            hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+            hx-trigger="click">
+          Delete
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

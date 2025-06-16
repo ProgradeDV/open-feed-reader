@@ -148,6 +148,9 @@ def delete_folder(request: HttpResponse, folder_id:int):
         raise Http404("Folder Not Found")
 
     folder.delete()
-    messages.success(request, f"{folder} Saved")
+    messages.success(request, f"{folder} Deleted")
 
-    return HttpResponseRedirect(reverse('all_subed_feed'))
+    # redirect for htmx
+    response = HttpResponse(content='')
+    response.headers['HX-Redirect'] = reverse('all_subed_feed')
+    return response
