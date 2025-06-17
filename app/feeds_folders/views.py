@@ -41,12 +41,12 @@ def folder_page(request: HttpResponse, folder_id: int):
 def create_folder(request: HttpResponse):
     """return the html for a new folder form"""
     if request.method == "GET":
-        return render(request, 'folders/sidebar/create_folder_form.html')
+        return render(request, 'folders/menu/create_folder_form.html')
 
     if request.method == "POST":
         new_folder = FeedsFolder(name=request.POST.get('folder_name'), user=request.user)
         new_folder.save()
-        return render(request, 'folders/sidebar/created_folder.html', context={'lifolder':new_folder})
+        return render(request, 'folders/menu/created_folder.html', context={'lifolder':new_folder})
 
     return None
 

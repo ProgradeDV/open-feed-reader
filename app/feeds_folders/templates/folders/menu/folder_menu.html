@@ -1,0 +1,10 @@
+<ul class="list-group flex-column mb-auto collapse">
+
+  {% comment %} list of all folders {% endcomment %}
+  {% for lifolder in request.user.source_folders.all %}
+    {% include 'folders/menu/folder_menu_item.html' %}
+  {% endfor %}
+
+  {% comment %} new folder button {% endcomment %}
+  {% include 'folders/menu/create_folder_btn.html' %}
+</ul>

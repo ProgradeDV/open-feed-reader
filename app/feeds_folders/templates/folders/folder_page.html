@@ -8,13 +8,13 @@ Requires the contect values for the standard paginator
 
 {% block content %}
 <div class="row">
-  <!-- folder menu -->
+  {% comment %} folder menu {% endcomment %}
   <div class="col-lg-2">
-    {% include "folders/sidebar/folder_menu.html" %}
+    {% include "folders/menu/folder_menu.html" %}
   </div>
 
   <div class="col-lg-8 p-3">
-    <!-- list of entries -->
+    {% comment %} list of entries {% endcomment %}
     {% if page_obj.object_list %}
       {% for entry in page_obj.object_list %}
         {% include 'entries/entry_list_item.html' %}
