@@ -1,4 +1,6 @@
 {% comment %} Contains the dropdown menu item for the given folder {% endcomment %}
-<a href="{% url 'folder_page' folder_id=lifolder.id %}" class="list-group-item list-group-item-action {% if lifolder == folder %}active{% endif %}">
-  {{ lifolder.name }}
-</a>
+<li class="nav-item">
+  <a href="{% url 'folder_page' folder_id=lifolder.id %}" {% if lifolder == folder %}aria-current="page"{% endif %} class="nav-link">
+    {{ lifolder.name }}
+  </a>
+</li>
