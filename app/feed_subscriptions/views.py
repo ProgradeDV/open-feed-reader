@@ -26,7 +26,7 @@ def edit_subscriptions_page(request: HttpResponse):
         request,
         'subscriptions/edit_subs_page.html',
         context={
-            'navbar_title':'All Feeds',
+            'navbar_title':'Subscribe to Feeds',
             },
         )
 
@@ -39,11 +39,11 @@ def all_subed_feed(request: HttpResponse):
 
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
-    context['navbar_title'] = 'My Feeds'
+    context['navbar_title'] = 'All Feeds'
 
     return render(
         request,
-        'folders/folder_page.html',
+        'entries/entries_list_page.html',
         context=context,
         )
 
