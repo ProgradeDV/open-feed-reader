@@ -120,7 +120,7 @@ def entry_page(request: HttpResponse, entry_id: int):
     """view for a single entry"""
     entry = Entry.objects.get(id=entry_id)
     return render(request,
-        'entries/entry.html',
+        'entries/entry_page.html',
         context={
             'entry':entry,
             },
