@@ -23,25 +23,11 @@
     {% comment %} left items for general navigation {% endcomment %}
     <div class="row bg-dark-subtle ">
       <div class="col-md-4 col-9 ms3">
-        <nav class="navbar navbar-expand-md bg-dark-subtle">
+        <nav class="navbar bg-dark-subtle">
           <nav class="nav nav-pills">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleFoldersMenu" aria-controls="navbarToggleFoldersMenu" aria-expanded="false" aria-label="Toggle navigation">
-              <i class="bi bi-list"></i>
-            </button>
-
-            {% comment %} the "All" feed {% endcomment %}
-            {% url 'all_subed_feed' as all_url %}
-            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == all_url %}active{% endif %}" href="{{all_url}}">
-              <i class="bi bi-house"></i>
-            </a>
-
-            {% url 'subscriptions' as all_feeds_url %}
-            <a class="flex-sm-fill text-sm-center nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{{all_feeds_url}}">
-              <i class="bi bi-rss"></i>
-            </a>
-            {% comment %} designated zone for extra navbar links {% endcomment %}
-            {% block extra_navbar_links %}{% endblock %}
+            {% comment %} designated zone for navbar links {% endcomment %}
+            {% block navbar_links %}{% endblock %}
           </nav>
         </nav>
       </div>
@@ -54,7 +40,7 @@
       {% comment %} Right items for uer account and admin functions {% endcomment %}
       <div class="col-md-4 col-3">
         {% if user.is_authenticated %}
-        <nav class="navbar navbar-expand-md justify-content-end mx-4">
+        <nav class="navbar justify-content-end mx-4">
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
