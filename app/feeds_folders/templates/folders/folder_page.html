@@ -7,36 +7,30 @@ Requires the contect values for the standard paginator
 {% endcomment %}
 
 {% block content %}
-<div class="row">
-  {% comment %} folder menu {% endcomment %}
-  <div class="col-lg-2">
-    {% include "folders/menu/folder_menu.html" %}
+  <div class="row justify-content-center">
+
+    <div class="col-lg-8 p-3">
+      {% comment %} list of entries {% endcomment %}
+      {% if page_obj.object_list %}
+        {% for entry in page_obj.object_list %}
+          {% include 'entries/entry_list_item.html' %}
+        {% endfor %}
+      {% else %}
+        <div class="text-center p-5">
+          <h2>[ Empty List ]</h2>
+        </div>
+      {% endif %}
+
+    </div>
   </div>
 
-  <div class="col-lg-8 p-3">
-    {% comment %} list of entries {% endcomment %}
-    {% if page_obj.object_list %}
-      {% for entry in page_obj.object_list %}
-        {% include 'entries/entry_list_item.html' %}
-      {% endfor %}
-    {% else %}
-      <div class="text-center p-5">
-        <h2>[ Empty List ]</h2>
-      </div>
-    {% endif %}
-
-  </div>
-</div>
-
-<!-- pagination -->
-{% include 'site_base/paginator.html' %}
-<script src="{% static 'htmx.min.js' %}" ></script>
+  {% include 'site_base/paginator.html' %}
+  <script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}
 
-{% block extra_navbar_links %}
-  {% if folder %}
+{% block navbar_links %}
+  {{ block.super }}
     <a href="{% url 'edit_folder' folder_id=folder.id %}" class="flex-sm-fill text-sm-center nav-link">
       <i class="bi bi-pencil-square"></i>
     </a>
-  {% endif %}
 {% endblock %}
