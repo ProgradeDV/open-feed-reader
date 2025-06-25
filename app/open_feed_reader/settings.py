@@ -218,6 +218,30 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 AXES_ENABLED = os.getenv("AXES_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes')
 AXES_COOLOFF_TIME = timedelta(seconds=60)
 
+# Cache
+# if the cache is disables, set up a dummy cache
+if not os.getenv("CASH_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes'):
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        }
+    }
+# if a redis cache location is provided, use that
+elif 'REDIS_LOCATION' in os.environ:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": "redis://" + os.environ['REDIS_LOCATION'],
+        }
+    }
+# default cache is a local memory cache
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
+
 
 LOGGING = {
     "version": 1,
