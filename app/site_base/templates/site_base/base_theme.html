@@ -19,13 +19,12 @@
 
   </head>
   <body>
-
-    {% comment %} left items for general navigation {% endcomment %}
+    {% comment %} header {% endcomment %}
     <div class="row bg-dark-subtle ">
+      {% comment %} left items for general navigation {% endcomment %}
       <div class="col-md-4 col-9 ms3">
-        <nav class="navbar bg-dark-subtle">
+        <nav class="navbar">
           <nav class="nav nav-pills">
-
             {% comment %} designated zone for navbar links {% endcomment %}
             {% block navbar_links %}{% endblock %}
           </nav>
@@ -34,40 +33,17 @@
 
       {% comment %} centered zone for titles {% endcomment %}
       <div class="col-md-4 d-none d-md-block text-center">
-          {% block navbar_title %}<h1>{{ navbar_title }}</h1>{% endblock %}
+        {% block navbar_title %}<h1>{{ navbar_title }}</h1>{% endblock %}
       </div>
 
       {% comment %} Right items for uer account and admin functions {% endcomment %}
       <div class="col-md-4 col-3">
-        {% if user.is_authenticated %}
         <nav class="navbar justify-content-end mx-4">
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ user.username }}
-              </a>
-              <ul class="dropdown-menu dropdown-menu-end">
-                {% comment %} Logout {% endcomment %}
-                <li>
-                  <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button class="dropdown-item" type="submit">Log Out</a>
-                  </form>
-                </li>
-                {% comment %} My Profile {% endcomment %}
-                <li><a class="dropdown-item" href="{% url 'users-profile' %}">Profile</a></li>
-                {% comment %} Admin {% endcomment %}
-                {% if user.is_superuser %}
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="/admin/">Administer</a></li>
-                {% endif %}
-              </ul>
-            </li>
+          <ul class="nav">
+            {% include "site_base/account_menu.html" %}
           </ul>
-          {% else %}
-          <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
-          {% endif %}
         </nav>
+
       </div>
     </div>
 
