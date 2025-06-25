@@ -22,10 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = os.getenv("DEBUG", 'False').lower() in ('true', '1', 't', 'y', 'yes')
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split()
-# ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -80,23 +79,29 @@ WSGI_APPLICATION = 'open_feed_reader.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['POSTGRES_DB'],
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
-        'PORT': 5432,
+if 'POSTGRES_DB' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ['POSTGRES_DB'],
+            'USER': os.environ['POSTGRES_USER'],
+            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'HOST': os.getenv('POSTGRES_HOST', 'localhost'),
+            'PORT': 5432,
+        }
     }
-}
+elif 'SQLITE_DB' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / os.environ['SQLITE_DB'],
+        }
+    }
+else:
+    raise ValueError('Missing database type')
 
 
 # Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -127,7 +132,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = '/static'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -144,8 +149,8 @@ EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
 EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
 
 # user media
-MEDIA_ROOT = '/media'
 MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'mediafiles'
 
 
 AUTHENTICATION_BACKENDS = [
@@ -210,7 +215,9 @@ SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # AXES config
-AXES_COOLOFF_TIME = timedelta(minutes=10)
+AXES_ENABLED = os.getenv("AXES_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes')
+AXES_COOLOFF_TIME = timedelta(seconds=60)
+
 
 LOGGING = {
     "version": 1,
