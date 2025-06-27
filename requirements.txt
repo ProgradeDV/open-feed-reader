@@ -1,9 +1,12 @@
-Django >= 5
-psycopg2-binary >= 2.9.9
-django-axes >= 6.4
-pillow >= 10.3
-gunicorn >= 22
-django-csp >= 3.8
-django_bleach >= 3.1
-ptpython >= 3
+Django
+psycopg2-binary
+django-axes
+pillow
+gunicorn
+django-csp
+django_bleach
+ptpython
 django_extensions
+
+django-user-management @ git+ssh://git@github.com/ProgradeDV/django-user-management.git@main
+django-feed-reader @ git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@master

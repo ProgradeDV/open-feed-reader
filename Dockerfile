@@ -1,22 +1,63 @@
-FROM python:3.13
+###########
+# BUILDER #
+###########
 
-# clean up the python logging
-ENV PYTHONBUFFERED=1
-ENV PIP_ROOT_USER_ACTION=ignore
+# pull official base image
+FROM python:3.13-alpine AS builder
+
+# set work directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# install system dependencies
+RUN apk update && apk upgrade
+RUN apk add git openssh-client
+RUN pip install --upgrade pip
 
 # nesisary for importing packags from github
 RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-WORKDIR /app
-
-# import requirements
+# install python dependencies
 COPY ./requirements.txt .
-RUN pip install -r requirements.txt
-RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-user-management.git@v0.2.0
-RUN --mount=type=ssh pip install git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@v0.2.0
+RUN --mount=type=ssh pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
-# add app
+#########
+# FINAL #
+#########
+
+# pull official base image
+FROM python:3.13-alpine
+
+# create the app user
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# create the appropriate directories
+ENV HOME=/home/app
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+# install dependencies
+RUN apk update && apk upgrade
+COPY --from=builder /usr/src/app/wheels /wheels
+
+RUN pip install --upgrade pip
+RUN pip install --no-cache /wheels/*
+
+# copy project
 COPY ./app .
 
-RUN python manage.py collectstatic
-CMD python manage.py runserver 0.0.0.0:8000
+# make entrypoint.prod.sh runable
+RUN sed -i 's/\r$//g'  $HOME/entrypoint.prod.sh
+RUN chmod +x $HOME/entrypoint.prod.sh
+
+# chown all the files to the app user
+RUN chown -R appuser:appgroup $HOME
+
+# change to the app user
+USER appuser
+
+# run entrypoint.prod.sh
+ENTRYPOINT ["/home/app/entrypoint.prod.sh"]

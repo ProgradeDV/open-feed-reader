@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  web:
+    build:
+      context: .
+      ssh:
+          - default
+    command: gunicorn open_feed_reader.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    environment:
+      - ALLOWED_HOSTS=localhost
+      - AXES_ENABLED=False
+      - CASH_ENABLED=False
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8000
+    volumes:
+      - db-data:/home/app/sqlite
+      - static_files:/home/app/staticfiles
+
+volumes:
+  db-data:
+  static_files:
