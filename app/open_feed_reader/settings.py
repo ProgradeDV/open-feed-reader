@@ -90,15 +90,15 @@ if 'POSTGRES_DB' in os.environ:
             'PORT': 5432,
         }
     }
-elif 'SQLITE_DB' in os.environ:
+else:
+    sqlite_dir = BASE_DIR / 'sqlite'
+    sqlite_dir.mkdir(parents=True, exist_ok=True)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / os.environ['SQLITE_DB'],
+            'NAME': sqlite_dir / 'db.sqlite3',
         }
     }
-else:
-    raise ValueError('Missing database type')
 
 
 # Password validation
@@ -133,6 +133,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
