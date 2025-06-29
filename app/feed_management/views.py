@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.contrib import messages
 from site_base.views import edit_model_form_view, delete_model_form_view, paginator_args
 from feeds.models import Source, Entry
-from feeds.fetch import init_feed, fetch_feed
+from feeds.fetch import fetch_feed
 from feeds.url_converters import get_rss_url
 from feed_subscriptions.models import SourceSubcription
 from .forms import EditFeedForm
@@ -67,7 +67,7 @@ def new_feed_form(request: HttpResponse, parsed_url:ParseResult):
     # create a new feed
     feed = Source(feed_url=actual_url, site_url=parsed_url.geturl())
     # update the feed atributes
-    init_feed(feed)
+    fetch_feed(feed)
 
     if request.user.has_perm('feeds.change_source'):
         return render(
