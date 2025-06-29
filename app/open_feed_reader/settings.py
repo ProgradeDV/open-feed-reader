@@ -91,7 +91,7 @@ if 'POSTGRES_DB' in os.environ:
         }
     }
 else:
-    sqlite_dir = BASE_DIR / 'sqlite'
+    sqlite_dir = BASE_DIR.parent / 'sqlite'
     sqlite_dir.mkdir(parents=True, exist_ok=True)
     DATABASES = {
         'default': {

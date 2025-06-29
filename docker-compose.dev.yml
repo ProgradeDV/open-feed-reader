@@ -17,7 +17,7 @@ services:
       - CASH_ENABLED=False
       - CSRF_TRUSTED_ORIGINS=http://localhost:8000
     volumes:
-      - db-data:/home/app/sqlite
+      - db-data:/home/sqlite
       - static_files:/home/app/staticfiles
 
 volumes:
