@@ -2,18 +2,19 @@
 {% load bleach_tags %}
 {% load static %}
 
-{% block extra_navbar_links %}
-<div class="btn-group me-2" role="group" aria-label="First group">
-  <a target="_blank" rel="noopener noreferrer" href="{{ feed.best_link }}" class="btn btn-secondary">
+{% block navbar_links %}
+  {{ block.super }}
+  <a target="_blank" rel="noopener noreferrer" href="{{ feed.best_link }}" class="nav-link">
     <i class="bi bi-arrow-up-right"></i>
   </a>
 
-  {% if perms.feeds.edit_source %}
-  <a href="{% url 'edit_feed' id=feed.id %}" class="btn btn-secondary"><i class="bi bi-gear"></i></a>
+  {% if request.user.is_superuser %}
+  <a class="nav-link" href="{% url 'admin:feeds_source_change' object_id=feed.id %}" target="_blank" rel="noopener noreferrer">
+    <i class="bi bi-gear"></i>
+  </a>
   {% endif %}
 
-</div>
-{% endblock %}
+{% endblock navbar_links %}
 
 
 {% block content %}
