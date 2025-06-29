@@ -122,27 +122,43 @@ def all_subs_search(request: HttpResponse):
 
     # get the search results
     search_text = form.cleaned_data['search_text']
+
+    # if the search text is empty, return all subbed feeds
+    if not search_text:
+        return feeds_search_blank(request)
+
+    # if the search text is a valiid url
     parsed_url = urlparse(search_text)
     if parsed_url.scheme:
-        rss_url = get_rss_url(parsed_url)
-        matched_feeds = feeds_search_url(request, rss_url)
+        # match the given url
+        return feeds_search_url(request, parsed_url)
 
-        if not matched_feeds.count():
-            return new_feed_search(request, rss_url)
-    else:
-        matched_feeds = feeds_search_text(request, search_text)
+    # else search for title/name matches
+    return feeds_search_text(request, search_text)
 
-    if matched_feeds.count():
-        page = int(request.GET.get("page", 1))
-        context = paginator_args(page, matched_feeds)
 
-        return render(
-            request,
-            'subscriptions/search/paginated_feeds_list.html',
-            context=context
-        )
+def feeds_search_blank(request: HttpResponse):
+    """this is the searcch result for empty search box"""
+    sources = Source.objects\
+        .filter(subscriptions__user = request.user)\
+        .order_by('title')
 
-    return HttpResponse('')
+    if not sources.count():
+        return feeds_search_no_match(request)
+
+    page = int(request.GET.get("page", 1))
+    context = paginator_args(page, sources)
+
+    return render(
+        request,
+        'subscriptions/search/paginated_feeds_list.html',
+        context=context
+    )
+
+
+def feeds_search_no_match(request):
+    """this is the search result for an empty list of matches"""
+    return HttpResponse(render(request, 'subscriptions/search/search_no_match.html'))
 
 
 def feeds_search_text(request: HttpResponse, search_text:str):
@@ -150,41 +166,64 @@ def feeds_search_text(request: HttpResponse, search_text:str):
     
     Returns a set of matches
     """
-    # if empty search text, return all feeds
-    if not search_text:
-        return Source.objects\
-            .filter(subscriptions__user = request.user)\
-            .order_by('title')
-
     # matches if search_text is in the name or title
-    return Source.objects\
+    matched_sources = Source.objects\
         .filter(subscriptions__user = request.user)\
         .filter(Q(title__icontains = search_text) | Q(name__icontains = search_text))\
         .order_by('title')
 
+    if matched_sources.count():
+        page = int(request.GET.get("page", 1))
+        context = paginator_args(page, matched_sources)
 
-def feeds_search_url(request: HttpResponse, search_text:str):
+        return render(
+            request,
+            'subscriptions/search/paginated_feeds_list.html',
+            context=context
+        )
+
+    return feeds_search_no_match(request)
+
+
+def feeds_search_url(request: HttpResponse, search_url:ParseResult):
     """search the database for feeds matching the given text
     
     Returns a set of matches
     """
-    # if empty search text, return all feeds
-    if not search_text:
-        return Source.objects\
-            .filter(subscriptions__user = request.user)\
-            .order_by('title')
-
     # valid links matching the feed or site url
-    return Source.objects\
-        .filter(subscriptions__user = request.user)\
-        .filter(Q(feed_url = search_text) | Q(site_url = search_text))\
-        .order_by('title')
+    rss_url = get_rss_url(search_url)
+    try:
+        source = Source.objects.get(feed_url = rss_url)
+    except Source.DoesNotExist:
+        return new_feed_search(request, rss_url)
+
+    logger.debug('source found: %s', source)
+
+    # check if the user is subscribed
+    try:
+        SourceSubcription.objects.get(user = request.user, source=source)
+    except SourceSubcription.DoesNotExist:
+        return render(
+            request,
+            'subscriptions/search/search_item_not_subed.html',
+            context={'feed':source}
+        )
+
+    return render(
+            request,
+            'subscriptions/search/search_item_subed.html',
+            context={'feed':source}
+        )
+
 
 
 def new_feed_search(request: HttpResponse, rss_url:str):
     """create a new feed, return a search result"""
-    new_source = Source(feed_url=rss_url)
-    fetch_feed(new_source, no_cache=True)
+    try:
+        new_source = Source(feed_url=rss_url)
+        fetch_feed(new_source, no_cache=True)
+    except:
+        return HttpResponse(render(request, 'subscriptions/search/search_no_match.html'))
 
     return render(
         request,
