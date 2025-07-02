@@ -56,6 +56,23 @@
 
     </div>
 
+    {% comment %} this is a warning that will pop up when the feed has a bad status {% endcomment %}
+    {% if feed.status_code >= 400 %}
+    <div class="alert alert-warning" role="alert">
+      <h4 class="alert-heading">Error</h4>
+      <p>An Error was raised during last feed update</p>
+      <p>Status Code: {{ feed.status_code }} </p>
+      <hr>
+      <p class="mb-0">{{ feed.last_result }}</p>
+    </div>
+    {% endif %}
+
+    {% if not feed.live %}
+    <div class="alert alert-warning" role="alert">
+      <p class="mb-0">This feed has been disabled, and will no longer recieve updates.</p>
+    </div>
+    {% endif %}
+
     <!-- list of entries -->
     {% for entry in page_obj.object_list %}
       {% include 'entries/entry_list_item.html' %}
