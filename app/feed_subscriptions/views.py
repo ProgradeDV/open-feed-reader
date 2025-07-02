@@ -9,7 +9,7 @@ from site_base.forms import SearchForm
 from site_base.views import paginator_args
 from feeds.models import Entry, Source
 from feeds.url_converters import get_rss_url
-from feeds.fetch import fetch_feed
+from feeds.fetch import new_feed
 from .models import SourceSubcription
 
 logger = getLogger('feed_subscriptions/views.py')
@@ -219,11 +219,15 @@ def feeds_search_url(request: HttpResponse, search_url:ParseResult):
 
 def new_feed_search(request: HttpResponse, rss_url:str):
     """create a new feed, return a search result"""
-    try:
-        new_source = Source(feed_url=rss_url)
-        fetch_feed(new_source, no_cache=True)
-    except:
-        return HttpResponse(render(request, 'subscriptions/search/search_no_match.html'))
+    new_source = Source(feed_url=rss_url)
+    new_feed(new_source)
+
+    if new_source.status_code >= 400: # the source will not have been created if there was an error
+        return render(
+            request,
+            'subscriptions/search/search_item_error.html',
+            context={'feed':new_source},
+        )
 
     return render(
         request,
