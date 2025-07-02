@@ -3,19 +3,27 @@
 
 {% block navbar_links %}
 
-  <button class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-    <i class="bi bi-list"></i>
-  </button>
+  <li>
+    <button class="nav-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <i class="bi bi-list"></i>
+    </button>
+  </li>
 
-  {% url 'all_subed_feed' as all_url %}
-  <a class="nav-link {% if request.path == all_url %}active{% endif %}" href="{{all_url}}">
-    <i class="bi bi-house"></i>
-  </a>
+  <li>
+    {% url 'all_subed_feed' as all_url %}
+    <a class="nav-link {% if request.path == all_url %}active{% endif %}" href="{{ all_url }}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Home" data-bs-delay="250">
+      <i class="bi bi-house"></i>
+    </a>
+  </li>
 
-  {% url 'subscriptions' as all_feeds_url %}
-  <a class="nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{{all_feeds_url}}">
-    <i class="bi bi-rss"></i>
-  </a>
+  <li>
+    {% url 'subscriptions' as all_feeds_url %}
+    <a class="nav-link {% if request.path == all_feeds_url %}active{% endif %}" href="{{ all_feeds_url }}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Feeds" data-bs-delay="250">
+      <i class="bi bi-rss"></i>
+    </a>
+  </li>
 
   <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
     <div class="offcanvas-body">

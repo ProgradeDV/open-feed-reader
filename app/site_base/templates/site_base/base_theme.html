@@ -24,10 +24,10 @@
       {% comment %} left items for general navigation {% endcomment %}
       <div class="col-md-4 col-9 ms3">
         <nav class="navbar">
-          <nav class="nav nav-pills">
+          <ul class="nav nav-pills">
             {% comment %} designated zone for navbar links {% endcomment %}
             {% block navbar_links %}{% endblock %}
-          </nav>
+          </ul>
         </nav>
       </div>
 
@@ -70,6 +70,7 @@
       <div></div>
     </div>
 
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="{% static 'bootstrap.bundle.js' %}"></script>
     <script src="{% static 'site_base/config.js' %}"></script>
   </body>

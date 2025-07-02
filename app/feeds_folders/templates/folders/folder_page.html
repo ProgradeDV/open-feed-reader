@@ -2,7 +2,10 @@
 
 {% block navbar_links %}
   {{ block.super }}
-    <a href="{% url 'edit_folder' folder_id=folder.id %}" class="flex-sm-fill text-sm-center nav-link">
+  <li>
+    <a class="nav-link" href="{% url 'edit_folder' folder_id=folder.id %}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Edit Folder" data-bs-delay="250">
       <i class="bi bi-pencil-square"></i>
     </a>
+  </li>
 {% endblock %}

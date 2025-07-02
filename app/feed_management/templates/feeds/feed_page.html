@@ -4,14 +4,20 @@
 
 {% block navbar_links %}
   {{ block.super }}
-  <a target="_blank" rel="noopener noreferrer" href="{{ feed.best_link }}" class="nav-link">
-    <i class="bi bi-arrow-up-right"></i>
-  </a>
+  <li>
+    <a class="nav-link" target="_blank" rel="noopener noreferrer" href="{{ feed.best_link }}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Go to Source" data-bs-delay="250">
+      <i class="bi bi-arrow-up-right"></i>
+    </a>
+  </li>
 
   {% if request.user.is_superuser %}
-  <a class="nav-link" href="{% url 'admin:feeds_source_change' object_id=feed.id %}" target="_blank" rel="noopener noreferrer">
-    <i class="bi bi-gear"></i>
-  </a>
+  <li>
+    <a class="nav-link" target="_blank" rel="noopener noreferrer" href="{% url 'admin:feeds_source_change' object_id=feed.id %}"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Settings" data-bs-delay="250">
+      <i class="bi bi-gear"></i>
+    </a>
+  </li>
   {% endif %}
 
 {% endblock navbar_links %}

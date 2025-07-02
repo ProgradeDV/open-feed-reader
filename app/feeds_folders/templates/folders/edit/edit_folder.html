@@ -1,6 +1,17 @@
 {% extends 'site_base/base.html' %}
 {% load static %}
 
+{% block navbar_links %}
+  {{ block.super }}
+  <li>
+    <a href="{% url 'folder_page' folder_id=folder.id %}" class="flex-sm-fill text-sm-center nav-link"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Back to Folder" data-bs-delay="250">
+      <i class="bi bi-folder-check"></i>
+    </a>
+  </li>
+{% endblock %}
+
+
 {% block content %}
 <div class="row justify-content-center">
   {% comment %} menu {% endcomment %}
