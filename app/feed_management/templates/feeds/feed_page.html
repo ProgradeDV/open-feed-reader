@@ -79,7 +79,7 @@
     </div>
     {% endif %}
 
-    <!-- list of entries -->
+    {% comment %} list of entries {% endcomment %}
     {% for entry in page_obj.object_list %}
       {% include 'entries/entry_list_item.html' %}
     {% endfor %}
@@ -87,7 +87,7 @@
   </div>
 </div>
 
-<!-- pagination -->
+{% comment %} pagination {% endcomment %}
 {% include 'site_base/paginator.html' %}
 
 <script src="{% static 'htmx.min.js' %}" ></script>

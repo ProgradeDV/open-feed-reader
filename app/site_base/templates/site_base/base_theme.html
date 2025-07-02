@@ -46,27 +46,20 @@
 
       </div>
     </div>
+  
+    {% comment %} page content {% endcomment %}
+    {% block content %} <h1>Hello, world!</h1> {% endblock %}
 
     {% comment %} alerts and messages {% endcomment %}
-    <div class="container-flex">
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
       {% if messages %}
-      <div class="row justify-content-md-center">
-        <div class="col-md-8">
-          {% for message in messages %}
-          <div class="alert alert-dismissible {{ message.tags }}" role="alert">
-            <div>{{ message|linebreaks }}</div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
+        {% for message in messages %}
+          {% include "site_base/message.html" %}
+        {% endfor %}
       {% endif %}
-
-      {% comment %} page content {% endcomment %}
-      {% block content %} <h1>Hello, world!</h1> {% endblock %}
     </div>
 
-    <div class="min-vh-100">
+    <div class="min-vh-50">
       <div></div>
     </div>
 

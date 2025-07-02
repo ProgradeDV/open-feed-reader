@@ -27,3 +27,44 @@ img.loading-spinner {
     width: 40px;
     height: auto;
 }
+
+
+
+.toast.warning {
+    border-color: var(--bs-warning-border-subtle);
+}
+
+.toast.warning > .toast-header {
+    background-color: var(--bs-warning-bg-subtle);
+    border-color: var(--bs-warning-border-subtle);
+}
+
+
+.toast.error {
+    border-color: var(--bs-danger-border-subtle);
+}
+
+.toast.error > .toast-header {
+    background-color: var(--bs-danger-bg-subtle);
+    border-color: var(--bs-danger-border-subtle);
+}
+
+
+.toast.success {
+    border-color: var(--bs-success-border-subtle);
+}
+
+.toast.success > .toast-header {
+    background-color: var(--bs-success-bg-subtle);
+    border-color: var(--bs-success-border-subtle);
+}
+
+
+.toast.info {
+    border-color: var(--bs-info-border-subtle);
+}
+
+.toast.info > .toast-header {
+    background-color: var(--bs-info-bg-subtle);
+    border-color: var(--bs-info-border-subtle);
+}

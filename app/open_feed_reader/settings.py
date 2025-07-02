@@ -179,15 +179,6 @@ CSP_IMG_SRC = ["'self'", "https:"]
 CSP_FRAME_SRC = ["'self'", "https://www.youtube.com"]
 CSP_MEDIA_SRC = ["'self'", "https:"]
 
-# idk why this needs to be a setting, but here we are
-MESSAGE_TAGS = {
-    messages.DEBUG: 'alert-info',
-    messages.INFO: 'alert-info',
-    messages.SUCCESS: 'alert-success',
-    messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-danger',
-}
-
 
 # Which HTML tags are allowed
 BLEACH_ALLOWED_TAGS = ['p', 'b', 'i', 'u', 'em', 'strong', 'a', 'img', 'h3', 'h4', 'h5', 'h6']
