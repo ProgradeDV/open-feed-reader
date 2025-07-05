@@ -10,6 +10,13 @@
       <i class="bi bi-arrow-up-right"></i>
     </a>
   </li>
+  <li>
+  {% if is_subed %}
+    {% include "subscriptions/actions/unsubscribe_btn.html" with id=feed.id %}
+  {% else %}
+    {% include "subscriptions/actions/subscribe_btn.html" with id=feed.id %}
+  {% endif %}
+  </li>
 
   {% if request.user.is_superuser %}
   <li>
