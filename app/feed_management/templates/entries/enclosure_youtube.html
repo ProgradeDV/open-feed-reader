@@ -1,4 +1,4 @@
 {% comment %} html component for a youtube feed enclosure {% endcomment %}
 <div class="ratio ratio-16x9">
-    <iframe nonce="{{request.csp_nonce}}" src="{{ enclosure.href }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <iframe src="{{ enclosure.href }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 </div>
