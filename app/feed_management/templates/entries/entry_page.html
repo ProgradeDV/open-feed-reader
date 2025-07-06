@@ -8,68 +8,64 @@ Required Context:
 {% load bleach_tags %}
 
 {% block content %}
-<div class="row">
-  <div class="col-md-10 mx-auto">
-    <div class="card">
+  <div class="card">
 
-      <div class="card-header">
-        <div class="row">
+    <div class="card-header">
+      <div class="row">
 
-          {% if entry.image_url %}
-          <div class="col-md-2 mx-auto">
-            <img class="card-img-top" src="{{ entry.image_url }}" alt="Card image cap">
-          </div>
-          {% endif %}
-
-          <!-- title -->
-          <div class="col-md-10 mx-auto">
-            <div class="row">
-              <h1>
-                <a target="_blank" rel="noopener noreferrer" href="{{entry.link}}">
-                  {{ entry.title }}
-                </a>
-              </h1>
-
-            </div>
-
-            <!-- credit -->
-            <footer class="blockquote-footer mt-1">
-              {% if entry.author %}
-                {{ entry.author }} at 
-              {% endif %}
-              <a href="{% url 'one_feed' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
-              {{ entry.created }}
-            </footer>
-          </div>
-
+        {% if entry.image_url %}
+        <div class="col-md-2 mx-auto">
+          <img class="card-img-top" src="{{ entry.image_url }}" alt="Card image cap">
         </div>
-      </div>
+        {% endif %}
 
-      <div class="card-body">
-        {% for enclosure in entry.enclosures.all %}
-          <div class="row p-2">
-            {% if enclosure.type == 'youtube' %}
-              {% include 'entries/enclosure_youtube.html' %}
-            {% elif 'audio' in enclosure.type %}
-              {% include 'entries/enclosure_audio.html' %}
-            {% elif 'video' in enclosure.type %}
-              {% include 'entries/enclosure_video.html' %}
-            {% else %}
-              Unknown Media: <a href="{{ enclosure.href }}">{{ enclosure.href }}</a>
+        <!-- title -->
+        <div class="col-md-10 mx-auto">
+          <div class="row">
+            <h1>
+              <a target="_blank" rel="noopener noreferrer" href="{{entry.link}}">
+                {{ entry.title }}
+              </a>
+            </h1>
+
+          </div>
+
+          <!-- credit -->
+          <footer class="blockquote-footer mt-1">
+            {% if entry.author %}
+              {{ entry.author }} at 
             {% endif %}
-          </div>
-        {% endfor %}
+            <a href="{% url 'one_feed' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
+            {{ entry.created }}
+          </footer>
+        </div>
 
+      </div>
+    </div>
+
+    <div class="card-body">
+      {% for enclosure in entry.enclosures.all %}
         <div class="row p-2">
-          {% if '<a' in entry.body %}
-            {{ entry.body|bleach }}
+          {% if enclosure.type == 'youtube' %}
+            {% include 'entries/enclosure_youtube.html' %}
+          {% elif 'audio' in enclosure.type %}
+            {% include 'entries/enclosure_audio.html' %}
+          {% elif 'video' in enclosure.type %}
+            {% include 'entries/enclosure_video.html' %}
           {% else %}
-            {{ entry.body|bleach|urlizetrunc:40|linebreaks }}
+            Unknown Media: <a href="{{ enclosure.href }}">{{ enclosure.href }}</a>
           {% endif %}
         </div>
-      </div>
+      {% endfor %}
 
+      <div class="row p-2">
+        {% if '<a' in entry.body %}
+          {{ entry.body|bleach }}
+        {% else %}
+          {{ entry.body|bleach|urlizetrunc:40|linebreaks }}
+        {% endif %}
+      </div>
     </div>
+
   </div>
-</div>
 {% endblock %}

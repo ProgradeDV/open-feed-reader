@@ -7,23 +7,17 @@ Requires the contect values for the standard paginator
 {% endcomment %}
 
 {% block content %}
-  <div class="row justify-content-center">
-
-    <div class="col-lg-8 p-3">
-      {% comment %} list of entries {% endcomment %}
-      {% if page_obj.object_list %}
-        {% for entry in page_obj.object_list %}
-          {% include 'entries/entry_list_item.html' %}
-        {% endfor %}
-      {% else %}
-        <div class="text-center p-5">
-          <h2>[ Empty List ]</h2>
-        </div>
-      {% endif %}
-
+  {% comment %} list of entries {% endcomment %}
+  {% if page_obj.object_list %}
+    {% for entry in page_obj.object_list %}
+      {% include 'entries/entry_list_item.html' %}
+    {% endfor %}
+    {% include 'site_base/paginator.html' %}
+  {% else %}
+    <div class="text-center p-5">
+      <h2>[ Empty List ]</h2>
     </div>
-  </div>
+  {% endif %}
 
-  {% include 'site_base/paginator.html' %}
   <script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}

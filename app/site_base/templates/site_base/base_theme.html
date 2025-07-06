@@ -40,7 +40,9 @@
       <div class="col-md-4 col-3">
         <nav class="navbar justify-content-end mx-4">
           <ul class="nav">
-            {% include "site_base/account_menu.html" %}
+            {% block right_navbar_links %}
+              {% include "site_base/account_menu.html" %}
+            {% endblock right_navbar_links %}
           </ul>
         </nav>
 
@@ -48,7 +50,17 @@
     </div>
   
     {% comment %} page content {% endcomment %}
-    {% block content %} <h1>Hello, world!</h1> {% endblock %}
+    {% block body %}
+      <div class="row pt-2">
+        <div class="col-lg-8 mx-auto">
+          {% block content %}
+          <h1>Hello, world!</h1>
+          {% endblock content %}
+        </div>
+      </div>
+    {% endblock body %}
+  
+    {% block extra_body %}{% endblock extra_body %}
 
     {% comment %} alerts and messages {% endcomment %}
     <div class="toast-container position-fixed bottom-0 end-0 p-3">

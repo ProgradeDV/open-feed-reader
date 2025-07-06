@@ -13,38 +13,31 @@
 
 
 {% block content %}
-<div class="row justify-content-center">
-  {% comment %} menu {% endcomment %}
+  <div class="d-flex gap-3 p-3 align-items-center">
+    {% comment %} form for edit/delete {% endcomment %}
+    <h4>Name:</h4>
+    {% include 'folders/edit/edit_folder_name_form.html' %}
+    <div class="vr"></div>
 
-  <div class="col-lg-8" id="search-results">
-    <div class="d-flex gap-3 p-3 align-items-center">
-      {% comment %} form for edit/delete {% endcomment %}
-      <h4>Name:</h4>
-      {% include 'folders/edit/edit_folder_name_form.html' %}
-      <div class="vr"></div>
-
-      {% include "folders/edit/delete_folder_btn.html" %}
-    </div>
-
-    {% comment %} feeds to add {% endcomment %}
-    {% if all_feeds %}
-      {% for feed in all_feeds %}
-        {% include "folders/edit/feed_list_item.html" %}
-      {% endfor %}
-    {% else %}
-      <div class="text-center p-5">
-        <h2>[ Subscribe to Feeds to add  them to folders. ]</h2>
-      </div>
-    {% endif %}
-
+    {% include "folders/edit/delete_folder_btn.html" %}
   </div>
-</div>
 
+  {% comment %} feeds to add {% endcomment %}
+  {% if all_feeds %}
+    {% for feed in all_feeds %}
+      {% include "folders/edit/feed_list_item.html" %}
+    {% endfor %}
+  {% else %}
+    <div class="text-center p-5">
+      <h2>[ Subscribe to Feeds to add  them to folders. ]</h2>
+    </div>
+  {% endif %}
 
-<!-- pagination -->
-{% include 'site_base/paginator.html' %}
-<script src="{% static 'htmx.min.js' %}" ></script>
+  <!-- pagination -->
+  {% include 'site_base/paginator.html' %}
+  <script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}
+
 
 {% block extra_navbar_links %}
   <a class="flex-sm-fill text-sm-center nav-link active">

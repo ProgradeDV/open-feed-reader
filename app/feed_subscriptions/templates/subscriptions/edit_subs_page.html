@@ -2,18 +2,13 @@
 {% load static %}
 
 {% block content %}
-<div class="row justify-content-center">
-
-    <div class="col-lg-8">
-        <div class="row">
-            {% include "subscriptions/search/subs_search_bar.html" %}
-        </div>
-
-        {% comment %} list of all the feeds {% endcomment %}
-        <div id="search-results">
-        </div>
+    <div class="row">
+        {% include "subscriptions/search/subs_search_bar.html" %}
     </div>
-</div>
 
-<script src="{% static 'htmx.min.js' %}" ></script>
+    {% comment %} list of all the feeds {% endcomment %}
+    <div id="search-results">
+    </div>
+
+    <script src="{% static 'htmx.min.js' %}" ></script>
 {% endblock %}
