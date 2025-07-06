@@ -120,7 +120,7 @@ def all_subs_search(request: HttpResponse):
     if not form.is_valid():
         return HttpResponse(content='Invalid Form')
 
-    # get the search results
+    # get the text to search for search
     search_text = form.cleaned_data['search_text']
 
     # if the search text is empty, return all subbed feeds

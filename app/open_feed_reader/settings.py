@@ -171,11 +171,11 @@ CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS', '').split()
 
 CSP_INCLUDE_NONCE_IN = ['script-src', 'style-src']
 CSP_DEFAULT_SRC = ["'self'",]
-CSP_SCRIPT_SRC = ["'self'",]
+CSP_SCRIPT_SRC = ["'self'"]
 CSP_STYLE_SRC = ["'self'",]
 CSP_STYLE_SRC_ELEM = ["'self'",]
 CSP_FONT_SRC = ["'self'",]
-CSP_IMG_SRC = ["'self'", "https:"]
+CSP_IMG_SRC = ["'self'", "https:", "data:"]
 CSP_FRAME_SRC = ["'self'", "https://www.youtube.com"]
 CSP_MEDIA_SRC = ["'self'", "https:"]
 

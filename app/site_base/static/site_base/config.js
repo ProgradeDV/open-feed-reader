@@ -1,8 +1,8 @@
 // config for htmx
-if (!(typeof myVar === 'undefined')) {
+if (!(typeof htmx === 'undefined')) {
     htmx.config.includeIndicatorStyles = false
     htmx.config.allowEval = false
-    htmx.config.selfRequestsOnly = false
+    htmx.config.selfRequestsOnly = true
 }
 
 // enable bootstrap popups
