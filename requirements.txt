@@ -8,5 +8,4 @@ django_bleach
 ptpython
 django_extensions
 
-django-user-management @ git+ssh://git@github.com/ProgradeDV/django-user-management.git@main
 django-feed-reader @ git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@v0.3.0

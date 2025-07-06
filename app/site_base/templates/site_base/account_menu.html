@@ -1,18 +1,20 @@
+{% load account %}
 {% if user.is_authenticated %}
   <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      {{ user.username }}
+      {% user_display user %}
     </a>
     <ul class="dropdown-menu dropdown-menu-end">
       {% comment %} Logout btn {% endcomment %}
       <li>
-        <form action="{% url 'logout' %}" method="post">
+        <form action="{% url 'account_logout' %}" method="post">
         {% csrf_token %}
         <button class="dropdown-item" type="submit">Log Out</a>
         </form>
       </li>
       {% comment %} My Profile {% endcomment %}
-      <li><a class="dropdown-item" href="{% url 'users-profile' %}">Profile</a></li>
+      <li><a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a></li>
+      <li><a class="dropdown-item" href="{% url 'account_email' %}">Change Email</a></li>
       {% comment %} Admin {% endcomment %}
       {% if user.is_superuser %}
         <li><hr class="dropdown-divider"></li>
@@ -21,5 +23,5 @@
     </ul>
   </li>
 {% else %}
-  <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
+  <a class="nav-link active" aria-current="page" href="{% url 'account_login' %}">Login</a>
 {% endif %}

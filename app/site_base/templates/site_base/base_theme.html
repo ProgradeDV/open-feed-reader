@@ -41,7 +41,6 @@
         <nav class="navbar justify-content-end mx-4">
           <ul class="nav">
             {% block right_navbar_links %}
-              {% include "site_base/account_menu.html" %}
             {% endblock right_navbar_links %}
           </ul>
         </nav>
@@ -59,8 +58,6 @@
         </div>
       </div>
     {% endblock body %}
-  
-    {% block extra_body %}{% endblock extra_body %}
 
     {% comment %} alerts and messages {% endcomment %}
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
