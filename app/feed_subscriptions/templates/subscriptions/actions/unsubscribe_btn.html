@@ -1,4 +1,5 @@
 <button class="btn btn-danger"
+      data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Unsubscribe" data-bs-delay="250"
       hx-post="{% url 'unsubscribe_feed' id=id %}"
       hx-swap="outerHTML"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
