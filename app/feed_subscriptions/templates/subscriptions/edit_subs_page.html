@@ -9,6 +9,9 @@
     {% comment %} list of all the feeds {% endcomment %}
     <div id="search-results">
     </div>
+{% endblock content %}
 
-    <script src="{% static 'htmx.min.js' %}" ></script>
-{% endblock %}
+
+{% block extra_body %}
+<script src="{% static 'htmx.min.js' %}" ></script>
+{% endblock extra_body %}

@@ -88,8 +88,12 @@
     {% include 'entries/entry_list_item.html' %}
   {% endfor %}
 
-{% comment %} pagination {% endcomment %}
-{% include 'site_base/paginator.html' %}
+  {% comment %} pagination {% endcomment %}
+  {% include 'site_base/paginator.html' %}
 
+{% endblock content %}
+
+
+{% block extra_body %}
 <script src="{% static 'htmx.min.js' %}" ></script>
-{% endblock %}
+{% endblock extra_body %}

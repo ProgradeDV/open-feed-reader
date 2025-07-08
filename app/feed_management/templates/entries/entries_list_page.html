@@ -19,5 +19,9 @@ Requires the contect values for the standard paginator
     </div>
   {% endif %}
 
-  <script src="{% static 'htmx.min.js' %}" ></script>
-{% endblock %}
+{% endblock content %}
+
+
+{% block extra_body %}
+<script src="{% static 'htmx.min.js' %}" ></script>
+{% endblock extra_body %}

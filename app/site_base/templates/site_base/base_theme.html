@@ -59,6 +59,8 @@
       </div>
     {% endblock body %}
 
+    {% block extra_body %}{% endblock extra_body %}
+
     {% comment %} alerts and messages {% endcomment %}
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       {% if messages %}
