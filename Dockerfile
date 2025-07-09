@@ -14,15 +14,11 @@ ENV PYTHONUNBUFFERED=1
 
 # install system dependencies
 RUN apk update && apk upgrade
-RUN apk add git openssh-client
 RUN pip install --upgrade pip
-
-# nesisary for importing packags from github
-RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 # install python dependencies
 COPY ./requirements.txt .
-RUN --mount=type=ssh pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 #########
 # FINAL #

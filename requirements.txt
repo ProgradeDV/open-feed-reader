@@ -1,11 +1,8 @@
 Django
 psycopg2-binary
-django-axes
 pillow
 gunicorn
 django-csp
 django_bleach
 ptpython
 django_extensions
-
-django-feed-reader @ git+ssh://git@github.com/ProgradeDV/django-feed-reader.git@v0.3.0

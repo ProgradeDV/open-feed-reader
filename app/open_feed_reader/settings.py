@@ -37,10 +37,9 @@ INSTALLED_APPS = [
     'django_bleach',
     'allauth',
     'allauth.account',
-    'feed_subscriptions',
-    'feed_management',
-    'feeds_folders',
     'feeds',
+    'feed_subscriptions',
+    'feeds_folders',
 ]
 
 MIDDLEWARE = [
