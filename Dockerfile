@@ -33,6 +33,7 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # create the appropriate directories
 ENV HOME=/home/app
 RUN mkdir -p $HOME
+RUN mkdir /home/sqlite/
 WORKDIR $HOME
 
 # install dependencies
@@ -52,6 +53,7 @@ RUN chmod +x $HOME/entrypoint.prod.sh
 
 # chown all the files to the app user
 RUN chown -R appuser:appgroup $HOME
+RUN chown -R appuser:appgroup /home/sqlite/
 
 # change to the app user
 USER appuser
