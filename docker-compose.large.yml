@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  web:
+    image: progradedv/open-feed-reader:latest
+    expose:
+      - 8000
+    env_file:
+      - ./.env
+    environment:
+      - REDIS_LOCATION=redis
+      - POSTGRES_HOST=db
+    volumes:
+      - static_files:/home/app/staticfiles
+      - nginx_config:/home/nginx
+    depends_on:
+      - db
+      - redis
+
+
+  db:
+    image: postgres:17.5
+    env_file:
+      - ./.env
+    expose:
+      - 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+
+
+  redis:
+    image: redis/redis:8.0.3
+    expose:
+      - 6379
+
+
+  nginx:
+    build: nginx/nginx:1.29
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+    volumes:
+      - static_files:/home/app/web/staticfiles
+      - nginx_config:/etc/nginx/conf.d
+
+
+volumes:
+  postgres-data:
+  static_files:
+  nginx_config:

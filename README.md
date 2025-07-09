@@ -5,13 +5,14 @@ An open source rss feed website for those who want to host their own.
 # Install
 Install the dependancies: `pip isntall -r requirements.txt`
 
+
 # Environment Variables
 The app will not launch if these environment variables are not present
 | Required Key | Description |
 | ----------- | ----------- |
 | SECRET_KEY | a salted key |
 
-These variables are not required to run the app but are essential for production security or debugging.
+These variables are not required to run the app but are essential for security or debugging.
 | Optional key | Default | Description
 | ----------- | ----------- | ----------- |
 | DEBUG | False | Set to true to activate the django debug mode. Do NOT run True in production. |
@@ -33,26 +34,20 @@ These variables are not required to run the app but are essential for production
 | POSTGRES_PASSWORD | The database password |
 
 ## .env file
-When running OFR from a terminal it is usefull to set all the nesisary environment variables in a `.env` file. e.g.:
-```
-SECRET_KEY=1234567890qwertyuiop
+When running OFR it is usefull to set all the nesisary environment variables in a `.env` file.
 
-SQLITE_DB=db.sqlite3
-
-ALLOWED_HOSTS=localhost
-CSRF_TRUSTED_ORIGINS=http://localhost:8000
-DEBUG=True
-```
+There are two examples of .env files included in this project, `example.dev.env` and `example.prod.env`. you can copy and rename one to `.env` to get started
 
 This is the linux command to import it:
 ```bash
 export $(grep -v '^#' .env | xargs -d '\n')
 ```
-Or you can add this function to ~/.bash_aleases:
+Or you can add this function to ~/.bashrc:
 ```bash
 senv() { set -a && source .env && set +a; }
 ```
 This adds the terminal command 'senv' witch will import environment variables from an .env file in your current directory.
+
 
 # Run
 For delevopment, It is recomended to use the default django server:
@@ -68,27 +63,28 @@ gunicorn open_feed_reader.wsgi:application --bind 0.0.0.0:8000
 ## Docker
 OFR comes with a Dockerfile. Build the docker container using:
 ```bash
-docker build -t progradedv/open-feed-reader:dev --ssh default=~/.ssh/id_rsa .
+docker build .
 ```
 
-## Docker Compose
+## Deployment with Docker Compose
 OFR comes with a few docker compose files.
-- **docker-compose.dev.yaml** is a simple development set up that only used the OFR container with a sqllte database.
-- **docker-compose.prod.yaml** is an example productions environment that uses a redis instance for caching, a nginx instance for static files, and a postgres database.
+- **docker-compose.dev.yaml** is a simple set up that only has one built locally container, with a simple database and cache scheme.
+- **docker-compose.prod.yaml** is an example productions environment that uses a redis instance for caching, an nginx instance for static files, and a postgres database.
 
 ### HTTPS
-This application is not meant to handle https connections. It expects them to be handled via nginx, apache, or other network manager
+This application is not meant to handle https connections. It expects them to be handled via nginx, apache, or other network manager prior to reaching it.
 
 ## Administration
 
 ### Create Super User
-Run this command from within the container to create a superuser.
-`python manage.py createsuperuser`
+Run this command to create a superuser, the app will probably fail to run if so superuser exists.
+```bash
+python manage.py createsuperuser
+```
 
 ### Updating Feeds
-Run this command within the container to update all feeds.
-`python manage.py refreshfeeds`
+Run this command update all feeds.
+```bash
+python manage.py refreshfeeds
+```
 It is recommended using cron to run it every 5-20 minutes
-
-### Permissions
-- Any user with the feeds.add_source, feeds.change_source, or feeds.delete_source permissions can add, edit, and delete sources.

@@ -43,6 +43,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy project
+COPY ./nginx /home/nginx
 COPY ./app .
 
 # make entrypoint.prod.sh runable
@@ -57,3 +58,4 @@ USER appuser
 
 # run entrypoint.prod.sh
 ENTRYPOINT ["/home/app/entrypoint.prod.sh"]
+CMD ["gunicorn", "open_feed_reader.wsgi:application", "--bind", "0.0.0.0:8000"]

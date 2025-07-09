@@ -1,0 +1,1 @@
+This nginx config is packaged with the ofr docker image in order to make a static files config easy to ship by sharing it in a volume with an nxinx container

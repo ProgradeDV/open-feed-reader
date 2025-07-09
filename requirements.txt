@@ -2,7 +2,11 @@ Django
 psycopg2-binary
 pillow
 gunicorn
+requests
 django-csp
 django_bleach
 ptpython
 django_extensions
+django-allauth
+feedparser
+beautifulsoup4
