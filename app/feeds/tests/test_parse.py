@@ -1,9 +1,7 @@
 
 import os
-from django.test import TestCase, Client
-from django.conf import settings
-from django.utils import timezone
-from feeds.models import Source, Entry, Enclosure, WebProxy
+from django.test import TestCase
+from feeds.models import Source
 from feeds.fetch import parse
 
 TEST_DATA_DIR = os.path.join(os.path.dirname(__file__), 'test_data')
@@ -65,4 +63,4 @@ class TestParsing(TestCase):
         test_enclosure = test_entry.enclosures.first()
 
         self.assertEqual(test_enclosure.type, 'youtube')
-        self.assertEqual(test_enclosure.href, 'https://www.youtube.com/embed/?v=sWvHHM_4Eiw')
+        self.assertEqual(test_enclosure.href, 'https://www.youtube.com/embed/sWvHHM_4Eiw')
