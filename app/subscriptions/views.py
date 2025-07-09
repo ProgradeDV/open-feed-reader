@@ -10,9 +10,9 @@ from site_base.views import paginator_args
 from feeds.models import Entry, Source
 from feeds.url_converters import get_rss_url
 from feeds.fetch import new_feed
-from .models import SourceSubcription
 
-logger = getLogger('feed_subscriptions/views.py')
+
+logger = getLogger('subscriptions/views.py')
 
 
 ITEMS_PER_PAGE = 20
@@ -35,7 +35,7 @@ def edit_subscriptions_page(request: HttpResponse):
 @login_required
 def all_subed_feed(request: HttpResponse):
     """all entries from the users subscribed feeds"""
-    entries = Entry.objects.filter(source__subscriptions__user = request.user).order_by('-created')
+    entries = Entry.objects.filter(source__subscribers = request.user).order_by('-created')
 
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
@@ -63,18 +63,12 @@ def subscribe_feed(request: HttpResponse, id: int):
         return Http404("Feed not Found")
 
     # check if you are already subscribed to that feed
-    try:
-        sub = SourceSubcription.objects.filter(user = request.user).get(source = feed)
-
-    except SourceSubcription.DoesNotExist:
-        # if the subscription doesn't exist, subscribe
-        logger.debug('%s subscribing to %s', request.user, feed.name)
-        sub = SourceSubcription(user = request.user, source = feed)
-        sub.save()
+    if feed.subscribers.filter(id=request.user.id).exists():
+        logger.debug('%s is already subscribed to %s',  request.user, feed)
 
     else:
-        # if you're already subscribed
-        logger.debug('%s is already subscribed to %s', request.user, feed.name)
+        logger.debug('%s subscribing to %s', request.user, feed)
+        feed.subscribers.add(request.user)
 
     # return an unsubscribe button
     return render(request, 'subscriptions/actions/unsubscribe_btn.html', context={'id':id})
@@ -88,21 +82,21 @@ def unsubscribe_feed(request: HttpResponse, id: int):
         return HttpResponse(status=405) # Method Not Allowed
 
     try:
-        # find the subscription
-        sub = SourceSubcription.objects.filter(user = request.user).get(source = id)
+        feed = Source.objects.get(id = id)
+    except Source.DoesNotExist:
+        return Http404("Feed not Found")
 
-    except SourceSubcription.DoesNotExist:
+    if not feed.subscribers.filter(id=request.user.id).exists():
         logger.debug('%s is not subscribed to %s', request.user, id)
         return Http404("Subscription not Found")
 
-    logger.debug('%s unsubscribing from %s', request.user, sub.source.name)
-    feed = sub.source
+    logger.debug('%s unsubscribing from %s', request.user, feed.name)
 
     # remove the feed from all of the users folders
     for folder in request.user.source_folders.all():
         folder.feeds.remove(feed)
 
-    sub.delete()
+    feed.subscribers.remove(request.user)
 
     # return a subscribe button
     return render(request, 'subscriptions/actions/resubscribe_btn.html', context={'id':id})
@@ -140,7 +134,7 @@ def all_subs_search(request: HttpResponse):
 def feeds_search_blank(request: HttpResponse):
     """this is the searcch result for empty search box"""
     sources = Source.objects\
-        .filter(subscriptions__user = request.user)\
+        .filter(subscribers = request.user)\
         .order_by('title')
 
     if not sources.count():
@@ -168,7 +162,7 @@ def feeds_search_text(request: HttpResponse, search_text:str):
     """
     # matches if search_text is in the name or title
     matched_sources = Source.objects\
-        .filter(subscriptions__user = request.user)\
+        .filter(subscribers = request.user)\
         .filter(Q(title__icontains = search_text) | Q(name__icontains = search_text))\
         .order_by('title')
 
@@ -193,26 +187,24 @@ def feeds_search_url(request: HttpResponse, search_url:ParseResult):
     # valid links matching the feed or site url
     rss_url = get_rss_url(search_url)
     try:
-        source = Source.objects.get(feed_url = rss_url)
+        feed = Source.objects.get(feed_url = rss_url)
     except Source.DoesNotExist:
         return new_feed_search(request, rss_url)
 
-    logger.debug('source found: %s', source)
+    logger.debug('feed found: %s', feed)
 
     # check if the user is subscribed
-    try:
-        SourceSubcription.objects.get(user = request.user, source=source)
-    except SourceSubcription.DoesNotExist:
+    if not feed.subscribers.filter(id=request.user.id).exists():
         return render(
             request,
             'subscriptions/search/search_item_not_subed.html',
-            context={'feed':source}
+            context={'feed':feed}
         )
 
     return render(
             request,
             'subscriptions/search/search_item_subed.html',
-            context={'feed':source}
+            context={'feed':feed}
         )
 
 

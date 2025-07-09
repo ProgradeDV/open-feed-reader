@@ -25,6 +25,6 @@ urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('feeds/', include('feeds.urls')),
     path('folders/', include('feeds_folders.urls')),
-    path('', include('feed_subscriptions.urls')),
+    path('', include('subscriptions.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
 + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

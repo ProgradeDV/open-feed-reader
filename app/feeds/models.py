@@ -6,7 +6,7 @@ import logging
 from urllib.parse import urlencode
 from django.db import models
 from django.utils.timezone import now
-
+from django.contrib.auth import get_user_model
 
 
 class Source(models.Model):
@@ -44,6 +44,8 @@ class Source(models.Model):
     status_code = models.PositiveIntegerField(default=0)
     # If the feed is not live, then the fetch routine will not query it
     live = models.BooleanField(default=True)
+
+    subscribers = models.ManyToManyField(get_user_model(), related_name='subscriptions')
 
 
     def __str__(self):

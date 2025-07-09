@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'feeds',
-    'feed_subscriptions',
+    'subscriptions',
     'feeds_folders',
 ]
 

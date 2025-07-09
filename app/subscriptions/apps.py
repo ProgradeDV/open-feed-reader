@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class FeedSubscriptionsConfig(AppConfig):
+class SubscriptionsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'feed_subscriptions'
+    name = 'subscriptions'
