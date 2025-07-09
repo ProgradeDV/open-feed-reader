@@ -29,6 +29,10 @@ img.loading-spinner {
 }
 
 
+#id_name {
+    display: none;
+}
+
 
 .toast.warning {
     border-color: var(--bs-warning-border-subtle);

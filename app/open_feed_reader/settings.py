@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from django.contrib import messages
-from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -204,9 +202,9 @@ BLEACH_STRIP_COMMENTS = False
 SECURE_REFERRER_POLICY = "no-referrer-when-downgrade"
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-# AXES config
-AXES_ENABLED = os.getenv("AXES_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes')
-AXES_COOLOFF_TIME = timedelta(seconds=60)
+# allauth settings
+ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = 'name'
+
 
 # Cache
 # if the cache is disables, set up a dummy cache
