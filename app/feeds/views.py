@@ -15,8 +15,6 @@ def feed_page(request: HttpResponse, id: int):
     entries = Entry.objects.filter(source = feed).order_by('-created')
     is_subed = feed.subscribers.filter(id=request.user.id).exists()
 
-    logger.warning('is_subed = %s', is_subed)
-
     page = int(request.GET.get("page", 1))
     context = paginator_args(page, entries)
     context['feed'] = feed

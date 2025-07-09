@@ -60,7 +60,7 @@ def edit_folder_page(request: HttpResponse, folder_id:int):
     if folder.user != request.user:
         raise Http404("Folder Not Found")
 
-    subed_feeds = Source.objects.filter(subscriptions__user = request.user).order_by('name')
+    subed_feeds = Source.objects.filter(subscribers = request.user).order_by('name')
     ordered_feeds = sorted(subed_feeds, key=lambda f: (f not in folder.feeds.all()))
 
     return render(
