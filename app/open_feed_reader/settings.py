@@ -204,7 +204,9 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # allauth settings
 ACCOUNT_SIGNUP_FORM_HONEYPOT_FIELD = 'name'
-
+# disable account creation if ENABLE_SIGNUPS is set to true
+ACCOUNT_ADAPTER = 'open_feed_reader.account_adapter.DisableSignUpsAccountAdapter'
+ENABLE_SIGNUPS = os.getenv("ENABLE_SIGNUPS", 'False').lower() in ('true', '1', 't', 'y', 'yes')
 
 # Cache
 # if the cache is disables, set up a dummy cache

@@ -15,7 +15,7 @@ These variables are not required to run the app but are essential for production
 | Optional key | Default | Description
 | ----------- | ----------- | ----------- |
 | DEBUG | False | Set to true to activate the django debug mode. Do NOT run True in production. |
-| AXES_ENABLED | True | Set to False to disable django-axes, the module for timing out users who enter the wrong password too many times.
+| ENABLE_SIGNUPS | False | if this value is false than new users will not be able to create new accounts.
 | ALLOWED_HOSTS | "[]" | A list of strings representing the host/domain names that this Django site can serve |
 | CSRF_TRUSTED_ORIGINS | "[]" | A list of trusted origins for unsafe requests (e.g. POST) |
 | EMAIL_HOST_USER | | The email address to send password resets and other notifications from
