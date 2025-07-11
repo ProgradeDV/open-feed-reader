@@ -1,15 +1,17 @@
 {% load bleach_tags %}
 
-<div class="row">
+<div class="row py-2 px-4">
 
   {% if feed.image_url %}
-  <div class="col-md-2 mx-auto my-2">
-    <img class="card-img-top" src="{{ feed.image_url }}" alt="Card image cap">
+  <div class="col-sm-2 mx-auto my-2">
+    <a target="_blank" rel="noopener noreferrer" href="{{ feed.best_link }}">
+      <img class="card-img-top" src="{{ feed.image_url }}" alt="Card image cap">
+    </a>
   </div>
 
-  <div class="col-md-10 mx-auto">
+  <div class="col-sm-10 mx-auto">
   {% else %}
-  <div class="col-md-12 mx-auto">
+  <div class="col-sm-12 mx-auto">
   {% endif %}
 
     <!-- title -->
