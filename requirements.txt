@@ -10,3 +10,4 @@ django_extensions
 django-allauth
 feedparser
 beautifulsoup4
+redis
