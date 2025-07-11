@@ -1,6 +1,7 @@
 {% extends 'site_base/base.html' %}
 {% load bleach_tags %}
 {% load static %}
+{% load cache %}
 
 {% block navbar_links %}
   {{ block.super }}
@@ -30,6 +31,7 @@
 {% endblock navbar_links %}
 
 
+{% cache 600 feed_page_content feed %}
 {% block content %}
   <div class="row">
 
@@ -91,7 +93,8 @@
   {% comment %} pagination {% endcomment %}
   {% include 'site_base/paginator.html' %}
 
-{% endblock content %}
+  {% endblock content %}
+{% endcache %}
 
 
 {% block extra_body %}

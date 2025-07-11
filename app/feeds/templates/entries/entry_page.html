@@ -3,8 +3,11 @@
 This is the template for a page providing a single feed entry
 
 Required Context:
-  entry: the feeds.models.Entry model to display
+entry: the feeds.models.Entry model to display
 {% endcomment %}
+{% load cache %}
+
+{% cache 86400 entry_page_content entry.id %}
 {% load bleach_tags %}
 
 {% block content %}
@@ -69,3 +72,4 @@ Required Context:
 
   </div>
 {% endblock %}
+{% endcache %}
