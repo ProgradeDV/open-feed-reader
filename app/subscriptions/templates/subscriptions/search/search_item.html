@@ -4,7 +4,7 @@
       {% comment %} icon {% endcomment %}
       {% if feed.image_url %}
       <div class="btn-group pe-3 pt-1" role="group" aria-label="Basic example">
-        <a href="{% url 'one_feed' id=feed.id %}">
+        <a href="{% url 'one_feed' feed_id=feed.id %}">
           <img src="{{ feed.image_url }}" height="40" class="rounded ms-2" alt="Image">
         </a>
       </div>
@@ -12,7 +12,7 @@
 
       {% comment %} title {% endcomment %}
       <div class="flex-fill p-1 mx-1">
-        <a class="ms-2" href="{% url 'one_feed' id=feed.id %}">
+        <a class="ms-2" href="{% url 'one_feed' feed_id=feed.id %}">
           {{ feed.display_name }}
         </a>
       </div>

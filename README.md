@@ -21,7 +21,7 @@ These variables are not required to run the app but are essential for security o
 | CSRF_TRUSTED_ORIGINS | "[]" | A list of trusted origins for unsafe requests (e.g. POST) |
 | EMAIL_HOST_USER | | The email address to send password resets and other notifications from
 | EMAIL_HOST_PASSWORD | | A password to the website email address. Do not use your real password, use an app-password or other secondary permissions
-| CASH_ENABLED | True | Set this to false to disable the built in page caching.
+| CASHE_ENABLED | True | Set this to false to disable the built in page caching.
 | REDIS_LOCATION | | If provided then OFR will use a redis instance at this location as the cache. If not provided then OFR will use a local memory cache.
 
 **Postgress** is my database of choice for production environments, but if you don't provide this information then OFR will use sqlite

@@ -1,0 +1,62 @@
+{% load bleach_tags %}
+
+<div class="row">
+
+  {% if feed.image_url %}
+  <div class="col-md-2 mx-auto my-2">
+    <img class="card-img-top" src="{{ feed.image_url }}" alt="Card image cap">
+  </div>
+
+  <div class="col-md-10 mx-auto">
+  {% else %}
+  <div class="col-md-12 mx-auto">
+  {% endif %}
+
+    <!-- title -->
+    <h1 class="card-title">
+      {{ feed.display_name }}
+    </h1>
+
+    {% if feed.subtitle %}
+    {{ feed.subtitle|bleach|urlizetrunc:40 }}
+    {% endif %}
+
+    <!-- title footer -->
+    <footer class="blockquote-footer mt-1">
+      Updated {{ feed.last_feched }}
+    </footer>
+
+    {% if feed.description %}
+    <div class="row">
+      {{ feed.description|bleach|urlizetrunc:40|linebreaks }}
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% comment %} this is a warning that will pop up when the feed has a bad status {% endcomment %}
+{% if feed.status_code >= 400 %}
+<div class="alert alert-warning" role="alert">
+  <h4 class="alert-heading">Error</h4>
+  <p>An Error was raised during last feed update</p>
+  <p>Status Code: {{ feed.status_code }} </p>
+  <hr>
+  <p class="mb-0">{{ feed.last_result }}</p>
+</div>
+{% endif %}
+
+{% if not feed.live %}
+<div class="alert alert-warning" role="alert">
+  <p class="mb-0">This feed has been disabled, and will no longer recieve updates.</p>
+</div>
+{% endif %}
+
+{% comment %} list of entries {% endcomment %}
+{% for entry in page_obj.object_list %}
+  {% include 'entries/entry_list_item.html' %}
+{% endfor %}
+
+{% comment %} pagination {% endcomment %}
+{% include 'site_base/paginator.html' %}
+

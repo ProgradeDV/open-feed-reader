@@ -38,7 +38,7 @@ entry: the feeds.models.Entry model to display
             {% if entry.author %}
               {{ entry.author }} at 
             {% endif %}
-            <a href="{% url 'one_feed' id=entry.source.id %}">{{ entry.source.display_name }}</a>,
+            <a href="{% url 'one_feed' feed_id=entry.source.id %}">{{ entry.source.display_name }}</a>,
             {{ entry.created }}
           </footer>
         </div>

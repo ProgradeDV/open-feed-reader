@@ -209,7 +209,7 @@ ENABLE_SIGNUPS = os.getenv("ENABLE_SIGNUPS", 'False').lower() in ('true', '1', '
 
 # Cache
 # if the cache is disables, set up a dummy cache
-if not os.getenv("CASH_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes'):
+if not os.getenv("CASHE_ENABLED", 'true').lower() in ('true', '1', 't', 'y', 'yes'):
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.dummy.DummyCache",
