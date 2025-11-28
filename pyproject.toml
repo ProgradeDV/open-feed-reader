@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where=["src"]
+
+[project]
+name="open_feed_reader"
+version="v0.6.0"
+dependencies = [
+  "Django",
+  "pillow",
+  "gunicorn",
+  "requests",
+  "django-csp",
+  "django_bleach",
+  "ptpython",
+  "django-extensions",
+  "django-allauth",
+  "feedparser",
+  "beautifulsoup4",
+  "redis",
+]
+
+[dependency-groups]
+dev=[
+  "ruff",
+]
+

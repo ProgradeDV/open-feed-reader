@@ -1,0 +1,26 @@
+target-version = 'py312'
+line-length = 120
+exclude = [
+    "*/migrations/*"
+]
+
+[lint]
+select = [
+    'ALL',
+]
+ignore = [
+    'EM101',
+    'TRY003',
+    'PTH',
+    'FBT',
+    'D203',
+    'D212',
+    'PLR0913',
+]
+
+[lint.flake8-self]
+ignore-names = ["_meta"]
+
+
+[lint.extend-per-file-ignores]
+"*test*.py" = ["S101", "PLR2004", "PT009"]
