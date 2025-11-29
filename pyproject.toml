@@ -8,6 +8,7 @@ where=["src"]
 [project]
 name="open_feed_reader"
 version="v0.6.0"
+requires-python = ">=3.13,<4.0"
 dependencies = [
   "Django",
   "pillow",
@@ -27,4 +28,10 @@ dependencies = [
 dev=[
   "ruff",
 ]
+
+[project.scripts]
+"manage.py" = "open_feed_reader.manage:main"
+
+[tool.setuptools.package-data]
+"*" = ["**/templates/*", "**/static/*"]
 

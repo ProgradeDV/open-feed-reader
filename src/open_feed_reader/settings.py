@@ -16,6 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+DATA_DIR = Path(os.getenv("DATA_DIR", BASE_DIR.parent))
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "")
 
@@ -59,7 +61,7 @@ ROOT_URLCONF = "open_feed_reader.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [DATA_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -91,7 +93,7 @@ if "POSTGRES_DB" in os.environ:
         },
     }
 else:
-    sqlite_dir = BASE_DIR.parent / "sqlite"
+    sqlite_dir = DATA_DIR / "sqlite"
     sqlite_dir.mkdir(parents=True, exist_ok=True)
     DATABASES = {
         "default": {
@@ -127,7 +129,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = DATA_DIR / "staticfiles"
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
 # Default primary key field type
@@ -146,7 +148,7 @@ EMAIL_HOST_PASSWORD = str(os.getenv("EMAIL_HOST_PASSWORD"))
 
 # user media
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "mediafiles"
+MEDIA_ROOT = DATA_DIR / "mediafiles"
 
 
 AUTHENTICATION_BACKENDS = [

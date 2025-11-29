@@ -2,15 +2,18 @@ version: '3'
 
 services:
   web:
-    image: progradedv/open-feed-reader:latest
+    image: open-feed-reader:dev
     ports:
       - 8000:8000
     env_file:
       - ./.env
     volumes:
-      - db-data:/home/sqlite
-      - static_files:/home/app/staticfiles
+      - db-data:/app/sqlite
+      - static-files:/app/staticfiles
+      - media-files:/app/mediafiles
 
 volumes:
   db-data:
-  static_files:
+  static-files:
+  media-files:
+
