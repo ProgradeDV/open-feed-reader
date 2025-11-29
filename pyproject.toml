@@ -33,5 +33,5 @@ dev=[
 "manage.py" = "open_feed_reader.manage:main"
 
 [tool.setuptools.package-data]
-"*" = ["**/templates/*", "**/static/*"]
+"*" = ["**/templates/**/*", "**/static/**/*"]
 
