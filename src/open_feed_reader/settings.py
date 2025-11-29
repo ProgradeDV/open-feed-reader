@@ -132,6 +132,15 @@ STATIC_URL = "/static/"
 STATIC_ROOT = DATA_DIR / "staticfiles"
 STATIC_ROOT.mkdir(parents=True, exist_ok=True)
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
+}
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
