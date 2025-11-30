@@ -1,51 +1,39 @@
-version: '3'
-
 services:
-  web:
-    image: progradedv/open-feed-reader:latest
-    expose:
-      - 8000
-    env_file:
-      - ./.env.prod
-    environment:
-      - REDIS_LOCATION=redis
-      - POSTGRES_HOST=db
-    volumes:
-      - static_files:/home/app/staticfiles
-      - nginx_config:/home/nginx
+  celery_worker:
+    command: >-
+      uv run celery -A open_feed_reader worker -B -l INFO
     depends_on:
-      - db
       - redis
-
-
-  db:
-    image: postgres:17.5
-    env_file:
-      - ./.env.prod
-    expose:
-      - 5432
+    environment:
+      - CELERY_BROKER=redis://redis:6379/0
+    image: open-feed-reader:dev
     volumes:
-      - postgres-data:/var/lib/postgresql/data/
-
-
-  redis:
-    image: redis:8.0.3
-    expose:
-      - 6379
-
-
+      - db-data:/app/sqlite
+      - media_files:/app/mediafiles
   nginx:
-    image: nginx:1.29
-    ports:
-      - 1337:80
     depends_on:
       - web
+    image: nginx:1.29
+    ports:
+      - '1337:80'
     volumes:
       - static_files:/home/app/web/staticfiles
       - nginx_config:/etc/nginx/conf.d
-
-
+  redis:
+    image: redis:latest
+  web:
+    env_file:
+      - ./.env.prod
+    expose:
+      - 8000
+    image: open-feed-reader:dev
+    volumes:
+      - db-data:/app/sqlite
+      - static_files:/app/staticfiles
+      - media_files:/app/mediafiles
+      - nginx_config:/app/nginx
 volumes:
-  postgres-data:
-  static_files:
-  nginx_config:
+  db-data: Null
+  media_files: Null
+  nginx_config: Null
+  static_files: Null

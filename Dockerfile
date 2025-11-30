@@ -40,6 +40,8 @@ ENV DATA_DIR=/app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin
 COPY --from=builder --chown=appuser:appgroup /app/.venv /app/.venv
 
+COPY ./nginx /app/nginx
+
 # create the media directories
 RUN mkdir /app/sqlite/
 RUN mkdir /app/staticfiles/
