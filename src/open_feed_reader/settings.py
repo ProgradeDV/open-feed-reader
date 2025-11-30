@@ -34,11 +34,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "site_base",
+    "django_celery_beat",
+    "django_celery_results",
     "django_extensions",
     "django_bleach",
     "allauth",
     "allauth.account",
+    "site_base",
     "feeds",
     "subscriptions",
     "feeds_folders",
@@ -241,6 +243,13 @@ else:
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         },
     }
+
+# Celery settings
+CELERY_RESULT_EXTENDED = True
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://127.0.0.1:6379/0")
+CELERY_SEND_TASK_ERROR_EMAILS = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 
 LOGGING = {

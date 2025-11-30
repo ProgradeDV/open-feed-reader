@@ -22,6 +22,8 @@ dependencies = [
   "feedparser",
   "beautifulsoup4",
   "redis",
+  "django-celery-beat",
+  "django-celery-results",
 ]
 
 [dependency-groups]
