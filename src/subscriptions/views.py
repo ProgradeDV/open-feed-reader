@@ -1,10 +1,10 @@
-"""site_base.views"""
+"""Subscriptions views, pages, and query responses."""
 from logging import getLogger
 from urllib.parse import ParseResult, urlparse
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpRequest
 from django.shortcuts import HttpResponse, render
 
 from feeds.fetch import new_feed
@@ -20,8 +20,8 @@ ITEMS_PER_PAGE = 20
 
 
 @login_required
-def edit_subscriptions_page(request: HttpResponse):
-    """View for the page of all known feeds"""
+def edit_subscriptions_page(request: HttpRequest) -> HttpResponse:
+    """View for the page of all known feeds."""
     return render(
         request,
         "subscriptions/edit_subs_page.html",
@@ -33,8 +33,8 @@ def edit_subscriptions_page(request: HttpResponse):
 
 
 @login_required
-def all_subed_feed(request: HttpResponse):
-    """All entries from the users subscribed feeds"""
+def all_subed_feed(request: HttpRequest) -> HttpResponse:
+    """All entries from the users subscribed feeds."""
     entries = Entry.objects.filter(source__subscribers = request.user).order_by("-created")
 
     page = int(request.GET.get("page", 1))
@@ -50,15 +50,15 @@ def all_subed_feed(request: HttpResponse):
 
 
 @login_required
-def subscribe_feed(request: HttpResponse, id: int):
-    """Subscribe to the feed with the given id"""
+def subscribe_feed(request: HttpRequest, source_id: int) -> HttpResponse:
+    """Subscribe to the feed with the given id."""
     # reject non post requests
     if request.method != "POST":
         return HttpResponse(status=405) # Method Not Allowed
 
     # reject subscriptions to feeds that don't exist
     try:
-        feed = Source.objects.get(id = id)
+        feed = Source.objects.get(id = source_id)
     except Source.DoesNotExist:
         return Http404("Feed not Found")
 
@@ -71,23 +71,23 @@ def subscribe_feed(request: HttpResponse, id: int):
         feed.subscribers.add(request.user)
 
     # return an unsubscribe button
-    return render(request, "subscriptions/actions/unsubscribe_btn.html", context={"id":id})
+    return render(request, "subscriptions/actions/unsubscribe_btn.html", context={"id":source_id})
 
 
 
 @login_required
-def unsubscribe_feed(request: HttpResponse, id: int):
-    """Unsubscribe the user from the feed with the given id"""
+def unsubscribe_feed(request: HttpRequest, source_id: int) -> HttpResponse:
+    """Unsubscribe the user from the feed with the given i."""
     if request.method != "POST":
         return HttpResponse(status=405) # Method Not Allowed
 
     try:
-        feed = Source.objects.get(id = id)
+        feed = Source.objects.get(id = source_id)
     except Source.DoesNotExist:
         return Http404("Feed not Found")
 
     if not feed.subscribers.filter(id=request.user.id).exists():
-        logger.debug("%s is not subscribed to %s", request.user, id)
+        logger.debug("%s is not subscribed to %s", request.user, source_id)
         return Http404("Subscription not Found")
 
     logger.debug("%s unsubscribing from %s", request.user, feed.name)
@@ -99,13 +99,13 @@ def unsubscribe_feed(request: HttpResponse, id: int):
     feed.subscribers.remove(request.user)
 
     # return a subscribe button
-    return render(request, "subscriptions/actions/resubscribe_btn.html", context={"id":id})
+    return render(request, "subscriptions/actions/resubscribe_btn.html", context={"id":source_id})
 
 
 
 @login_required
-def all_subs_search(request: HttpResponse):
-    """View for the responst to the htmx request for searching for a feed"""
+def all_subs_search(request: HttpRequest) -> HttpResponse:
+    """View for the responst to the htmx request for searching for a feed."""
     if request.method != "POST":
         return HttpResponse(status=405) # Method Not Allowed
 
@@ -131,8 +131,8 @@ def all_subs_search(request: HttpResponse):
     return feeds_search_text(request, search_text)
 
 
-def feeds_search_blank(request: HttpResponse):
-    """This is the searcch result for empty search box"""
+def feeds_search_blank(request: HttpRequest) -> HttpResponse:
+    """Searcch result for empty search box."""
     sources = Source.objects\
         .filter(subscribers = request.user)\
         .order_by("title")
@@ -150,16 +150,16 @@ def feeds_search_blank(request: HttpResponse):
     )
 
 
-def feeds_search_no_match(request):
-    """This is the search result for an empty list of matches"""
+def feeds_search_no_match(request:HttpRequest) -> HttpResponse:
+    """Search result for an empty list of matches."""
     return HttpResponse(render(request, "subscriptions/search/search_no_match.html"))
 
 
-def feeds_search_text(request: HttpResponse, search_text:str):
+def feeds_search_text(request: HttpRequest, search_text:str) -> HttpResponse:
     """
-    Search the database for feeds matching the given text
-    
-    Returns a set of matches
+    Search the database for feeds matching the given text.
+
+    Returns a set of matches.
     """
     # matches if search_text is in the name or title
     matched_sources = Source.objects\
@@ -180,11 +180,11 @@ def feeds_search_text(request: HttpResponse, search_text:str):
     return feeds_search_no_match(request)
 
 
-def feeds_search_url(request: HttpResponse, search_url:ParseResult):
+def feeds_search_url(request: HttpRequest, search_url:ParseResult) -> HttpResponse:
     """
-    Search the database for feeds matching the given text
-    
-    Returns a set of matches
+    Search the database for feeds matching the given text.
+
+    Returns a set of matches.
     """
     # valid links matching the feed or site url
     rss_url = get_rss_url(search_url)
@@ -211,12 +211,12 @@ def feeds_search_url(request: HttpResponse, search_url:ParseResult):
 
 
 
-def new_feed_search(request: HttpResponse, rss_url:str):
-    """Create a new feed, return a search result"""
+def new_feed_search(request: HttpRequest, rss_url:str) -> HttpResponse:
+    """Create a new feed, return a search result."""
     new_source = Source(feed_url=rss_url)
     new_feed(new_source)
 
-    if new_source.status_code >= 400: # the source will not have been created if there was an error
+    if new_source.status_code >= 400: # the source will not have been created if there was an error  # noqa: PLR2004
         return render(
             request,
             "subscriptions/search/search_item_error.html",

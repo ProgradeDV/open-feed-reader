@@ -1,3 +1,4 @@
+"""Feeds."""
 from django.conf import settings
 
 __all__ = []

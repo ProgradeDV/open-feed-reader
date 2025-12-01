@@ -1,6 +1,4 @@
-"""
-Request the feed data
-"""
+"""Request the feed data."""
 import logging
 from datetime import datetime
 from zoneinfo import ZoneInfo
@@ -17,7 +15,7 @@ logger = logging.getLogger("Fetch Query")
 
 def query_source(source: Source, no_cache: bool) -> feedparser.util.FeedParserDict:
     """
-    Retrieve the feed data from the given url
+    Retrieve the feed data from the given url.
 
     ### Parameters
     - source (Source): the feed source to query
@@ -29,12 +27,12 @@ def query_source(source: Source, no_cache: bool) -> feedparser.util.FeedParserDi
     logger.info("Requesting Source: %s", source)
     now = datetime.now(tz=ZoneInfo("UTC"))
 
-    if source.last_feched is not None:
+    if source.last_feched is not None:  # noqa: SIM108
         interval = (now - source.last_feched).total_seconds()
     else:
         interval = 0
 
-    headers = headers={
+    headers = {
         "Accept-Encoding": "gzip",
         "User-Agent": settings.FEEDS_USER_AGENT,
         }
@@ -70,16 +68,16 @@ def query_source(source: Source, no_cache: bool) -> feedparser.util.FeedParserDi
         logger.info("Feed redirected to %s", response.url)
         source.feed_url = response.url
 
-    elif response.status_code == 304: # 304 means that there is no new content
+    elif response.status_code == 304: # 304 means that there is no new content  # noqa: PLR2004
         return None
 
-    elif response.status_code == 429: # 429 means too many requests,
+    elif response.status_code == 429: # 429 means too many requests,  # noqa: PLR2004
         if interval > source.min_cadence: # avoid doing anything if fetched early
             source.min_cadence += 1200 # add 20 minuts to minimum interval
         return None
 
     # turn off source if we get a 404 or any other 400 code
-    elif 400 <= response.status_code < 500:
+    elif 400 <= response.status_code < 500:  # noqa: PLR2004
         source.live = False
         return None
 

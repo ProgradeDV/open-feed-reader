@@ -146,9 +146,6 @@ STORAGES = {
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# user login session
-# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
-
 # email configs
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
@@ -174,8 +171,8 @@ LOGIN_REDIRECT_URL = "/"
 
 # HTTPS settings
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split()
-# CSRF_COOKIE_SECURE = True
-# SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 CSP_INCLUDE_NONCE_IN = ["script-src", "style-src"]
 CSP_DEFAULT_SRC = ["'self'"]

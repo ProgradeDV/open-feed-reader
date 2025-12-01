@@ -1,3 +1,6 @@
+"""Admin panel config for feed folders."""
+from typing import ClassVar
+
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -8,20 +11,20 @@ from .models import FeedsFolder
 
 
 class FeedsFolderAdmin(admin.ModelAdmin):
-    """Adds link to a sources entries to the admin panel"""
+    """Adds link to a sources entries to the admin panel."""
 
-    list_display = ["name", "user", "feeds_count"]
-    list_filter = ["name", "user"]
+    list_display:ClassVar[list] = ["name", "user", "feeds_count"]
+    list_filter:ClassVar[list] = ["name", "user"]
 
     def feeds_count(self, folder:FeedsFolder) -> str:
-        """Returns an html link string to the feeds list"""
+        """HTML link string to the feeds list."""
         if folder.id is None:
             return ""
         qs = folder.feeds.count()
 
         link = reverse(f"admin:{Source._meta.app_label}_{Source._meta.model_name}_changelist")
 
-        return mark_safe(f'<a href="{link}?folders__id={folder.id:d}" target="_blank">{qs:d} Feeds</a>')
+        return mark_safe(f'<a href="{link}?folders__id={folder.id:d}" target="_blank">{qs:d} Feeds</a>')  # noqa: S308
 
     feeds_count.short_description = "feeds"
 

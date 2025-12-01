@@ -1,7 +1,6 @@
-"""
-CLI for fetching and updating a feed
-"""
+"""CLI for fetching and updating a feed."""
 import logging
+from argparse import ArgumentParser
 
 from django.core.management.base import BaseCommand
 
@@ -15,13 +14,12 @@ DEFAULT_MAX_FEEDS = 10
 
 
 class Command(BaseCommand):
-    """
-    Command to request and parse all due feeds
-    """
+    """Command to request and parse all due feeds."""
 
     help = "Rrefreshes the RSS feeds"
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser:ArgumentParser) -> None:
+        """Add arguments to the commad parser."""
         parser.add_argument("--name", type=str)
         parser.add_argument("--url", type=str)
         parser.add_argument("--max", type=int, default=DEFAULT_MAX_FEEDS)
@@ -29,8 +27,8 @@ class Command(BaseCommand):
         parser.add_argument("--no-cache", action="store_true")
 
 
-    def handle(self, *args, **options):
-
+    def handle(self, *args:any, **options:any) -> None:  # noqa: ARG002
+        """Request and parse all due feeds."""
         if options["all_feeds"]:
             logger.info("Updating all feeds")
             sources = Source.objects.all()

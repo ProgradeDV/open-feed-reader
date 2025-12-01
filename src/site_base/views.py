@@ -1,19 +1,20 @@
-"""site_base.views"""
+"""Views and http responses for the site base."""
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Model
 from django.db.models.query import QuerySet
 from django.forms import ModelForm
-from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 
 ITEMS_PER_PAGE = 20
 
 
-def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_url: str,
-                        title: str = None, initial_model: Model = None) -> HttpResponse:
+def new_model_form_view(request: HttpRequest, form_class: ModelForm, success_url: str,
+                        title: str|None = None, initial_model: Model = None) -> HttpResponse:
     """
-    Generic view to create a new model
+    From view to create a new model.
 
     ### Parameters
     - request: the HttpResponse that requested this view
@@ -51,11 +52,11 @@ def new_model_form_view(request: HttpResponse, form_class: ModelForm, success_ur
 
 
 
-def edit_model_form_view(request: HttpResponse, model: Model, form_class: ModelForm, success_url: str,
-                         title: str = None, delete_url: str = None) -> HttpResponse:
+def edit_model_form_view(request: HttpRequest, model: Model, form_class: ModelForm, success_url: str,
+                         title: str|None = None, delete_url: str|None = None) -> HttpResponse:
     """
-    Generic page to edit a model
-    
+    From page to edit a model.
+
     ### Parameters
     - request: the HttpResponse that requested this view
     - model: the model to edit
@@ -97,10 +98,10 @@ def edit_model_form_view(request: HttpResponse, model: Model, form_class: ModelF
 
 
 
-def delete_model_form_view(request: HttpResponse, model: Model, success_url: str, title: str = None) -> HttpResponse:
+def delete_model_form_view(request:HttpRequest, model:Model, success_url:str, title:str|None = None) -> HttpResponse:
     """
-    Generic view to delete a model
-    
+    From view to Delete a model.
+
     ### Parameters
     - request: HttpResponse of the page to render
     - model: the model instance to delete
@@ -130,16 +131,7 @@ def delete_model_form_view(request: HttpResponse, model: Model, success_url: str
 
 
 def paginator_args(page_index:int, items:QuerySet, items_per_page:int=ITEMS_PER_PAGE) -> dict:
-    """
-    Calculate the paginator context for use with the paginator template
-
-    Parameters
-    ----------
-    - request: the http response object for the view
-    - items: a django QuerySet for all of the items to be paged
-    - items_per_page: integer number of items to put on each page
-
-    """
+    """Calculate the paginator context for use with the paginator template."""
     paginator = Paginator(items, items_per_page)
 
     page_number = max(min(page_index, paginator.num_pages), 1)

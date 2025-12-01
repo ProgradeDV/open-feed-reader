@@ -1,13 +1,17 @@
-"""functions for converting links related to a feed to the feed url"""
+"""Converting links related to a feed to the feed url."""
 import re
 from urllib.parse import ParseResult, parse_qs
 
 import requests
 from bs4 import BeautifulSoup
 
+YOUTUBE_URL_REGEX = r"^/@\w+$" # mathces "/@{channelname_name}..."
+BLUESKY_URL_REGEX = r"^/profile/\w+\.\w+\.\w+$" # mathces "/profile/{profile_name}"
+REDDIT_URL_REGEX = r"^/r/\w+/$" # mathces "/r/{subreddit_name}/"
+
 
 def get_rss_url(parsed_url:ParseResult) -> str:
-    """Convert the given url into the corisponding rss url"""
+    """Convert the given url into the corisponding rss url."""
     if parsed_url.netloc == "www.youtube.com":
         return convert_youtube_channel(parsed_url)
 
@@ -21,10 +25,10 @@ def get_rss_url(parsed_url:ParseResult) -> str:
 
 
 def convert_youtube_channel(parsed_url:ParseResult) -> str:
-    """Find the rss feed link for a given youtube channel"""
-    if re.match(r"^/@\w+$", parsed_url.path): # mathces "/@{channelname_name}..."
+    """Find the rss feed link for a given youtube channel."""
+    if re.match(YOUTUBE_URL_REGEX, parsed_url.path): # mathces "/@{channelname_name}..."
         # remove any parameters
-        parsed_url._replace(query="")
+        parsed_url._replace(query="")  # noqa: SLF001
 
         # pull the url
         page = requests.get(parsed_url.geturl(), timeout=5)
@@ -39,18 +43,20 @@ def convert_youtube_channel(parsed_url:ParseResult) -> str:
 
 
 def convert_bluesky_account(parsed_url:ParseResult) -> str:
-    """Find the rss link for a given bluesky account"""
-    assert re.match(r"^/profile/\w+\.\w+\.\w+$", parsed_url.path) # mathces "/profile/{profile_name}"
+    """Find the rss link for a given bluesky account."""
+    if not re.match(BLUESKY_URL_REGEX, parsed_url.path):
+        raise ValueError("Unreconized link")
 
     new_path = parsed_url.path + "/rss"
 
-    return parsed_url._replace(path=new_path).geturl()
+    return parsed_url._replace(path=new_path).geturl()  # noqa: SLF001
 
 
 def convert_subreddit(parsed_url:ParseResult) -> str:
-    """Find the rss link for a given subredit"""
-    assert re.match(r"^/r/\w+/$", parsed_url.path) # mathces "/r/{subreddit_name}/"
+    """Find the rss link for a given subredit."""
+    if not re.match(REDDIT_URL_REGEX, parsed_url.path):
+        raise ValueError("Unreconized link")
 
     new_path = parsed_url.path[:-1] + ".rss"
 
-    return parsed_url._replace(path=new_path).geturl()
+    return parsed_url._replace(path=new_path).geturl()  # noqa: SLF001

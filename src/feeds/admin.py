@@ -1,7 +1,9 @@
-"""
-Register models for admin panel management
-"""
+"""Register models for admin panel management."""
+from typing import ClassVar
+
 from django.contrib import admin, messages
+from django.db.models import QuerySet
+from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import ngettext
@@ -11,30 +13,28 @@ from feeds.fetch import fetch_feed
 
 
 class SourceAdmin(admin.ModelAdmin):
-    """
-    Adds link to a sources entries to the admin panel
-    """
+    """Adds link to a sources entries to the admin panel."""
 
-    list_display = ["display_name", "entries_link", "status_code", "last_result", "due_fetch"]
-    readonly_fields = ("entries_link",)
-    actions = ["fetch_feeds"]
+    list_display:ClassVar[list] = ["display_name", "entries_link", "status_code", "last_result", "due_fetch"]
+    readonly_fields:ClassVar[list] = ("entries_link",)
+    actions:ClassVar[list] = ["fetch_feeds"]
 
 
     @admin.action(description="Fetch selected feeds")
-    def fetch_feeds(self, request, queryset):
-        """This admin action will update the selected sources"""
+    def fetch_feeds(self, request:HttpRequest, queryset:QuerySet) -> None:
+        """Admin Action to update the selected sources."""
         sucsesses = 0
         failed = 0
 
         for source in queryset:
             fetch_feed(source, no_cache=True)
-            if source.status_code < 400:
+            if source.status_code < 400:  # noqa: PLR2004
                 sucsesses += 1
             else:
                 failed += 1
 
         message = ngettext(
-                f"{sucsesses} feed was updated.",
+                f"{sucsesses} feed was updated.",  # noqa: INT001
                 f"{sucsesses} feeds were updated.",
                 sucsesses,
             ) + f" {failed} failed"
@@ -46,25 +46,19 @@ class SourceAdmin(admin.ModelAdmin):
         )
 
     def entries_link(self, source: models.Source) -> str:
-        """
-        Returns an html link string to the given sources entries
-        """
+        """HTML link string to the given sources entries."""
         if source.id is None:
             return ""
-        qs = source.entries.all()
-        return mark_safe(
-            '<a href="%s?source__id=%i" target="_blank">%i Posts</a>' % (
-                reverse("admin:feeds_entry_changelist"), source.id, qs.count(),
-            ),
-        )
+        count = source.entries.all().count()
+        url = reverse("admin:feeds_entry_changelist")
+
+        return mark_safe(f'<a href="{url}?source__id={source.id:d}" target="_blank">{count:d} Posts</a>')  # noqa: S308
     entries_link.short_description = "entries"
 
 
 
 class EntryAdmin(admin.ModelAdmin):
-    """
-    Adds a link to a entry's enclosures to the admin panel
-    """
+    """Adds a link to a entry's enclosures to the admin panel."""
 
     raw_id_fields = ("source",)
     list_display = ("title", "enclosures_link", "source", "created", "guid", "author")
@@ -76,25 +70,20 @@ class EntryAdmin(admin.ModelAdmin):
     )
 
     def enclosures_link(self, entry: models.Entry) -> str:
-        """
-        Returns an html link to the given entry's enclosures
-        """
+        """HTML link to the given entry's enclosures."""
         if entry.id is None:
             return ""
-        qs = entry.enclosures.all()
-        return mark_safe(
-            '<a href="%s?entry__id=%i" target="_blank">%i Enclosures</a>' % (
-                reverse("admin:feeds_enclosure_changelist"), entry.id, qs.count(),
-            ),
-        )
+        count = entry.enclosures.all().count()
+        url = reverse("admin:feeds_enclosure_changelist")
+
+
+        return mark_safe(f'<a href="{url}?entry__id={entry,id:d}" target="_blank">{count:d} Enclosures</a>')  # noqa: S308
     enclosures_link.short_description = "enclosures"
 
 
 
 class EnclosureAdmin(admin.ModelAdmin):
-    """
-    Admin panel for enclosures
-    """
+    """Admin panel for enclosures."""
 
     raw_id_fields = ("entry",)
     list_display = ("href", "type")

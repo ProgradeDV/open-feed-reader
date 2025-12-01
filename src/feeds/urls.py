@@ -1,4 +1,4 @@
-"""contains the urls for open feed reader"""
+"""Urls for open feed reader."""
 from django.urls import path
 
 from . import views

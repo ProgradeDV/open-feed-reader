@@ -28,5 +28,6 @@ urlpatterns = [
     path("feeds/", include("feeds.urls")),
     path("folders/", include("feeds_folders.urls")),
     path("", include("subscriptions.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
-+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *static(settings.STATIC_URL, document_root=settings.STATIC_ROOT),
+]

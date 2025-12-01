@@ -1,6 +1,4 @@
-"""
-Functions for updating feeds
-"""
+"""Functions for updating feeds."""
 import logging
 from time import strftime, struct_time
 from urllib.parse import ParseResult, parse_qs, urlparse
@@ -36,7 +34,7 @@ ENTRY_FIELD_KEYS = {
 }
 
 
-def update_feed(source: Source, content:str):
+def update_feed(source: Source, content:str) -> None:
     """
     Update the data for the given feed.
 
@@ -58,9 +56,9 @@ def update_feed(source: Source, content:str):
 
 
 
-def tree_atribute(parser_data: feedparser.util.FeedParserDict, *paths):
+def tree_atribute(parser_data: feedparser.util.FeedParserDict, *paths:str) -> str:
     """
-    Follow a tree of attributes to attempt to find a value
+    Follow a tree of attributes to attempt to find a value.
 
     ### Parameters
     - parser_data (FeedParserDict): the data retrieved from the source
@@ -76,19 +74,19 @@ def tree_atribute(parser_data: feedparser.util.FeedParserDict, *paths):
             if isinstance(value, list):
                 try:
                     value = value[int(key)]
-                except Exception:
+                except IndexError:
                     break
 
             elif isinstance(value, dict):
                 try:
                     value = value[key]
-                except Exception:
+                except KeyError:
                     break
 
             else:
                 try:
                     value = getattr(value, key)
-                except Exception:
+                except AttributeError:
                     break
 
         else: # no break
@@ -101,14 +99,14 @@ def tree_atribute(parser_data: feedparser.util.FeedParserDict, *paths):
 
 
 def parse_feed_content(content:str) -> feedparser.util.FeedParserDict:
-    """Turn the string response from the query into a searchable dict"""
+    """Turn the string response from the query into a searchable dict."""
     return feedparser.parse(content)
 
 
 
-def update_source_attributes(source: Source, feed_data: feedparser.util.FeedParserDict):
+def update_source_attributes(source: Source, feed_data: feedparser.util.FeedParserDict) -> None:
     """
-    Update the Source from the data
+    Update the Source from the data.
 
     ### Parameters
     - source (Source): the Source instance to update
@@ -128,9 +126,9 @@ def update_source_attributes(source: Source, feed_data: feedparser.util.FeedPars
     source.save()
 
 
-def update_entries(source: Source, entries_data: feedparser.util.FeedParserDict):
+def update_entries(source: Source, entries_data: feedparser.util.FeedParserDict) -> None:
     """
-    Create any new entries for a source
+    Create any new entries for a source.
 
     ### Parameters
     - source (Source): the source instance we're creating entried for
@@ -143,9 +141,9 @@ def update_entries(source: Source, entries_data: feedparser.util.FeedParserDict)
         update_enclosures(entry, entry_data)
 
 
-def get_or_create_entry(source: Source, entry_data: feedparser.util.FeedParserDict):
+def get_or_create_entry(source: Source, entry_data: feedparser.util.FeedParserDict) -> Entry:
     """
-    Create any new entries for a source
+    Create any new entries for a source.
 
     ### Parameters
     - source (Source): the source instance we're creating entried for
@@ -174,9 +172,9 @@ def get_or_create_entry(source: Source, entry_data: feedparser.util.FeedParserDi
     return entry
 
 
-def update_enclosures(entry: Entry, entry_data: feedparser.util.FeedParserDict):
+def update_enclosures(entry: Entry, entry_data: feedparser.util.FeedParserDict) -> None:
     """
-    Create enclosures for the given entry
+    Create enclosures for the given entry.
 
     ### Parameters
     - entry (Entry): the netry to update
@@ -206,7 +204,7 @@ def update_enclosures(entry: Entry, entry_data: feedparser.util.FeedParserDict):
 
 
 def create_enclosure(entry: Entry, enclosure_data: feedparser.util.FeedParserDict) -> Enclosure:
-    """The standard way to create an enclosure"""
+    """Create an enclosure."""
     if not enclosure_data:
         return None
 
@@ -219,8 +217,9 @@ def create_enclosure(entry: Entry, enclosure_data: feedparser.util.FeedParserDic
 
 
 
-def create_embeded_youtube_enclosure(entry: Entry, enclosure_data: feedparser.util.FeedParserDict, youtube_link:ParseResult) -> Enclosure:
-    """Youtube enclosures need to be modified to form an embedable link"""
+def create_embeded_youtube_enclosure(entry: Entry, enclosure_data: feedparser.util.FeedParserDict,
+                                     youtube_link:ParseResult) -> Enclosure:
+    """Youtube enclosures need to be modified to form an embedable link."""
     # if the link is already an embeded link
     if youtube_link.path.startswith("embed/"):
         return Enclosure.objects.create(

@@ -1,6 +1,4 @@
-"""
-This module contains the functions that predict when the next feed entry will be posted based on past data
-"""
+"""Functions that predict when the next feed entry will be posted based on past data."""
 from datetime import date, datetime, time, timedelta
 from statistics import mean, stdev
 from zoneinfo import ZoneInfo
@@ -14,7 +12,7 @@ MAX_ENTRIES = 50
 
 def set_next_fetch(source: Source) -> datetime:
     """
-    Calculate and set when the given source should next be polled
+    Calculate and set when the given source should next be polled.
 
     ### Parameters
     - source: the feed source to set the poll date on
@@ -46,7 +44,7 @@ def set_next_fetch(source: Source) -> datetime:
 
 def predict_time(entries: list[Entry]) -> tuple[time, timedelta]:
     """
-    Predicts the time of day and standard deviation from it of the next entry
+    Predicts the time of day and standard deviation from it of the next entry.
 
     ### Parameters
     - entries, a list of feed entries
@@ -63,15 +61,15 @@ def predict_time(entries: list[Entry]) -> tuple[time, timedelta]:
     mean_value, deviation = circled_mean(seconds, 0, 86400)
 
     deviation_dt = timedelta(seconds=deviation)
-    predicted_time = (datetime.min + timedelta(seconds=mean_value)).time()
+    predicted_time = (datetime.min + timedelta(seconds=mean_value)).time()  # noqa: DTZ901
 
     return predicted_time, deviation_dt
 
 
 
-def circled_mean(data: list, min_value, max_value) -> tuple:
+def circled_mean(data: list, min_value:int, max_value:int) -> tuple:
     """
-    Find the mean of data that wraps around a circle
+    Find the mean of data that wraps around a circle.
 
     ### Parameters
     - data (list): the data to find the mean of
@@ -87,7 +85,7 @@ def circled_mean(data: list, min_value, max_value) -> tuple:
     sorted_data = sorted(data)
 
     # find the index of the first data point above the middle
-    for middle_index, value in enumerate(sorted_data):
+    for middle_index, value in enumerate(sorted_data):  # noqa: B007
         if value >= middle:
             break
 
@@ -112,7 +110,7 @@ def circled_mean(data: list, min_value, max_value) -> tuple:
 
 def seconds_since_midnight(date_time: datetime) -> float:
     """
-    Convert a datetime object into a float representing the total seconds since midnight
+    Convert a datetime object into a float representing the total seconds since midnight.
 
     ### Parameters
     - date_time (datetime): the object to convert
@@ -126,37 +124,38 @@ def seconds_since_midnight(date_time: datetime) -> float:
 
 def predict_day(entries: list[Entry]) -> date:
     """
-    Predict the next day that there will be a new entry. It does this by tallying what days of the week new
-    entries happen and finding the next one where an entry was posted.
+    Predict the next day that there will be a new entry.
 
-    This does not take into account time of day. so a feed that regularly posts around midnight UTC will get the tally
-    split over many weekdays
-    
+    It does this by tallying what days of the week new entries happen and finding the next one where an entry was
+    posted. This does not take into account time of day. so a feed that regularly posts around midnight UTC will get
+    the tally split over many weekdays
+
     ### Parameters
     - entries: list of entries
 
     ### Returns
     date of next predicted entry
     """
+    today = datetime.now(tz=datetime.UTC).date()
     # if less than a week of entries present, assume dayly
-    if len(entries) == 0 or (entries[-1].created).date() > date.today() - timedelta(days=7):
-        return date.today()
+    if len(entries) == 0 or (entries[-1].created).date() > today - timedelta(days=7):
+        return today
 
     # count by weekday and determine days with entries
     weekday_tally = [0]*7
     for entry in entries:
         weekday_tally[entry.created.weekday()] += 1
 
-    today_weekday = datetime.now().weekday()
+    today_weekday = datetime.now(tz=datetime.UTC).weekday()
 
     # shift the week tally to start on todays weekday
     reordered_weekdays = weekday_tally[today_weekday:] + weekday_tally[:today_weekday]
 
     for i, tally in enumerate(reordered_weekdays):
         if tally > 0:
-            return date.today() + timedelta(days=i)
+            return today + timedelta(days=i)
 
-    return date.today() + timedelta(days=1)
+    return today + timedelta(days=1)
 
 
 
@@ -167,5 +166,5 @@ def due_sources() -> list:
     ### Returns
     - list of sources to update
     """
-    sources = Source.objects.filter(Q(due_fetch__lt = datetime.now()) & Q(live = True))
+    sources = Source.objects.filter(Q(due_fetch__lt = datetime.now(tz=datetime.UTC)) & Q(live = True))
     return sources.order_by("due_fetch")

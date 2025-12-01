@@ -1,9 +1,10 @@
+"""Views, Pages, and Actions for managing feed folders."""
 from logging import getLogger
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
-from django.shortcuts import HttpResponse, HttpResponseRedirect, render
+from django.http import Http404, HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse
 
 from feeds.models import Entry, Source
@@ -14,8 +15,8 @@ from .models import FeedsFolder
 logger=getLogger("Feeds Folders")
 
 @login_required
-def folder_page(request: HttpResponse, folder_id: int):
-    """View the posts in a folder"""
+def folder_page(request: HttpRequest, folder_id: int) -> HttpResponse:
+    """View the posts in a folder."""
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't view folders that are not yours
@@ -40,8 +41,8 @@ def folder_page(request: HttpResponse, folder_id: int):
 
 
 @login_required
-def create_folder(request: HttpResponse):
-    """Return the html for a new folder form"""
+def create_folder(request: HttpRequest) -> HttpResponse:
+    """Return the html for a new folder form."""
     if request.method == "GET":
         return render(request, "folders/menu/create_folder_form.html")
 
@@ -54,8 +55,8 @@ def create_folder(request: HttpResponse):
 
 
 @login_required
-def edit_folder_page(request: HttpResponse, folder_id:int):
-    """Poge to edit the attributes of and content of a foldder"""
+def edit_folder_page(request: HttpRequest, folder_id:int) -> HttpResponse:
+    """Poge to edit the attributes of and content of a foldder."""
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't edit folders that are not yours
@@ -78,8 +79,8 @@ def edit_folder_page(request: HttpResponse, folder_id:int):
 
 
 @login_required
-def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
-    """Add a feed to a folder"""
+def add_feed_to_folder(request: HttpRequest, folder_id:int, feed_id:int) -> HttpResponse:
+    """Add a feed to a folder."""
     # reject non post requests
     if request.method != "POST":
         return None
@@ -100,8 +101,8 @@ def add_feed_to_folder(request: HttpResponse, folder_id:int, feed_id:int):
 
 
 @login_required
-def edit_folder_name(request: HttpResponse, folder_id:int):
-    """Add a feed to a folder"""
+def edit_folder_name(request: HttpRequest, folder_id:int) -> HttpResponse:
+    """Add a feed to a folder."""
     # reject non post requests
     if request.method != "POST":
         return None
@@ -120,8 +121,8 @@ def edit_folder_name(request: HttpResponse, folder_id:int):
 
 
 @login_required
-def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
-    """Remove a feed from a folder"""
+def remove_feed_from_folder(request: HttpRequest, folder_id:int, feed_id:int) -> HttpResponse:
+    """Remove a feed from a folder."""
     # reject non post requests
     if request.method != "POST":
         return None
@@ -141,8 +142,8 @@ def remove_feed_from_folder(request: HttpResponse, folder_id:int, feed_id:int):
 
 
 @login_required
-def delete_folder(request: HttpResponse, folder_id:int):
-    """Delete a folder"""
+def delete_folder(request: HttpRequest, folder_id:int) -> HttpResponse:
+    """Delete a folder."""
     folder = FeedsFolder.objects.get(id=folder_id)
 
     # can't edit folders that are not yours

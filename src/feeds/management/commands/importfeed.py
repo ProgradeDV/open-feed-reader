@@ -1,7 +1,6 @@
-"""
-Django Command to import a feed source
-"""
+"""Django Command to import a feed source."""
 import logging
+from argparse import ArgumentParser
 from urllib.parse import urlparse
 
 from django.core.management.base import BaseCommand
@@ -14,24 +13,24 @@ logger = logging.getLogger("ImportFeed")
 
 
 class Command(BaseCommand):
-    """
-    Command to create a new soure object
-    """
+    """Command to create a new soure object."""
 
     help = "Inport an RSS feed"
 
-    def add_arguments(self, parser):
+    def add_arguments(self, parser:ArgumentParser) -> None:
+        """Add arguments to the parser."""
         parser.add_argument("feed_url", type=str)
         parser.add_argument("-n", "--name", dest="name", type=str)
 
 
-    def handle(self, *args, **options):
-
+    def handle(self, *args:any, **options:any) -> None:  # noqa: ARG002
+        """Create a new soure object."""
         feed_url = options["feed_url"]
 
         parsed_url = urlparse(feed_url)
         if not parsed_url.scheme:
-            raise ValueError(f"Not a url: {feed_url}")
+            msg = f"Not a url: {feed_url}"
+            raise ValueError(msg)
 
         feed_url = get_rss_url(parsed_url)
         logger.info("feed_url = %s", feed_url)
