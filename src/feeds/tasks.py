@@ -11,7 +11,6 @@ logger = getLogger("Tasks")
 @shared_task
 def update_feeds() -> None:
     """Vertsion of update_all_content wrapped by celery registry."""
-
     sources = due_sources()
     for source in sources:
         fetch_feed(source)

@@ -3,12 +3,12 @@
 ## Build the docker container
 deploy the 
 ```shell
-docker build -t open-feed-reader:beta_0.3.0 .
+docker build -t open-feed-reader:0.6.1.dev .
 ```
 
 ## Pack up the docker container
 ```shell
-docker save open-feed-reader:beta_0.3.0 > open-feed-reader.tar
+docker save open-feed-reader:0.6.1.dev > open-feed-reader.tar
 ```
 
 ## Import the packed container

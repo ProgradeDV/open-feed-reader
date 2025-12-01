@@ -380,7 +380,6 @@ wheels = [
 
 [[package]]
 name = "open-feed-reader"
-version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "beautifulsoup4" },

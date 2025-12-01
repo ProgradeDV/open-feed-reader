@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
@@ -7,7 +7,7 @@ where=["src"]
 
 [project]
 name="open_feed_reader"
-version="v0.6.0"
+dynamic = ["version"]
 requires-python = ">=3.13,<4.0"
 dependencies = [
   "Django",
@@ -37,3 +37,4 @@ dev=[
 [tool.setuptools.package-data]
 "*" = ["**/templates/**/*", "**/static/**/*"]
 
+[tool.setuptools_scm]
